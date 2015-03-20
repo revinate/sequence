@@ -125,6 +125,44 @@ class FnGen {
     }
 
     /**
+     * Generate a function that returns the key from a map call.
+     *
+     * @return callable
+     */
+    public static function fnMapToKey() {
+        return function ($v, $k) { return $k; };
+    }
+
+    /**
+     * Generate a function that combines the key and the value into a tuple.
+     *
+     * @return callable
+     */
+    public static function fnMayToKeyValuePair() {
+        return function ($v, $k) { return array($k, $v); };
+    }
+
+    /**
+     * Generate a function that returns the value given.
+     *
+     * @return callable
+     */
+    public static function fnIdentity() {
+        return function ($v) { return $v; };
+    }
+
+    /**
+     * Generate a function that returns a counter.
+     *
+     * @param int $startingValue
+     * @return callable
+     */
+    public static function fnCounter($startingValue = 0) {
+        $count = $startingValue;
+        return function () use (&$count) { return $count++; };
+    }
+
+    /**
      * Returns a function that applies a function to a nested array and returns the results.
      *
      * @param $fn
