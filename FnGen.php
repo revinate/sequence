@@ -21,6 +21,17 @@ class FnGen {
         return function ($v) { return isset($v); };
     }
 
+    /**
+     * Alias for fnKeepIsSet
+     *
+     * Usage Sequence::make($values)->filter(FnGen::clean())->to_a();
+     *
+     * @return callable
+     */
+    public static function fnClean() {
+        return static::fnKeepIsSet();
+    }
+
 
     /**
      * Generates a function that returns true if $map has a key that matches the value.
@@ -140,6 +151,22 @@ class FnGen {
      */
     public static function fnMayToKeyValuePair() {
         return function ($v, $k) { return array($k, $v); };
+    }
+
+
+    /**
+     * Generate a pluck function that returns the value of a field, or null if the field does not exist.
+     *
+     * @param $key - the name, key, of the field to get the value from.
+     * @return callable
+     */
+    public static function fnPluck($key) {
+        return function ($v) use ($key) {
+            if (isset($v[$key])) {
+                return $v[$key];
+            }
+            return null;
+        };
     }
 
     /**
