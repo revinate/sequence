@@ -13,5 +13,7 @@ interface IterationFunctions {
     public function to_a();
     public function keys();
     public function values();
+    public function limit($limit);
+    public function offset($offset);
     public function walk(Closure $fn);
 }

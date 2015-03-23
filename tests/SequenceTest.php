@@ -94,4 +94,20 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
         $this->assertTrue($sum == Sequence::make($values)->reduce(0, $fnReduceSum));
     }
+
+    public function testLimit() {
+        $values = range(1, 100);
+
+        $results = Sequence::make($values)->limit(50)->to_a();
+
+        $this->assertTrue($results == range(1,50));
+    }
+
+    public function testOffset() {
+        $values = range(1, 100);
+
+        $results = Sequence::make($values)->offset(50)->values()->to_a();
+
+        $this->assertTrue($results == range(51,100));
+    }
 }

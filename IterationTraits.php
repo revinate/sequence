@@ -36,7 +36,29 @@ class IterationTraits {
      * @return FilteredSequence
      */
     public static function filter(Iterator $iterator, Closure $fn) {
-        return new FilteredSequence($iterator, $fn);
+        return Sequence::make(new FilteredSequence($iterator, $fn));
+    }
+
+    /**
+     * Limit the number of items.
+     *
+     * @param Iterator $iterator
+     * @param $limit
+     * @return Sequence
+     */
+    public static function limit(Iterator $iterator, $limit) {
+        return Sequence::make(new LimitIterator($iterator, 0, $limit));
+    }
+
+    /**
+     * Skip a number of items.
+     *
+     * @param Iterator $iterator
+     * @param $offset
+     * @return Sequence
+     */
+    public static function offset(Iterator $iterator, $offset) {
+        return Sequence::make(new LimitIterator($iterator, $offset));
     }
 
     /**

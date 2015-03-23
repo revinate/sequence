@@ -70,6 +70,27 @@ class Sequence extends IteratorIterator implements IterationFunctions {
     }
 
     /**
+     * Limit the number of values returned
+     *
+     * @param int $limit
+     * @return Sequence
+     */
+    public function limit($limit) {
+        return IterationTraits::limit($this, $limit);
+    }
+
+    /**
+     * Skip $offset number of values
+     *
+     * @param int $offset
+     * @return Sequence
+     */
+    public function offset($offset) {
+        return IterationTraits::offset($this, $offset);
+    }
+
+
+    /**
      * Make a sequence from an Traversable object (array or any other iterator).
      *
      * @param $iterator
