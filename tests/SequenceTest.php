@@ -84,4 +84,14 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertTrue($result == $n * ($n +1) / 2);
     }
 
+    public function testWalk() {
+        $sum = 0;
+        $fn = function ($value) use (&$sum) { $sum += $value; };
+        $fnReduceSum = function ($sum, $value) { return $sum + $value; };
+        $values = range(1,100);
+
+        Sequence::make($values)->walk($fn);
+
+        $this->assertTrue($sum == Sequence::make($values)->reduce(0, $fnReduceSum));
+    }
 }

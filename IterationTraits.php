@@ -77,4 +77,21 @@ class IterationTraits {
     public static function values(Iterator $iterator) {
         return new MappedSequence($iterator, FnGen::fnIdentity(), FnGen::fnCounter());
     }
+
+    /**
+     * Call a function for all items available to the iterator.
+     *
+     * Note: it does a rewind on $iterator and walks ALL values.  It does NOT rewind the iterator a second time.
+     *
+     * @param Iterator $iterator
+     * @param callable $fn($value, $key) -- the function to call for each item.
+     * @return Iterator
+     */
+    public static function walk(Iterator $iterator, Closure $fn) {
+        foreach ($iterator as $key => $value) {
+            $fn($value, $key);
+        }
+
+        return $iterator;
+    }
 }

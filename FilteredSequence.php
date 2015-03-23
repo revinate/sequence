@@ -29,11 +29,12 @@ class FilteredSequence extends FilterIterator implements  IterationFunctions {
     }
 
     /**
-     * @param callable $fn
+     * @param callable $fnValueMap($value, $key) -- function that returns the new value.
+     * @param callable $fnKeyMap($key, $value) [optional] -- function that returns the new key
      * @return MappedSequence
      */
-    public function map(Closure $fn) {
-        return IterationTraits::map($this, $fn);
+    public function map(Closure $fnValueMap, Closure $fnKeyMap = null) {
+        return IterationTraits::map($this, $fnValueMap, $fnKeyMap);
     }
 
     /**
@@ -76,5 +77,15 @@ class FilteredSequence extends FilterIterator implements  IterationFunctions {
      */
     public function to_a() {
         return IterationTraits::to_a($this);
+    }
+
+    /**
+     * calls $fn for every value,key pair
+     *
+     * @param callable $fn($value, $key)
+     * @return Iterator
+     */
+    public function walk(Closure $fn) {
+        return IterationTraits::walk($this, $fn);
     }
 }

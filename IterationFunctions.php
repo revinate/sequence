@@ -7,10 +7,11 @@
  */
 
 interface IterationFunctions {
-    public function map(Closure $fn);
+    public function map(Closure $fnValueMap, Closure $fnKeyMap = null);
     public function filter(Closure $fn);
     public function reduce($init, Closure $fn);
     public function to_a();
     public function keys();
     public function values();
+    public function walk(Closure $fn);
 }
