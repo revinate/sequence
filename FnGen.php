@@ -197,7 +197,7 @@ class FnGen {
      */
     public static function fnNestedMap($fn) {
         return function ($array) use ($fn) {
-            return FancyArray::make($array)->map($fn)->to_a();
+            return Sequence::make($array)->map($fn)->to_a();
         };
     }
 
@@ -209,7 +209,7 @@ class FnGen {
      */
     public static function fnNestedUkeyBy($fn) {
         return function ($array) use ($fn) {
-            return FancyArray::make($array)->ukey_by($fn)->to_a();
+            return Sequence::make($array)->mapKeys($fn)->to_a();
         };
     }
 }

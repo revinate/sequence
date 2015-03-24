@@ -26,7 +26,7 @@ class IterationTraits {
      * @param callable $fn($key, $value)
      * @return MappedSequence
      */
-    public static function mapKey(Iterator $iterator, Closure $fn) {
+    public static function mapKeys(Iterator $iterator, Closure $fn) {
         return new MappedSequence($iterator, FnGen::fnIdentity(), $fn);
     }
 

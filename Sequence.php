@@ -18,6 +18,16 @@ class Sequence extends IteratorIterator implements IterationFunctions {
     }
 
     /**
+     * Map the keys of a sequence
+     *
+     * @param callable $fnKeyMap($key, $value) -- function that returns the new key
+     * @return MappedSequence
+     */
+    public function mapKeys(Closure $fnKeyMap) {
+        return IterationTraits::mapKeys($this, $fnKeyMap);
+    }
+
+    /**
      * @param callable $fn
      * @return FilteredSequence
      */

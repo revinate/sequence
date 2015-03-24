@@ -10,13 +10,22 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
     public function testMap() {
 
-        $values = range(1,100,1);
+        $values = range(1,100);
 
         $fn = function($v){ return 2 * $v;};
         $results = Sequence::make($values)->map($fn)->to_a();
 
         $this->assertTrue($results == range(2,200,2));
         $this->assertTrue($results == FancyArray::make($values)->map($fn)->to_a());
+    }
+
+    public function testMapKeys() {
+        $values = range(0,100);
+        $fnKeyMap = function($k) { return $k * 2; };
+
+        $results = Sequence::make($values)->mapKeys($fnKeyMap)->to_a();
+
+        $this->assertTrue(array_keys($results) == range(0, 200, 2));
     }
 
     public function testFilter() {
