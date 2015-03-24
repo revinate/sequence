@@ -38,6 +38,16 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertTrue($results == array_filter($values, $fn));
     }
 
+    public function testFilterKeys() {
+        $values = range(0,100);
+
+        $fn = function($v){ return $v % 2; };
+        $results = Sequence::make($values)->filterKeys($fn)->to_a();
+
+        $this->assertTrue($results == FancyArray::make($values)->filter_k($fn)->to_a());
+        $this->assertTrue($results == array_filter($values, $fn));
+    }
+
     public function testChaining() {
 
         $fnMap1 = function($v, $k) { return $v * $k;};

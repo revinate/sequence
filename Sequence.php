@@ -29,10 +29,18 @@ class Sequence extends IteratorIterator implements IterationFunctions {
 
     /**
      * @param callable $fn
-     * @return FilteredSequence
+     * @return Sequence
      */
     public function filter(Closure $fn) {
         return IterationTraits::filter($this, $fn);
+    }
+
+    /**
+     * @param callable $fn($key, $value)
+     * @return Sequence
+     */
+    public function filterKeys(Closure $fn) {
+        return IterationTraits::filterKeys($this, $fn);
     }
 
     /**

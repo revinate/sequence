@@ -33,10 +33,19 @@ class IterationTraits {
     /**
      * @param Iterator $iterator
      * @param callable $fn($value, $key)
-     * @return FilteredSequence
+     * @return Sequence
      */
     public static function filter(Iterator $iterator, Closure $fn) {
         return Sequence::make(new FilteredSequence($iterator, $fn));
+    }
+
+    /**
+     * @param Iterator $iterator
+     * @param callable $fn($key, $value)
+     * @return Sequence
+     */
+    public static function filterKeys(Iterator $iterator, Closure $fn) {
+        return Sequence::make(new FilteredSequence($iterator, FnGen::fnSwapParamsPassThrough($fn)));
     }
 
     /**
