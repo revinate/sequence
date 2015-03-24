@@ -28,6 +28,21 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertTrue(array_keys($results) == range(0, 200, 2));
     }
 
+    public function testKeyBy() {
+        $values = array(
+            array('name'=>'Terry', 'age'=> 22),
+            array('name'=>'Bob', 'age' => 30),
+            array('name'=>'Sam', 'age' => 19),
+            array('name'=>'Robert', 'age' => 55),
+            array('group'=>'student'),
+        );
+
+        $results = Sequence::make($values)->keyBy(FnGen::fnPluck('name'))->to_a();
+
+        $this->assertArrayHasKey('Terry', $results);
+        $this->assertTrue($results['Robert']['age'] == 55);
+    }
+
     public function testFilter() {
         $values = range(1,100,1);
 
