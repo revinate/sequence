@@ -35,4 +35,44 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($fn() == 12);
         $this->assertTrue($fn() == 13);
     }
+
+    public function testFnCallChain() {
+        $fn = function($v) { return $v + 1; };
+
+        $fnChain = FnGen::fnCallChain($fn, $fn, $fn, $fn);
+
+        $this->assertTrue($fnChain(5) == 9);
+
+        // More useful example:
+
+        $values = array(
+            array('name'=>'Terry', 'age'=> 22),
+            array('name'=>'Bob', 'age' => 30),
+            array('name'=>'Sam', 'age' => 19),
+            array('name'=>'Robert', 'age' => 55),
+            array('group'=>'student'),
+        );
+        $fnLen = function($v) { return strlen($v); };
+
+        // Extract only the elements with with name length of 3
+        $results = Sequence::make($values)
+            ->filter(FnGen::fnCallChain(
+                FnGen::fnPluck('name'),     // get the name field
+                $fnLen,                     // get the length
+                FnGen::fnIsEqual(3)         // compare to 3
+            ))->to_a();
+
+        $this->assertTrue(count($results) == 2);
+
+        // The first function in the chain is allowed multiple params
+        $results = Sequence::make($values)
+            ->filterKeys(FnGen::fnCallChain(
+                function($k, $v) { return $v; },  // get the value -- test multiple params
+                FnGen::fnPluck('name'),     // get the name field
+                $fnLen,                     // get the length
+                FnGen::fnIsEqual(3)         // compare to 3
+            ))->to_a();
+
+        $this->assertTrue(count($results) == 2);
+    }
 }
