@@ -125,6 +125,8 @@ class Sequence extends IteratorIterator implements IterationFunctions {
     public static function make($iterator) {
         if (is_array($iterator)) {
             $iterator = new ArrayIterator($iterator);
+        } else if (is_null($iterator)) {
+            $iterator = new ArrayIterator(array());
         }
         return new static($iterator);
     }

@@ -144,4 +144,10 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
         $this->assertTrue($results == range(51,100));
     }
+
+    public function testNull() {
+        $result = Sequence::make(null)->to_a();
+
+        $this->assertTrue(empty($result));
+    }
 }
