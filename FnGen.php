@@ -242,7 +242,7 @@ class FnGen {
      */
     public static function fnNestedUkeyBy($fn) {
         return function ($array) use ($fn) {
-            return Sequence::make($array)->mapKeys($fn)->to_a();
+            return Sequence::make($array)->keyBy($fn)->to_a();
         };
     }
 
