@@ -70,6 +70,14 @@ class FnGen {
         return function ($v) use($value) { return $value == $v; };
     }
 
+    /**
+     * Generates a function that returns true if a value is numeric
+     *
+     * @return callable
+     */
+    public static function fnIsNumeric() {
+        return function ($v) { return is_numeric($v); };
+    }
 
     /**
      * Generates a function that returns true if a value is not equal
