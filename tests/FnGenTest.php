@@ -64,6 +64,20 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue(count($results) == 2);
 
+        // Same thing, but without the chain.
+        $resultsNonChain = Sequence::make($values)
+            ->filter(function ($v) {
+                if (isset($v['name'])) {
+                    $x = $v['name'];
+                } else {
+                    $x = '';
+                }
+                $len = strlen($x);
+                return $len == 3;
+            })->to_a();
+
+        $this->assertTrue($results == $resultsNonChain);
+
         // The first function in the chain is allowed multiple params
         $results = Sequence::make($values)
             ->filterKeys(FnGen::fnCallChain(

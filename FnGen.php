@@ -245,4 +245,19 @@ class FnGen {
             return Sequence::make($array)->mapKeys($fn)->to_a();
         };
     }
+
+
+    /********************************************************************************
+     * Reduce functions
+     */
+
+
+    /**
+     * Used in Sequence::Reduce to sum all values.
+     *
+     * @return callable
+     */
+    public static function fnSum() {
+        return function ($sum, $v) { return $sum + $v; };
+    }
 }

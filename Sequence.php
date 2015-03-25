@@ -126,7 +126,7 @@ class Sequence extends IteratorIterator implements IterationFunctions {
         if (is_array($iterator)) {
             $iterator = new ArrayIterator($iterator);
         } else if (is_null($iterator)) {
-            $iterator = new ArrayIterator(array());
+            $iterator = new EmptyIterator();
         }
         return new static($iterator);
     }
