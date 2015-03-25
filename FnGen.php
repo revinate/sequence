@@ -214,6 +214,17 @@ class FnGen {
     /**
      * Returns a function that applies a function to a nested array and returns the results.
      *
+     * @return callable
+     */
+    public static function fnNestedSort() {
+        return function ($array) {
+            return FancyArray::make($array)->sort()->to_a();
+        };
+    }
+
+    /**
+     * Returns a function that applies a function to a nested array and returns the results.
+     *
      * @param $fn
      * @return callable
      */
