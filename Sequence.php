@@ -115,6 +115,16 @@ class Sequence extends IteratorIterator implements IterationFunctions {
         return IterationTraits::offset($this, $offset);
     }
 
+    /**
+     * Sort ALL the values in the sequence.  Keys are preserved.
+     *
+     * @param callable $fn [optional] -- function to use to sort the values.
+     * @return Sequence
+     */
+    public function sort(Closure $fn = null) {
+        return IterationTraits::sort($this, $fn);
+    }
+
 
     /**
      * Make a sequence from an Traversable object (array or any other iterator).

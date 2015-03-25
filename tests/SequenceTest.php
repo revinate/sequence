@@ -150,4 +150,17 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
         $this->assertTrue(empty($result));
     }
+
+    public function testSort() {
+        $range = range(1, 100);
+        $rangeReverse = array_reverse($range);
+
+        // Check the values are sorted.
+        $result = Sequence::make($rangeReverse)->sort()->values()->to_a();
+        $this->assertEquals(range(1, 100), $result);
+
+        // Check the keys are preserved
+        $result = Sequence::make($rangeReverse)->sort()->keys()->to_a();
+        $this->assertEquals(array_reverse(range(0, 99)), $result);
+    }
 }
