@@ -46,13 +46,27 @@ class FilteredSequenceTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(Sequence::make($values)->filter($fn)->keys()->to_a() == Sequence::make($filteredValues)->keys()->to_a());
     }
 
-    public function testInterviewQuestion() {
-        $limit = 100;
+    public function testInterviewQuestionA() {
+        /*
+            The sum of all natural numbers below 10 that are multiples of 3 or 5 are 23 (3 + 5 + 6 + 9)
+            Write a php script that will find the sum of all the multiples of 3 or 5 below 1000. The script
+            should run from command line and put the result on screen. We will judge this task based on
+            simplicity, efficiency and cleverness of the code.
+         */
+        $limit = 1000;
         $values = range(0, $limit);
         $a = 3;
         $b = 5;
 
-        $filteredValues = Sequence::make($values)->filter(function($v) use ($a, $b) { return ($v % $a == 0) || ($v % $b == 0); } )->to_a();
+        $fnFilterMaker = function($a, $b) { return function($v) use ($a, $b) { return ($v % $a == 0) || ($v % $b == 0); }; };
+
+        // test: sum of multiples of 3 or 5 below 10 is 23 (3 + 5 + 6 + 9)
+        $this->assertTrue(
+            Sequence::make(range(0, 9))
+                ->filter($fnFilterMaker(3, 5))
+                ->reduce(0, FnGen::fnSum()) == 23);
+
+        $filteredValues = Sequence::make($values)->filter($fnFilterMaker($a, $b))->to_a();
         $this->assertArrayHasKey($a, $filteredValues);
         $this->assertArrayHasKey($b, $filteredValues);
         $this->assertArrayNotHasKey($a * $b + 1, $filteredValues);
