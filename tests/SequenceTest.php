@@ -37,7 +37,11 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
             array('group'=>'student'),
         );
 
-        $results = Sequence::make($values)->keyBy(FnGen::fnPluck('name'))->to_a();
+        $results = Sequence::make($values)->filter(FnGen::fnPluck('name'))->keyBy(FnGen::fnPluck('name'))->to_a();
+        $results2 = FancyArray::make($values)->filter(FnGen::fnPluck('name'))->ukey_by(FnGen::fnPluck('name'))->to_a();
+
+        $this->assertTrue($results == $results2);
+        $this->assertEquals($results2, $results);
 
         $this->assertArrayHasKey('Terry', $results);
         $this->assertTrue($results['Robert']['age'] == 55);
