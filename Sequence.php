@@ -116,13 +116,24 @@ class Sequence extends IteratorIterator implements IterationFunctions {
     }
 
     /**
-     * Sort ALL the values in the sequence.  Keys are preserved.
+     * Sort ALL the values in the sequence.  Keys ARE preserved.
      *
-     * @param callable $fn [optional] -- function to use to sort the values.
+     * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uasort
      * @return Sequence
      */
     public function sort(Closure $fn = null) {
         return IterationTraits::sort($this, $fn);
+    }
+
+
+    /**
+     * Sort ALL the values by the keys in the sequence.  Keys ARE preserved.
+     *
+     * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uasort
+     * @return Sequence
+     */
+    public function sortKeys(Closure $fn = null) {
+        return IterationTraits::sortKeys($this, $fn);
     }
 
 

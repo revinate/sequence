@@ -143,4 +143,22 @@ class IterationTraits {
 
         return Sequence::make($array);
     }
+
+    /**
+     * Collect all the values into an array, sort them and return the resulting Sequence.  Keys are preserved.
+     *
+     * @param Iterator $iterator
+     * @param callable $fn
+     * @return static
+     */
+    public static function sortKeys(Iterator $iterator, Closure $fn = null) {
+        $array = iterator_to_array($iterator);
+        if ($fn) {
+            uksort($array, $fn);
+        } else {
+            ksort($array);
+        }
+
+        return Sequence::make($array);
+    }
 }
