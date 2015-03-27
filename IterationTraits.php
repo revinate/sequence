@@ -127,13 +127,31 @@ class IterationTraits {
     }
 
     /**
-     * Collect all the values into an array, sort them and return the resulting Sequence.  Keys are preserved.
+     * Collect all the values into an array, sort them and return the resulting Sequence.  Keys are NOT preserved.
      *
      * @param Iterator $iterator
      * @param callable $fn
      * @return static
      */
     public static function sort(Iterator $iterator, Closure $fn = null) {
+        $array = iterator_to_array($iterator);
+        if ($fn) {
+            usort($array, $fn);
+        } else {
+            sort($array);
+        }
+
+        return Sequence::make($array);
+    }
+
+    /**
+     * Collect all the values into an array, sort them and return the resulting Sequence.  Keys are preserved.
+     *
+     * @param Iterator $iterator
+     * @param callable $fn
+     * @return static
+     */
+    public static function asort(Iterator $iterator, Closure $fn = null) {
         $array = iterator_to_array($iterator);
         if ($fn) {
             uasort($array, $fn);

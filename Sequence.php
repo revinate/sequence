@@ -116,9 +116,9 @@ class Sequence extends IteratorIterator implements IterationFunctions {
     }
 
     /**
-     * Sort ALL the values in the sequence.  Keys ARE preserved.
+     * Sort ALL the values in the sequence.  Keys are NOT preserved.
      *
-     * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uasort
+     * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see usort
      * @return Sequence
      */
     public function sort(Closure $fn = null) {
@@ -127,13 +127,34 @@ class Sequence extends IteratorIterator implements IterationFunctions {
 
 
     /**
-     * Sort ALL the values by the keys in the sequence.  Keys ARE preserved.
+     * Sort ALL the values in the sequence.  Keys ARE preserved.
      *
      * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uasort
      * @return Sequence
      */
+    public function asort(Closure $fn = null) {
+        return IterationTraits::asort($this, $fn);
+    }
+
+
+    /**
+     * Sort ALL the values by the keys in the sequence.  Keys ARE preserved.
+     *
+     * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uksort
+     * @return Sequence
+     */
     public function sortKeys(Closure $fn = null) {
         return IterationTraits::sortKeys($this, $fn);
+    }
+
+    /**
+     * Returns the first element where $fnTest returns true.
+     *
+     * @param callable $fnTest --
+     * @return null|mixed
+     */
+    public function first(Closure $fnTest) {
+        return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
     }
 
 

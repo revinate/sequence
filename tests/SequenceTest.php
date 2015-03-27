@@ -160,11 +160,24 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $rangeReverse = array_reverse($range);
 
         // Check the values are sorted.
-        $result = Sequence::make($rangeReverse)->sort()->values()->to_a();
+        $result = Sequence::make($rangeReverse)->sort()->to_a();
+        $this->assertEquals(range(1, 100), $result);
+
+        // Check the keys are in numeric order
+        $result = Sequence::make($rangeReverse)->sort()->keys()->to_a();
+        $this->assertEquals(range(0, 99), $result);
+    }
+
+    public function testASort() {
+        $range = range(1, 100);
+        $rangeReverse = array_reverse($range);
+
+        // Check the values are sorted.
+        $result = Sequence::make($rangeReverse)->asort()->values()->to_a();
         $this->assertEquals(range(1, 100), $result);
 
         // Check the keys are preserved
-        $result = Sequence::make($rangeReverse)->sort()->keys()->to_a();
+        $result = Sequence::make($rangeReverse)->asort()->keys()->to_a();
         $this->assertEquals(array_reverse(range(0, 99)), $result);
     }
 
@@ -175,5 +188,23 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         // Check the values are reversed and the keys are in the right order.
         $result = Sequence::make(array_combine($rangeReverse, $range))->sortKeys()->to_a();
         $this->assertEquals(array_combine($range, $rangeReverse), $result);
+    }
+
+    public function testFirst() {
+        $values = array(
+            array('name'=> 'apple', 'count' => 5 ),
+            array('name'=> 'orange', 'count' => 15 ),
+            array('name'=> 'banana', 'count' => 25 ),
+            array('name'=> 'orange', 'count' => 6 ),
+            array('name'=> 'pear', 'count' => 2 ),
+            array('name'=> 'apple', 'count' => 6 ),
+            array('name'=> 'grape', 'count' => 53 ),
+            array('name'=> 'apple', 'count' => 10 ),
+        );
+
+        $fnTest = FnGen::fnCallChain(FnGen::fnPluck('count'), FnGen::fnIsEqual(6));
+
+        $this->assertEquals(FancyArray::make($values)->first($fnTest), Sequence::make($values)->first($fnTest));
+        $this->assertEquals($values[6], Sequence::make($values)->first(FnGen::fnCallChain(FnGen::fnPluck('name'), FnGen::fnIsEqual('grape'))));
     }
 }
