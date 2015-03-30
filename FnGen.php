@@ -165,15 +165,16 @@ class FnGen {
     /**
      * Generate a pluck function that returns the value of a field, or null if the field does not exist.
      *
-     * @param $key - the name, key, of the field to get the value from.
+     * @param string $key - the name / key, of the field to get the value from.
+     * @param mixed $default - the default value to assign if the field does not exist.
      * @return callable
      */
-    public static function fnPluck($key) {
-        return function ($v) use ($key) {
+    public static function fnPluck($key, $default = null) {
+        return function ($v) use ($key, $default) {
             if (isset($v[$key])) {
                 return $v[$key];
             }
-            return null;
+            return $default;
         };
     }
 
@@ -263,9 +264,46 @@ class FnGen {
     /**
      * Used in Sequence::Reduce to sum all values.
      *
+     * @param Closure $fnMapValue [optional] - a function to get the needed value
+     * @return callable
+     *
+     * @example:
+     * Get the total number of fruit.
+     * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->reduce(FnGen::fnSum(FnGen::fnPluck('count'))
+     */
+    public static function fnSum(Closure $fnMapValue = null) {
+        if ($fnMapValue) {
+            return function ($sum, $v) use ($fnMapValue) { return $sum + $fnMapValue($v); };
+        }
+        return function ($sum, $v) { return $sum + $v; };
+    }
+
+    /**
+     * Generate a function that will:
+     * Calculate the average of a set of values.  Null values are skipped.
+     *
+     * @param callable $fnMapValue [optional] - maps the value before it is computed.
      * @return callable
      */
-    public static function fnSum() {
-        return function ($sum, $v) { return $sum + $v; };
+    public static function fnAvg(Closure $fnMapValue = null) {
+        $count = 0;
+        $sum = 0;
+
+        if (!$fnMapValue) {
+            $fnMapValue = FnGen::fnIdentity();
+        }
+
+        return function ($avg, $v) use (&$count, &$sum, $fnMapValue) {
+            $v = $fnMapValue($v);
+            if (is_null($v)) {
+                if (!$count) {
+                    return null;
+                }
+            } else {
+                $count += 1;
+                $sum += $v;
+            }
+            return $sum / $count;
+        };
     }
 }

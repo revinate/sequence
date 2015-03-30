@@ -20,6 +20,18 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
 
         $this->assertTrue($fn($doc) == $doc['value']);
         $this->assertTrue($fn(array('no-value'=>0)) === null);
+
+        $data = array(
+            array('value'=>1),
+            array('value'=>2),
+            array('value'=>3),
+            array('name'=>'PHP'),
+            array('value'=>4),
+        );
+        $this->assertEquals(
+            array(1, 2, 3, 'Not Found', 4),
+            Sequence::make($data)->map(FnGen::fnPluck('value', 'Not Found'))->to_a()
+        );
     }
 
     public function testFnCounter() {
@@ -88,5 +100,47 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
             ))->to_a();
 
         $this->assertTrue(count($results) == 2);
+    }
+
+    public function testFnSum() {
+        $range = range(0, 100);
+        $this->assertEquals(array_sum($range), Sequence::make($range)->reduce(0, FnGen::fnSum()));
+
+        $fruit = array(
+            array('name'=>'apple',  'count'=>1),
+            array('name'=>'orange', 'count'=>5),
+            array('name'=>'apple',  'count'=>3),
+            array('name'=>'banana', 'count'=>9),
+        );
+
+        $this->assertEquals(18,
+            Sequence::make($fruit)
+            ->reduce(0, FnGen::fnSum(
+                FnGen::fnPluck('count', 0)
+            )));
+    }
+
+    public function testFnAvg() {
+        $range = range(1, 10);
+        $this->assertEquals(5.5, Sequence::make($range)->reduce(0, FnGen::fnAvg()));
+
+        $fruit = array(
+            array('name'=>'apple',  'count'=>1),
+            array('name'=>'orange', 'count'=>5),
+            array('name'=>'apple',  'count'=>3),
+            array('name'=>'banana', 'count'=>9),
+            array('name'=>'Out of Stock'),
+            array('name'=>'orange', 'count'=>5),
+        );
+
+        $counts = Sequence::make($fruit)->map(FnGen::fnPluck('count'))->filter(FnGen::fnKeepIsSet())->to_a();
+        $avg = array_sum($counts) / count($counts);
+
+        $avg2 = Sequence::make($fruit)
+            ->reduce(0, FnGen::fnAvg(
+                FnGen::fnPluck('count')
+            ));
+
+        $this->assertEquals($avg, $avg2);
     }
 }
