@@ -8,6 +8,25 @@
 
 class SequenceTest extends PHPUnit_Framework_TestCase  {
 
+    protected static $fruit = array(
+        array('name'=> 'apple', 'count' => 5 ),
+        array('name'=> 'orange', 'count' => 15 ),
+        array('name'=> 'banana', 'count' => 25 ),
+        array('name'=> 'orange', 'count' => 6 ),
+        array('name'=> 'pear', 'count' => 2 ),
+        array('name'=> 'apple', 'count' => 6 ),
+        array('name'=> 'grape', 'count' => 53 ),
+        array('name'=> 'apple', 'count' => 10 ),
+    );
+
+    protected static $people = array(
+        array('name'=>'Terry', 'age'=> 22),
+        array('name'=>'Bob', 'age' => 30),
+        array('name'=>'Sam', 'age' => 19),
+        array('name'=>'Robert', 'age' => 55),
+        array('group'=>'student'),
+    );
+
     public function testMap() {
 
         $values = range(1,100);
@@ -29,13 +48,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
     public function testKeyBy() {
-        $values = array(
-            array('name'=>'Terry', 'age'=> 22),
-            array('name'=>'Bob', 'age' => 30),
-            array('name'=>'Sam', 'age' => 19),
-            array('name'=>'Robert', 'age' => 55),
-            array('group'=>'student'),
-        );
+        $values = self::$people;
 
         $results = Sequence::make($values)->filter(FnGen::fnPluck('name'))->keyBy(FnGen::fnPluck('name'))->to_a();
         $results2 = FancyArray::make($values)->filter(FnGen::fnPluck('name'))->ukey_by(FnGen::fnPluck('name'))->to_a();
@@ -191,20 +204,48 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
     public function testFirst() {
-        $values = array(
-            array('name'=> 'apple', 'count' => 5 ),
-            array('name'=> 'orange', 'count' => 15 ),
-            array('name'=> 'banana', 'count' => 25 ),
-            array('name'=> 'orange', 'count' => 6 ),
-            array('name'=> 'pear', 'count' => 2 ),
-            array('name'=> 'apple', 'count' => 6 ),
-            array('name'=> 'grape', 'count' => 53 ),
-            array('name'=> 'apple', 'count' => 10 ),
-        );
+        $values = self::$fruit;
 
         $fnTest = FnGen::fnCallChain(FnGen::fnPluck('count'), FnGen::fnIsEqual(6));
 
         $this->assertEquals(FancyArray::make($values)->first($fnTest), Sequence::make($values)->first($fnTest));
         $this->assertEquals($values[6], Sequence::make($values)->first(FnGen::fnCallChain(FnGen::fnPluck('name'), FnGen::fnIsEqual('grape'))));
     }
+
+
+    public function testFlattenOnce() {
+        $values = range(1,5);
+        $flattened = Sequence::make($values)->flattenOnce()->to_a();
+        $this->assertEquals($values, $flattened);
+        $this->assertEquals(FancyArray::make($values)->flatten_once()->to_a(), $flattened);
+
+        $values = self::$fruit;
+        $flattened = Sequence::make($values)->flattenOnce()->to_a();
+        $this->assertEquals(FancyArray::make($values)->flatten_once()->to_a(), $flattened);
+
+        $values = array(
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+        );
+        $flattened = Sequence::make($values)->flattenOnce()->to_a();
+        $this->assertEquals(FancyArray::make($values)->flatten_once()->to_a(), $flattened);
+
+        $values1 = array(
+            self::$fruit,
+            self::$fruit,
+        );
+        $values2 = array(
+            Sequence::make(self::$fruit),
+            self::$fruit,
+        );
+        $flattened1 = Sequence::make($values1)->flattenOnce()->to_a();
+        $flattened2 = Sequence::make($values2)->flattenOnce()->to_a();
+        $this->assertEquals($flattened1, $flattened2);
+
+        $this->assertEquals(array(), Sequence::make(null)->flattenOnce()->to_a());
+    }
+
 }

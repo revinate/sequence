@@ -7,7 +7,6 @@
  */
 
 class Sequence extends IteratorIterator implements IterationFunctions {
-
     /**
      * @param callable $fnValueMap($value, $key) -- function that returns the new value.
      * @param callable $fnKeyMap($key, $value) [optional] -- function that returns the new key
@@ -157,6 +156,26 @@ class Sequence extends IteratorIterator implements IterationFunctions {
         return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
     }
 
+    /**
+     * Flatten a Sequence by one level into a new Sequence.
+     *
+     * In its current implementation it forces the evaluation of ALL the items in the Sequence.
+     *
+     * @return Sequence
+     */
+    public function flattenOnce() {
+        $result = $this->reduce(array(), function($result, $value) {
+            if ($value instanceof Traversable) {
+                $value = iterator_to_array($value);
+            }
+            if (is_array($value)) {
+                return array_merge($result, $value);
+            }
+            $result[] = $value;
+            return $result;
+        });
+        return Sequence::make($result);
+    }
 
     /**
      * Make a sequence from an Traversable object (array or any other iterator).
