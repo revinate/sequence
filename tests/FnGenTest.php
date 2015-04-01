@@ -169,7 +169,7 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         );
 
         $n1 = Sequence::make($fruitBasket)->map(FnGen::fnNestedMap($fnMap))->to_a();
-        $n2 = Sequence::make($fruitBasket)->map(FnSequence::make()->map($fnMap)->to_fn())->to_a();
+        $n2 = Sequence::make($fruitBasket)->map(FnSequence::make()->map($fnMap)->to_a())->to_a();
         $n3 = Sequence::make($fruitBasket)
             ->map(function ($values) use ($fnMap) {
                 return Sequence::make($values)->map($fnMap)->to_a();
