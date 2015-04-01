@@ -8,6 +8,18 @@
 
 class FnGenTest extends PHPUnit_Framework_TestCase {
 
+    public static $fruit = array(
+        array('name'=> 'apple', 'count' => 5 ),
+        array('name'=> 'orange', 'count' => 15 ),
+        array('name'=> 'banana', 'count' => 25 ),
+        array('name'=> 'orange', 'count' => 6 ),
+        array('name'=> 'pear', 'count' => 2 ),
+        array('name'=> 'apple', 'count' => 6 ),
+        array('name'=> 'grape', 'count' => 53 ),
+        array('name'=> 'apple', 'count' => 10 ),
+    );
+
+
     public function testFnIdentity() {
         $fn = FnGen::fnIdentity();
         $this->assertTrue($fn(99) === 99);
@@ -142,5 +154,31 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
             ));
 
         $this->assertEquals($avg, $avg2);
+    }
+
+    public function testFnNestedMap() {
+        $fnMap = function ($v) { $v['mul'] = strlen($v['name']) * $v['count']; return $v; };
+        $fnMap2 = function ($v) { $v['mul'] = -strlen($v['name']) * $v['count']; return $v; };
+
+        $fruitBasket = array(
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+        );
+
+        $n1 = Sequence::make($fruitBasket)->map(FnGen::fnNestedMap($fnMap))->to_a();
+        $n2 = Sequence::make($fruitBasket)->map(FnSequence::make()->map($fnMap)->to_fn())->to_a();
+        $n3 = Sequence::make($fruitBasket)
+            ->map(function ($values) use ($fnMap) {
+                return Sequence::make($values)->map($fnMap)->to_a();
+            })
+            ->to_a();
+        $x1 = Sequence::make($fruitBasket)->map(FnGen::fnNestedMap($fnMap2))->to_a();
+
+        $this->assertEquals($n3, $n1);
+        $this->assertEquals($n3, $n2);
+        $this->assertNotEquals($n1, $x1);
     }
 }

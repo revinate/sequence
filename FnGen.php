@@ -238,9 +238,7 @@ class FnGen {
      * @return callable
      */
     public static function fnNestedMap($fn) {
-        return function ($array) use ($fn) {
-            return Sequence::make($array)->map($fn)->to_a();
-        };
+        return FnSequence::make()->map($fn)->to_a();
     }
 
     /**
@@ -304,6 +302,18 @@ class FnGen {
                 $sum += $v;
             }
             return $sum / $count;
+        };
+    }
+
+    /**
+     * Generate a function that will:
+     *
+     * @param callable $fnReduce(mixed, $value)
+     * @return callable
+     */
+    public static function fnReduce(Closure $fnReduce) {
+        return function ($current, $values) use ($fnReduce) {
+            return Sequence::make($values)->reduce($current, $fnReduce);
         };
     }
 }
