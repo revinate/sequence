@@ -181,4 +181,132 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($n3, $n2);
         $this->assertNotEquals($n1, $x1);
     }
+
+    public function testFnEqual() {
+        $fn = FnGen::fnIsEqual(0);
+
+        $this->assertTrue($fn(0));
+        $this->assertTrue($fn('0'));
+        $this->assertTrue($fn(false));
+        $this->assertTrue($fn(null));
+        $this->assertTrue($fn('hello'));  // <-- sad truth about PHP.
+        $this->assertTrue($fn(0.0));
+
+        $this->assertFalse($fn(1));
+        $this->assertFalse($fn(true));
+        $this->assertFalse($fn('100'));
+
+        $fn = FnGen::fnIsEqual('hello');
+        $this->assertTrue($fn('hello'));
+        $this->assertTrue($fn(true));   // <-- also true.
+        $this->assertTrue($fn(0));      // <-- sad truth about PHP.
+        $this->assertTrue($fn(0.0));    // <-- again, sadly this is true
+
+        $this->assertFalse($fn('Hello'));
+        $this->assertFalse($fn('0'));
+        $this->assertFalse($fn(null));
+        $this->assertFalse($fn(false));
+
+        $fn = FnGen::fnIsEqual('0');  // Making it a string changes everything.
+        $this->assertTrue($fn(0));
+        $this->assertTrue($fn('0'));
+        $this->assertTrue($fn(false));
+        $this->assertTrue($fn(0.0));
+
+        $this->assertFalse($fn(null));
+        $this->assertFalse($fn('hello'));
+        $this->assertFalse($fn(1));
+        $this->assertFalse($fn(true));
+        $this->assertFalse($fn('100'));
+
+        $fn1 = FnGen::fnIsEqual(0);
+        $fn2 = FnGen::fnIsEqual(1);
+        $this->assertEquals($fn1, $fn2);  // <-- closure function == closure function --- should not be relied on.
+    }
+
+
+    public function testFnNotEqual() {
+        $fn = FnGen::fnIsNotEqual(0);
+
+        $this->assertFalse($fn(0));
+        $this->assertFalse($fn('0'));
+        $this->assertFalse($fn(false));
+        $this->assertFalse($fn(null));
+        $this->assertFalse($fn('hello'));  // <-- sad truth about PHP.
+        $this->assertFalse($fn(0.0));
+
+        $this->assertTrue($fn(1));
+        $this->assertTrue($fn(true));
+        $this->assertTrue($fn('100'));
+
+        $fn = FnGen::fnIsNotEqual('hello');
+        $this->assertFalse($fn('hello'));
+        $this->assertFalse($fn(true));   // <-- also true.
+        $this->assertFalse($fn(0));      // <-- sad truth about PHP.
+        $this->assertFalse($fn(0.0));    // <-- again, sadly this is true
+
+        $this->assertTrue($fn('Hello'));
+        $this->assertTrue($fn('0'));
+        $this->assertTrue($fn(null));
+        $this->assertTrue($fn(false));
+
+        $fn1 = FnGen::fnIsNotEqual(0);
+        $fn2 = FnGen::fnIsEqual(1);
+        $this->assertEquals($fn1, $fn2);  // <-- closure function == closure function --- should not be relied on.
+    }
+
+    public function testFnEqualEqual() {
+        $fn = FnGen::fnIsEqualEqual(0);
+
+        $this->assertTrue($fn(0));
+
+        $this->assertFalse($fn('0'));
+        $this->assertFalse($fn(false));
+        $this->assertFalse($fn(null));
+        $this->assertFalse($fn('hello'));
+        $this->assertFalse($fn(0.0));
+        $this->assertFalse($fn(1));
+        $this->assertFalse($fn(true));
+        $this->assertFalse($fn('100'));
+
+        $fn = FnGen::fnIsEqualEqual('hello');
+        $this->assertTrue($fn('hello'));
+
+        $this->assertFalse($fn(true));
+        $this->assertFalse($fn(0));
+        $this->assertFalse($fn(0.0));
+        $this->assertFalse($fn('Hello'));
+        $this->assertFalse($fn('0'));
+        $this->assertFalse($fn(null));
+        $this->assertFalse($fn(false));
+    }
+
+    public function testFnNotEqualEqual() {
+        $fn = FnGen::fnIsNotEqualEqual(0);
+
+        $this->assertFalse($fn(0));
+
+        $this->assertTrue($fn('0'));
+        $this->assertTrue($fn(false));
+        $this->assertTrue($fn(null));
+        $this->assertTrue($fn('hello'));
+        $this->assertTrue($fn(0.0));
+        $this->assertTrue($fn(1));
+        $this->assertTrue($fn(true));
+        $this->assertTrue($fn('100'));
+
+        $fn = FnGen::fnIsNotEqualEqual('hello');
+        $this->assertFalse($fn('hello'));
+
+        $this->assertTrue($fn(true));
+        $this->assertTrue($fn(0));
+        $this->assertTrue($fn(0.0));
+        $this->assertTrue($fn('Hello'));
+        $this->assertTrue($fn('0'));
+        $this->assertTrue($fn(null));
+        $this->assertTrue($fn(false));
+    }
+
+
+
 }

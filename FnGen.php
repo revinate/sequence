@@ -71,12 +71,13 @@ class FnGen {
     }
 
     /**
-     * Generates a function that returns true if a value is numeric
+     * Generates a function that returns true if a value is equal
      *
+     * @param $value
      * @return callable
      */
-    public static function fnIsNumeric() {
-        return function ($v) { return is_numeric($v); };
+    public static function fnIsEqualEqual($value) {
+        return function ($v) use($value) { return $value === $v; };
     }
 
     /**
@@ -89,6 +90,26 @@ class FnGen {
         return function ($v) use($value) { return $value != $v; };
     }
 
+
+    /**
+     * Generates a function that returns true if a value is not equal
+     *
+     * @param $value
+     * @return callable
+     */
+    public static function fnIsNotEqualEqual($value) {
+        return function ($v) use($value) { return $value !== $v; };
+    }
+
+
+    /**
+     * Generates a function that returns true if a value is numeric
+     *
+     * @return callable
+     */
+    public static function fnIsNumeric() {
+        return function ($v) { return is_numeric($v); };
+    }
 
     /**
      * @param $array
