@@ -307,6 +307,32 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($fn(false));
     }
 
+    public function testFnPluckFrom() {
+        $from = range(1,10);
+        $fn = FnGen::fnPluckFrom($from);
 
+        foreach($from as $key => $value) {
+            $this->assertEquals($value, $fn($key));
+        }
+
+        $from = array(
+            'apple' => 'A',
+            'banana' => 'B',
+            'orange' => 'O',
+            'pineapple' => 'P',
+        );
+
+        $fn = FnGen::fnPluckFrom($from);
+
+        foreach($from as $key => $value) {
+            $this->assertEquals($value, $fn($key));
+        }
+
+        $this->assertNull($fn('pear'));
+
+        $fn = FnGen::fnPluckFrom($from, 'fruit');
+
+        $this->assertEquals('fruit', $fn('pear'));
+    }
 
 }

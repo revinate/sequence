@@ -29,9 +29,15 @@ class FnGen {
      * @return callable
      */
     public static function fnClean() {
-        return static::fnKeepIsSet();
+        return static::fnKeepNotEmpty();
     }
 
+    /**
+     * @return callable
+     */
+    public static function fnIsEmpty() {
+        return function ($v) { return empty($v); };
+    }
 
     /**
      * Generates a function that returns true if $map has a key that matches the value.
@@ -194,6 +200,22 @@ class FnGen {
         return function ($v) use ($key, $default) {
             if (isset($v[$key])) {
                 return $v[$key];
+            }
+            return $default;
+        };
+    }
+
+    /**
+     * returns a function that given a key returns a value from $from.
+     *
+     * @param array|ArrayAccess $from
+     * @param null|mixed $default
+     * @return callable
+     */
+    public static function fnPluckFrom($from, $default = null) {
+        return function ($key) use ($from, $default) {
+            if (isset($from[$key])) {
+                return $from[$key];
             }
             return $default;
         };
