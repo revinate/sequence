@@ -149,7 +149,7 @@ class Sequence extends IteratorIterator implements IterationFunctions {
     /**
      * Returns the first element where $fnTest returns true.
      *
-     * @param callable $fnTest --
+     * @param callable|null $fnTest($value, $key)
      * @return null|mixed
      */
     public function first(Closure $fnTest = null) {
@@ -157,6 +157,19 @@ class Sequence extends IteratorIterator implements IterationFunctions {
             return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
         }
         return $this->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+    }
+
+    /**
+     * Returns the key of the first element where $fnTest returns true.
+    *
+     * @param callable|null $fnTest($value, $key)
+     * @return mixed
+     */
+    public function firstKey(Closure $fnTest = null) {
+        if ($fnTest) {
+            return $this->filter($fnTest)->limit(1)->keys()->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        }
+        return $this->limit(1)->keys()->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
     }
 
     /**

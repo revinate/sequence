@@ -216,6 +216,25 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
 
+    public function testFirstKey() {
+        $values = self::$fruit;
+
+        $fnTest = FnGen::fnCallChain(FnGen::fnPluck('count'), FnGen::fnIsEqual(6));
+
+        $this->assertEquals(FancyArray::make($values)->first_key($fnTest), Sequence::make($values)->firstKey($fnTest));
+        $this->assertEquals(6, Sequence::make($values)->firstKey(FnGen::fnCallChain(FnGen::fnPluck('name'), FnGen::fnIsEqual('grape'))));
+
+        // Test it without a function, it should return the first value in the list.
+        $this->assertEquals(0, Sequence::make($values)->firstKey());
+
+        $fnTest = FnGen::fnCallChain(FnGen::fnPluck('name'), FnGen::fnIsEqual('grape'));
+        $this->assertEquals(FancyArray::make($values)->first_key($fnTest), Sequence::make($values)->firstKey($fnTest));
+
+        $this->assertEquals('grape', Sequence::make($values)->keyBy(FnGen::fnPluck('name'))->firstKey($fnTest));
+
+    }
+
+
     public function testFlattenOnce() {
         $values = range(1,5);
         $flattened = Sequence::make($values)->flattenOnce()->to_a();
