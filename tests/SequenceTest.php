@@ -210,6 +210,9 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
         $this->assertEquals(FancyArray::make($values)->first($fnTest), Sequence::make($values)->first($fnTest));
         $this->assertEquals($values[6], Sequence::make($values)->first(FnGen::fnCallChain(FnGen::fnPluck('name'), FnGen::fnIsEqual('grape'))));
+
+        // Test it without a function, it should return the first value in the list.
+        $this->assertEquals($values[0], Sequence::make($values)->first());
     }
 
 

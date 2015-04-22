@@ -335,4 +335,18 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('fruit', $fn('pear'));
     }
 
+    public function testFnTrue() {
+        $fn = FnGen::fnTrue();
+        $this->assertTrue($fn());
+        $this->assertTrue($fn());
+        $this->assertTrue($fn());
+    }
+
+    public function testFnFalse() {
+        $fn = FnGen::fnFalse();
+        $this->assertFalse($fn());
+        $this->assertFalse($fn());
+        $this->assertFalse($fn());
+    }
+
 }

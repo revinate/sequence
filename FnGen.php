@@ -118,6 +118,24 @@ class FnGen {
     }
 
     /**
+     * Generates a function that always returns true
+     *
+     * @return callable
+     */
+    public static function fnTrue() {
+        return function () { return true; };
+    }
+
+    /**
+     * Generates a function that always returns false
+     *
+     * @return callable
+     */
+    public static function fnFalse() {
+        return function () { return false; };
+    }
+
+    /**
      * @param $array
      * @return callable
      */

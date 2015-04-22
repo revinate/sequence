@@ -152,8 +152,11 @@ class Sequence extends IteratorIterator implements IterationFunctions {
      * @param callable $fnTest --
      * @return null|mixed
      */
-    public function first(Closure $fnTest) {
-        return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+    public function first(Closure $fnTest = null) {
+        if ($fnTest) {
+            return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        }
+        return $this->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
     }
 
     /**
