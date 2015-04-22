@@ -200,10 +200,12 @@ class Sequence extends IteratorIterator implements IterationFunctions {
      * @return static
      */
     public static function make($iterator) {
-        if (is_array($iterator)) {
-            $iterator = new ArrayIterator($iterator);
-        } else if (is_null($iterator)) {
-            $iterator = new EmptyIterator();
+        if (! $iterator instanceof Traversable) {
+            if (is_array($iterator) || is_object($iterator)) {
+                $iterator = new ArrayIterator($iterator);
+            } else if (is_null($iterator)) {
+                $iterator = new EmptyIterator();
+            }
         }
         return new static($iterator);
     }

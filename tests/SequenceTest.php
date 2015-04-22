@@ -234,6 +234,17 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
     }
 
+    public function testMake() {
+        $values = self::$fruit[0];
+
+        $this->assertNotEmpty(Sequence::make($values)->to_a());
+        $this->assertNotEmpty(Sequence::make((object)$values)->to_a());
+        $this->assertNotEmpty(Sequence::make(new ArrayObject($values))->to_a());
+        $this->assertEquals(Sequence::make($values)->to_a(), Sequence::make((object)$values)->to_a());
+        $this->assertEquals(Sequence::make($values)->to_a(), Sequence::make(new ArrayObject($values))->to_a());
+        $this->assertEquals(Sequence::make($values)->to_a(), Sequence::make(new ArrayObject((object)$values))->to_a());
+    }
+
 
     public function testFlattenOnce() {
         $values = range(1,5);
