@@ -52,7 +52,7 @@ class IterationTraits {
      * Limit the number of items.
      *
      * @param Iterator $iterator
-     * @param $limit
+     * @param int $limit
      * @return Sequence
      */
     public static function limit(Iterator $iterator, $limit) {
@@ -63,7 +63,7 @@ class IterationTraits {
      * Skip a number of items.
      *
      * @param Iterator $iterator
-     * @param $offset
+     * @param int $offset
      * @return Sequence
      */
     public static function offset(Iterator $iterator, $offset) {
@@ -72,7 +72,7 @@ class IterationTraits {
 
     /**
      * @param Iterator $iterator
-     * @param $init - The first, initial, value of $reducedValue
+     * @param mixed $init - The first, initial, value of $reducedValue
      * @param callable $fn($reducedValue, $value, $key) - function that takes the following params ($reducedValue, $value, $key) where $reducedValue is the current
      * @return mixed
      */

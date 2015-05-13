@@ -147,6 +147,19 @@ class Sequence extends IteratorIterator implements IterationFunctions {
     }
 
     /**
+     * Map -- extracts a given field from the values.
+     *
+     * This is a alias for ->map(FnGen::fnPluck())
+     *
+     * @param string $fieldName -- name of the field to extract
+     * @param mixed $default = null
+     * @return MappedSequence
+     */
+    public function pluck($fieldName, $default = null) {
+        return $this->map(FnGen::fnPluck($fieldName, $default));
+    }
+
+    /**
      * Returns the first element where $fnTest returns true.
      *
      * @param callable|null $fnTest($value, $key)

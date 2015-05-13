@@ -281,4 +281,14 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array(), Sequence::make(null)->flattenOnce()->to_a());
     }
 
+    function testPluck() {
+        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('name'))->to_a(), Sequence::make(self::$fruit)->pluck('name')->to_a());
+        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('count'))->to_a(), Sequence::make(self::$fruit)->pluck('count')->to_a());
+        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing'))->to_a(), Sequence::make(self::$fruit)->pluck('missing')->to_a());
+        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(self::$fruit)->pluck('missing', 'hello')->to_a());
+        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('name','left'))->to_a(), Sequence::make(self::$fruit)->pluck('name','right')->to_a());
+        $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(self::$fruit)->pluck('missing', 'bye')->to_a());
+        $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(self::$fruit)->pluck('missing')->to_a());
+        $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('name'))->to_a(), Sequence::make(self::$people)->pluck('name')->to_a());
+    }
 }
