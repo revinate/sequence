@@ -1,0 +1,26 @@
+{
+  "name": "revinate/sequence-bundle",
+  "description": "A functional programming bundle for PHP",
+  "keywords": ["functional"],
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [
+    {"name" : "Jason Dent"},
+    {"name" : "Eric Madar"}
+  ],
+  "require": {
+    "php"                         : ">=5.3.0"
+  },
+  "require-dev": {},
+  "extra": {
+    "branch-alias": {
+      "dev-master": "master"
+    }
+  },
+  "autoload": {
+    "psr-0": {
+      "Revinate\\SequenceBundle\\": ""
+    }
+  },
+  "target-dir" : "Revinate/SequenceBundle"
+}
