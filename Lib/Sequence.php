@@ -1,11 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jasondent
- * Date: 20/03/15
- * Time: 11:54
- */
 
+namespace Revinate\SequenceBundle\Lib;
+
+/**
+ * Class Sequence
+ * @author jasondent
+ * @package Revinate\SequenceBundle\Lib
+ */
 class Sequence extends IteratorIterator implements IterationFunctions {
     /**
      * @param callable $fnValueMap($value, $key) -- function that returns the new value.

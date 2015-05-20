@@ -1,11 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jasondent
- * Date: 12/03/15
- * Time: 16:34
- */
 
+namespace Revinate\SequenceBundle\Lib;
+
+/**
+ * Class FnGen
+ * @author jasondent
+ * @package Revinate\SequenceBundle\Lib
+ */
 class FnGen {
     /**
      * @return callable

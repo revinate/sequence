@@ -1,11 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jasondent
- * Date: 31/03/15
- * Time: 16:34
- */
 
+namespace Revinate\SequenceBundle\Lib;
+
+/**
+ * Class FnSequence
+ * @author jasondent
+ * @package Revinate\SequenceBundle\Lib
+ */
 class FnSequence {
     /** @var Closure|null  */
     protected $fnToApply = null;

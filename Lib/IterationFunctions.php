@@ -1,11 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jasondent
- * Date: 20/03/15
- * Time: 11:53
- */
 
+namespace Revinate\SequenceBundle\Lib;
+
+/**
+ * Interface IterationFunctions
+ * @author jasondent
+ * @package Revinate\SequenceBundle\Lib
+ */
 interface IterationFunctions {
     public function map(Closure $fnValueMap, Closure $fnKeyMap = null);
     public function mapKeys(Closure $fnKeyMap);

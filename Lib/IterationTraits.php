@@ -1,11 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jasondent
- * Date: 20/03/15
- * Time: 12:52
- */
 
+namespace Revinate\SequenceBundle\Lib;
+
+/**
+ * Class IterationTraits
+ * @author jasondent
+ * @package Revinate\SequenceBundle\Lib
+ */
 class IterationTraits {
 
     /**

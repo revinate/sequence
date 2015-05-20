@@ -1,17 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jasondent
- * Date: 20/03/15
- * Time: 13:08
- */
 
+namespace Revinate\SequenceBundle\Lib;
+
+/**
+ * Class FilteredSequence
+ * @author jasondent
+ * @package Revinate\SequenceBundle\Lib
+ */
 class FilteredSequence extends FilterIterator {
     protected $fnFilterFunction = null;
 
     /**
      * @param Iterator $iterator
-     * @param callable $fnFilterFunction($value, $key) - returns bool - true to keep, false to throw away.
+     * @param Closure $fnFilterFunction($value, $key) - returns bool - true to keep, false to throw away.
      */
     public function __construct(Iterator $iterator, Closure $fnFilterFunction) {
         parent::__construct($iterator);
