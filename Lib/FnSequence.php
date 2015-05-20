@@ -2,6 +2,8 @@
 
 namespace Revinate\SequenceBundle\Lib;
 
+use \Closure;
+
 /**
  * Class FnSequence
  * @author jasondent
@@ -25,6 +27,7 @@ class FnSequence {
      * Adds a map function to the call chain.
      *
      * @param callable $fnMap
+     * @param callable $fnMapKey
      * @return FnSequence
      */
     public function map(Closure $fnMap, Closure $fnMapKey = null) {
@@ -38,7 +41,7 @@ class FnSequence {
     /**
      * Adds a key map function to the call chain
      *
-     * @param callable $fnKeyMap($key, $value) -- function that returns the new key
+     * @param callable $fnMapKey($key, $value) -- function that returns the new key
      * @return FnSequence
      */
     public function mapKey(Closure $fnMapKey) {

@@ -2,6 +2,9 @@
 
 namespace Revinate\SequenceBundle\Lib;
 
+use \ArrayAccess;
+use \Closure;
+
 /**
  * Class FnGen
  * @author jasondent
@@ -289,7 +292,7 @@ class FnGen {
      */
     public static function fnNestedSort() {
         return function ($array) {
-            return FancyArray::make($array)->sort()->to_a();
+            return Sequence::make($array)->sort()->to_a();
         };
     }
 

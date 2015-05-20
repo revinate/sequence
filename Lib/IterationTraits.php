@@ -2,6 +2,10 @@
 
 namespace Revinate\SequenceBundle\Lib;
 
+use \Closure;
+use \Iterator;
+use \LimitIterator;
+
 /**
  * Class IterationTraits
  * @author jasondent

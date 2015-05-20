@@ -2,6 +2,8 @@
 
 namespace Revinate\SequenceBundle\Lib;
 
+use \Closure;
+
 /**
  * Interface IterationFunctions
  * @author jasondent

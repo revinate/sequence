@@ -2,6 +2,13 @@
 
 namespace Revinate\SequenceBundle\Lib;
 
+use \ArrayIterator;
+use \Closure;
+use \EmptyIterator;
+use \Iterator;
+use \IteratorIterator;
+use \Traversable;
+
 /**
  * Class Sequence
  * @author jasondent

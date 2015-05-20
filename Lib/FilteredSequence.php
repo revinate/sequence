@@ -2,6 +2,10 @@
 
 namespace Revinate\SequenceBundle\Lib;
 
+use \Closure;
+use \FilterIterator;
+use \Iterator;
+
 /**
  * Class FilteredSequence
  * @author jasondent
