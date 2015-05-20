@@ -1,5 +1,5 @@
 {
-  "name": "revinate/sequence-bundle",
+  "name": "revinate/sequence",
   "description": "A functional programming bundle for PHP",
   "keywords": ["functional"],
   "type": "symfony-bundle",
