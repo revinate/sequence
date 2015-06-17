@@ -6,7 +6,11 @@
  * Time: 14:01
  */
 
-class SequenceTest extends PHPUnit_Framework_TestCase  {
+namespace Revinate\SequenceBundle\Lib;
+
+use \ArrayObject;
+
+class SequenceTest extends \PHPUnit_Framework_TestCase  {
 
     protected static $fruit = array(
         array('name'=> 'apple', 'count' => 5 ),

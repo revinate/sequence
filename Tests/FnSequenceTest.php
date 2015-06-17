@@ -6,7 +6,9 @@
  * Time: 17:56
  */
 
-class FnSequenceTest extends PHPUnit_Framework_TestCase {
+namespace Revinate\SequenceBundle\Lib;
+
+class FnSequenceTest extends \PHPUnit_Framework_TestCase {
 
     public static $fruit = array(
         array('name'=> 'apple', 'count' => 5 ),

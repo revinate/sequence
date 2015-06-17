@@ -6,7 +6,9 @@
  * Time: 13:00
  */
 
-class FilteredSequenceTest extends PHPUnit_Framework_TestCase {
+namespace Revinate\SequenceBundle\Lib;
+
+class FilteredSequenceTest extends \PHPUnit_Framework_TestCase {
 
 
     /**
