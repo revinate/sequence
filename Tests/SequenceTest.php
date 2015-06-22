@@ -9,8 +9,10 @@
 namespace Revinate\SequenceBundle\Lib;
 
 use \ArrayObject;
+use \PHPUnit_Framework_TestCase;
+use Revinate\SequenceBundle\Lib\FancyArray;
 
-class SequenceTest extends \PHPUnit_Framework_TestCase  {
+class SequenceTest extends PHPUnit_Framework_TestCase  {
 
     protected static $fruit = array(
         array('name'=> 'apple', 'count' => 5 ),
@@ -123,7 +125,8 @@ class SequenceTest extends \PHPUnit_Framework_TestCase  {
         $array = array_combine($keys, $values);
 
         $results = Sequence::make($array)->values()->to_a();
-
+        $this->assertTrue($results == $values);
+        $results = Sequence::make($array)->values()->to_a();
         $this->assertTrue($results == $values);
     }
 
@@ -266,9 +269,26 @@ class SequenceTest extends \PHPUnit_Framework_TestCase  {
             self::$fruit,
             self::$fruit,
             self::$fruit,
+            array('tropical'=>20, 'exotic'=>1),
+            array('tropical'=>10, 'exotic'=>3),
         );
         $flattened = Sequence::make($values)->flattenOnce()->to_a();
         $this->assertEquals(FancyArray::make($values)->flatten_once()->to_a(), $flattened);
+
+        $a = Sequence::make($values)->flattenOnceNow()->to_a();
+        $this->assertEquals($a, $flattened);
+
+        //if used with values or re-keying, then the flattenOnce and flattenOnceNow behaviour will differ
+        $values = array(
+            array('tropical' => 20, 'exotic' => 1),
+            array('tropical' => 10, 'exotic' => 3),
+        );
+        $flattened = Sequence::make($values)->flattenOnce()->values()->to_a();
+        $a = Sequence::make($values)->flattenOnceNow()->values()->to_a();
+
+        $this->assertEquals(array(10,3), $a);
+        $this->assertEquals(array(20,1,10,3), $flattened);
+        $this->assertNotEquals($a, $flattened);
 
         $values1 = array(
             self::$fruit,
@@ -285,7 +305,7 @@ class SequenceTest extends \PHPUnit_Framework_TestCase  {
         $this->assertEquals(array(), Sequence::make(null)->flattenOnce()->to_a());
     }
 
-    function testPluck() {
+    public function testPluck() {
         $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('name'))->to_a(), Sequence::make(self::$fruit)->pluck('name')->to_a());
         $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('count'))->to_a(), Sequence::make(self::$fruit)->pluck('count')->to_a());
         $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing'))->to_a(), Sequence::make(self::$fruit)->pluck('missing')->to_a());
@@ -294,5 +314,24 @@ class SequenceTest extends \PHPUnit_Framework_TestCase  {
         $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(self::$fruit)->pluck('missing', 'bye')->to_a());
         $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(self::$fruit)->pluck('missing')->to_a());
         $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('name'))->to_a(), Sequence::make(self::$people)->pluck('name')->to_a());
+    }
+
+    public function testFlatten() {
+        $values = array(
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+            self::$fruit,
+            array('tropical'=>20, 'exotic'=>1),
+            array('tropical'=>10, 'exotic'=>3),
+        );
+
+        // Should be the same for a single depth.
+        $this->assertEquals(Sequence::make(self::$fruit)->flattenOnce()->to_a(), Sequence::make(self::$fruit)->flatten()->to_a());
+
+        $flattened = Sequence::make($values)->flatten()->to_a();
+        $this->assertCount(4, $flattened);
+        $this->assertEquals(10, $flattened['tropical']);
     }
 }

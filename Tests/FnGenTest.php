@@ -8,7 +8,9 @@
 
 namespace Revinate\SequenceBundle\Lib;
 
-class FnGenTest extends \PHPUnit_Framework_TestCase {
+use \PHPUnit_Framework_TestCase;
+
+class FnGenTest extends PHPUnit_Framework_TestCase {
 
     public static $fruit = array(
         array('name'=> 'apple', 'count' => 5 ),
@@ -129,9 +131,9 @@ class FnGenTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals(18,
             Sequence::make($fruit)
-            ->reduce(0, FnGen::fnSum(
-                FnGen::fnPluck('count', 0)
-            )));
+                ->reduce(0, FnGen::fnSum(
+                    FnGen::fnPluck('count', 0)
+                )));
     }
 
     public function testFnAvg() {
@@ -351,4 +353,69 @@ class FnGenTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($fn());
     }
 
+    public function testFnCount() {
+        $fn = FnGen::fnCount();
+        $this->assertEquals(count(0), $fn(0));
+        $this->assertEquals(count(null), $fn(null));
+        $this->assertEquals(count('hello'), $fn('hello'));
+        $this->assertEquals(count(array()), $fn(array()));
+        $this->assertEquals(count(array(1,2,3)), $fn(array(1,2,3)));
+        $this->assertNotEquals(count(array(1,2)), $fn(array(1,2,3)));
+    }
+
+    public function testFnMax() {
+        $fn = FnGen::fnMax();
+        $this->assertEquals(55, $fn(null, 55));
+        $this->assertEquals(55, $fn(55, null));
+        $this->assertEquals(-42, $fn(null, -42));
+        $this->assertEquals(2, $fn(2, -42));
+        $this->assertEquals(2, $fn(-42, 2));
+    }
+
+    public function testFnMin() {
+        $fn = FnGen::fnMin();
+        $this->assertEquals(55, $fn(null, 55));
+        $this->assertEquals(55, $fn(55, null));
+        $this->assertEquals(-42, $fn(null, -42));
+        $this->assertEquals(-42, $fn(2, -42));
+        $this->assertEquals(-42, $fn(-42, 2));
+    }
+
+    public function testFnMapField() {
+        $fn = FnGen::fnMapField('name', function($value) { return strtoupper($value);});
+
+        $doc = self::$fruit[0];
+        $docU = $doc;
+        $docU['name'] = strtoupper($docU['name']);
+        $this->assertNotEquals($doc, $docU);
+        $this->assertEquals($docU, $fn($doc));
+        $this->assertEquals($docU, $fn($docU));
+    }
+
+    public function testFnParam() {
+        $fn0 = FnGen::fnParam(0);
+        $fn1 = FnGen::fnParam(1);
+        $fn2 = FnGen::fnParam(2);
+
+        $this->assertEquals('Zero', $fn0('Zero', 'One', 'Two', 'Three'));
+        $this->assertEquals('One',  $fn1('Zero', 'One', 'Two', 'Three'));
+        $this->assertEquals('Two',  $fn2('Zero', 'One', 'Two', 'Three'));
+        $this->assertNull($fn2());
+    }
+
+    public function testFnRemoveSuffix() {
+        $suffix = "world";
+        $fn = FnGen::fnRemoveSuffix($suffix);
+
+        $this->assertEquals("Hello ", $fn("Hello world"));
+        $this->assertEquals("Hello world!", $fn("Hello world!"));
+    }
+
+    public function testFnRemovePrefix() {
+        $prefix = "Hello";
+        $fn = FnGen::fnRemovePrefix($prefix);
+
+        $this->assertEquals(" world!", $fn("Hello world!"));
+        $this->assertEquals("Oh, Hello world!", $fn("Oh, Hello world!"));
+    }
 }

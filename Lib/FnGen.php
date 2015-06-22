@@ -206,8 +206,29 @@ class FnGen {
      *
      * @return callable
      */
-    public static function fnMayToKeyValuePair() {
+    public static function fnMapToKeyValuePair() {
         return function ($v, $k) { return array($k, $v); };
+    }
+
+
+    /**
+     * Generates a function that will apply a mapping function to a sub field of a record
+     *
+     * @param string $fieldName
+     * @param callable $fnMap($fieldValue, $fieldName, $parentRecord, $parentKey)
+     * @return callable
+     */
+    public static function fnMapField($fieldName, $fnMap) {
+        return function ($record, $key = null) use ($fieldName, $fnMap) {
+            if ($record instanceof ArrayAccess || is_array($record)) {
+                $fieldValue = isset($record[$fieldName]) ? $record[$fieldName] : null;
+                $record[$fieldName] = $fnMap($fieldValue, $fieldName, $record, $key);
+            } elseif (is_object($record) && property_exists($record, $fieldName)) {
+                $record->{$fieldName} = $fnMap($record->{$fieldName}, $fieldName, $record, $key);
+            }
+
+            return $record;
+        };
     }
 
 
@@ -222,6 +243,8 @@ class FnGen {
         return function ($v) use ($key, $default) {
             if (isset($v[$key])) {
                 return $v[$key];
+            } elseif (is_object($v) && property_exists($v, $key)) {
+                return $v->{$key};
             }
             return $default;
         };
@@ -250,6 +273,15 @@ class FnGen {
      */
     public static function fnIdentity() {
         return function ($v) { return $v; };
+    }
+
+    /**
+     * @description Generate a function that will return the result of calling count()
+     *
+     * @return callable
+     */
+    public static function fnCount() {
+        return function ($v) { return count($v); };
     }
 
     /**
@@ -286,6 +318,19 @@ class FnGen {
     }
 
     /**
+     * Generate a function that will return the specified parameter
+     *
+     * @param int $num
+     * @return callable
+     */
+    public static function fnParam($num) {
+        return function () use ($num) {
+            $args = func_get_args();
+            return isset($args[$num]) ? $args[$num] : null;
+        };
+    }
+
+    /**
      * Returns a function that applies a function to a nested array and returns the results.
      *
      * @return callable
@@ -318,6 +363,30 @@ class FnGen {
         };
     }
 
+    /**
+     * Returns a function that removes a suffix from a string if it exists
+     *
+     * @param   string  $suffix
+     * @return  callable
+     */
+    public static function fnRemoveSuffix($suffix) {
+        return function ($val) use ($suffix) {
+            return preg_replace('/'.preg_quote($suffix).'$/', '', $val);
+        };
+    }
+
+    /**
+     * Returns a function that removes a prefix from a string if it exists
+     *
+     * @param   string  $prefix
+     * @return  callable
+     */
+    public static function fnRemovePrefix($prefix) {
+        return function ($val) use ($prefix) {
+            return preg_replace('/^'.preg_quote($prefix).'/', '', $val);
+        };
+    }
+
 
     /********************************************************************************
      * Reduce functions
@@ -339,6 +408,22 @@ class FnGen {
             return function ($sum, $v) use ($fnMapValue) { return $sum + $fnMapValue($v); };
         }
         return function ($sum, $v) { return $sum + $v; };
+    }
+
+    /**
+     * @description Generate a function that can be used with reduce to get the max value
+     * @return callable
+     */
+    public static function fnMax() {
+        return function ($max, $v) { return is_null($max) ? $v : (is_null($v) ? $max : max($max, $v)); };
+    }
+
+    /**
+     * @description Generate a function that can be used with reduce to get the min value
+     * @return callable
+     */
+    public static function fnMin() {
+        return function ($min, $v) { return is_null($min) ? $v : (is_null($v) ? $min : min($min, $v)); };
     }
 
     /**
@@ -371,6 +456,14 @@ class FnGen {
     }
 
     /**
+     * @description Alias for fnSum -- usage is to do a union between arrays.
+     * @return callable
+     */
+    public static function fnUnion() {
+        return FnGen::fnSum();
+    }
+
+    /**
      * Generate a function that will:
      *
      * @param callable $fnReduce(mixed, $value)
@@ -379,6 +472,28 @@ class FnGen {
     public static function fnReduce(Closure $fnReduce) {
         return function ($current, $values) use ($fnReduce) {
             return Sequence::make($values)->reduce($current, $fnReduce);
+        };
+    }
+
+    /**
+     * Returns a map function that will allow different map functions to be called based upon the result of a test function.
+     *
+     * @param callable $fnTest($value, $key)        -- the test function
+     * @param callable $fnMapTrue($value, $key)     -- the map function to use if the test is true
+     * @param callable $fnMapFalse($value, $key)    -- the map function to use if the test is false
+     * @return callable
+     */
+    public static function fnIfMap(Closure $fnTest, Closure $fnMapTrue, Closure $fnMapFalse = null) {
+        if (is_null($fnMapFalse)) {
+            $fnMapFalse = FnGen::fnIdentity();
+        }
+
+        return function ($value, $key) use ($fnTest, $fnMapTrue, $fnMapFalse) {
+            if ($fnTest($value, $key)) {
+                return $fnMapTrue($value, $key);
+            } else {
+                return $fnMapFalse($value, $key);
+            }
         };
     }
 }

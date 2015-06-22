@@ -7,6 +7,8 @@ use \Closure;
 use \EmptyIterator;
 use \Iterator;
 use \IteratorIterator;
+use \RecursiveIterator;
+use \RecursiveIteratorIterator;
 use \Traversable;
 
 /**
@@ -14,7 +16,7 @@ use \Traversable;
  * @author jasondent
  * @package Revinate\SequenceBundle\Lib
  */
-class Sequence extends IteratorIterator implements IterationFunctions {
+class Sequence extends IteratorIterator implements IterationFunctions, RecursiveIterator {
     /**
      * @param callable $fnValueMap($value, $key) -- function that returns the new value.
      * @param callable $fnKeyMap($key, $value) [optional] -- function that returns the new key
@@ -182,7 +184,7 @@ class Sequence extends IteratorIterator implements IterationFunctions {
 
     /**
      * Returns the key of the first element where $fnTest returns true.
-    *
+     *
      * @param callable|null $fnTest($value, $key)
      * @return mixed
      */
@@ -200,7 +202,7 @@ class Sequence extends IteratorIterator implements IterationFunctions {
      *
      * @return Sequence
      */
-    public function flattenOnce() {
+    public function flattenOnceNow() {
         $result = $this->reduce(array(), function($result, $value) {
             if ($value instanceof Traversable) {
                 $value = iterator_to_array($value);
@@ -212,6 +214,38 @@ class Sequence extends IteratorIterator implements IterationFunctions {
             return $result;
         });
         return Sequence::make($result);
+    }
+
+    /**
+     * Flatten a Sequence by one level into a new Sequence.
+     *
+     * @return Sequence
+     */
+    public function flattenOnce() {
+        // Make an iterator and limit the depth
+        $recursiveIterator = RecursiveSequence::make($this)->setMaxDepth(1);
+        // Simulate array_merge by sequencing numeric keys but do not touch string keys.
+        return IterationTraits::sequenceNumericKeys(Sequence::make(new RecursiveIteratorIterator($recursiveIterator)));
+    }
+
+    /**
+     * Flatten a Sequence into a new Sequence.
+     *
+     * @return Sequence
+     */
+    public function flatten() {
+        $recursiveIterator = new RecursiveIteratorIterator(RecursiveSequence::make($this));
+        return IterationTraits::sequenceNumericKeys(Sequence::make($recursiveIterator));
+    }
+
+    /**
+     * @param mixed $thing
+     * @return bool - return true if we can iterate over it.
+     */
+    public static function canBeSequence($thing) {
+        return $thing instanceof Traversable
+        || is_array($thing)
+        || is_object($thing);
     }
 
     /**
@@ -229,6 +263,20 @@ class Sequence extends IteratorIterator implements IterationFunctions {
             }
         }
         return new static($iterator);
+    }
+
+    /**
+     * @return null
+     */
+    public function getChildren() {
+        return null;
+    }
+
+    /**
+     * @return false
+     */
+    public function hasChildren() {
+        return false;
     }
 }
 

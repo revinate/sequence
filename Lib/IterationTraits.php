@@ -115,6 +115,18 @@ class IterationTraits {
     }
 
     /**
+     * @param Iterator $iterator
+     * @return MappedSequence
+     */
+    public static function sequenceNumericKeys(Iterator $iterator) {
+        return new MappedSequence(
+            $iterator,
+            FnGen::fnIdentity(),
+            FnGen::fnIfMap(FnGen::fnIsNumeric(), FnGen::fnCounter(), FnGen::fnIdentity())
+        );
+    }
+
+    /**
      * Call a function for all items available to the iterator.
      *
      * Note: it does a rewind on $iterator and walks ALL values.  It does NOT rewind the iterator a second time.
