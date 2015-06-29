@@ -189,8 +189,8 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
     public function testFnTrim() {
         $fn = FnGen::fnTrim();
         $this->assertEquals('test', $fn('  test '));
-        $array = array(' 352', '354 ', '333');
-        $expectedTrimmedArray = array('352', '354', '333');
+        $array = array(' 352', '354 ', '333', ' 12 34 ', "\n  Cool Stuff  \n", "\r", "CRLF\r\n");
+        $expectedTrimmedArray = array('352', '354', '333', '12 34', 'Cool Stuff', '', 'CRLF');
         $this->assertNotEquals($array, $expectedTrimmedArray);
         $trimmedArray = Sequence::make($array)
             ->map(FnGen::fnTrim())
