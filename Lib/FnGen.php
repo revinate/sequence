@@ -121,6 +121,16 @@ class FnGen {
         return function ($v) { return is_numeric($v); };
     }
 
+    /** Returns a function that trims the value.
+     *
+     * @return callable
+     */
+    public static function fnTrim() {
+        return function ($v) {
+            return trim($v);
+        };
+    }
+
     /**
      * Generates a function that always returns true
      *

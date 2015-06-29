@@ -186,6 +186,18 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertNotEquals($n1, $x1);
     }
 
+    public function testFnTrim() {
+        $fn = FnGen::fnTrim();
+        $this->assertEquals('test', $fn('  test '));
+        $array = array(' 352', '354 ', '333');
+        $expectedTrimmedArray = array('352', '354', '333');
+        $this->assertNotEquals($array, $expectedTrimmedArray);
+        $trimmedArray = Sequence::make($array)
+            ->map(FnGen::fnTrim())
+            ->to_a();
+        $this->assertEquals($trimmedArray, $expectedTrimmedArray);
+    }
+
     public function testFnEqual() {
         $fn = FnGen::fnIsEqual(0);
 
