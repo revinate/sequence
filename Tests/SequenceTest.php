@@ -14,25 +14,6 @@ use Revinate\SequenceBundle\Lib\FancyArray;
 
 class SequenceTest extends PHPUnit_Framework_TestCase  {
 
-    protected static $fruit = array(
-        array('name'=> 'apple', 'count' => 5 ),
-        array('name'=> 'orange', 'count' => 15 ),
-        array('name'=> 'banana', 'count' => 25 ),
-        array('name'=> 'orange', 'count' => 6 ),
-        array('name'=> 'pear', 'count' => 2 ),
-        array('name'=> 'apple', 'count' => 6 ),
-        array('name'=> 'grape', 'count' => 53 ),
-        array('name'=> 'apple', 'count' => 10 ),
-    );
-
-    protected static $people = array(
-        array('name'=>'Terry', 'age'=> 22),
-        array('name'=>'Bob', 'age' => 30),
-        array('name'=>'Sam', 'age' => 19),
-        array('name'=>'Robert', 'age' => 55),
-        array('group'=>'student'),
-    );
-
     public function testMap() {
 
         $values = range(1,100);
@@ -54,7 +35,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
     public function testKeyBy() {
-        $values = self::$people;
+        $values = TestData::$people;
 
         $results = Sequence::make($values)->filter(FnGen::fnPluck('name'))->keyBy(FnGen::fnPluck('name'))->to_a();
         $results2 = FancyArray::make($values)->filter(FnGen::fnPluck('name'))->ukey_by(FnGen::fnPluck('name'))->to_a();
@@ -186,6 +167,11 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         // Check the keys are in numeric order
         $result = Sequence::make($rangeReverse)->sort()->keys()->to_a();
         $this->assertEquals(range(0, 99), $result);
+
+        // Test that they can be sorted by age.
+        $this->assertEquals(
+            array('Sam', 'Terry', 'Bob', 'Robert'),
+            Sequence::make(TestData::$people)->limit(4)->sort(FnGen::fnPluck('age'))->pluck('name')->to_a());
     }
 
     public function testASort() {
@@ -211,7 +197,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
     public function testFirst() {
-        $values = self::$fruit;
+        $values = TestData::$fruit;
 
         $fnTest = FnGen::fnCallChain(FnGen::fnPluck('count'), FnGen::fnIsEqual(6));
 
@@ -224,7 +210,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
 
     public function testFirstKey() {
-        $values = self::$fruit;
+        $values = TestData::$fruit;
 
         $fnTest = FnGen::fnCallChain(FnGen::fnPluck('count'), FnGen::fnIsEqual(6));
 
@@ -242,7 +228,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
     public function testMake() {
-        $values = self::$fruit[0];
+        $values = TestData::$fruit[0];
 
         $this->assertNotEmpty(Sequence::make($values)->to_a());
         $this->assertNotEmpty(Sequence::make((object)$values)->to_a());
@@ -259,16 +245,16 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals($values, $flattened);
         $this->assertEquals(FancyArray::make($values)->flatten_once()->to_a(), $flattened);
 
-        $values = self::$fruit;
+        $values = TestData::$fruit;
         $flattened = Sequence::make($values)->flattenOnce()->to_a();
         $this->assertEquals(FancyArray::make($values)->flatten_once()->to_a(), $flattened);
 
         $values = array(
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
             array('tropical'=>20, 'exotic'=>1),
             array('tropical'=>10, 'exotic'=>3),
         );
@@ -291,12 +277,12 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertNotEquals($a, $flattened);
 
         $values1 = array(
-            self::$fruit,
-            self::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
         );
         $values2 = array(
-            Sequence::make(self::$fruit),
-            self::$fruit,
+            Sequence::make(TestData::$fruit),
+            TestData::$fruit,
         );
         $flattened1 = Sequence::make($values1)->flattenOnce()->to_a();
         $flattened2 = Sequence::make($values2)->flattenOnce()->to_a();
@@ -306,29 +292,29 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
     public function testPluck() {
-        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('name'))->to_a(), Sequence::make(self::$fruit)->pluck('name')->to_a());
-        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('count'))->to_a(), Sequence::make(self::$fruit)->pluck('count')->to_a());
-        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing'))->to_a(), Sequence::make(self::$fruit)->pluck('missing')->to_a());
-        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(self::$fruit)->pluck('missing', 'hello')->to_a());
-        $this->assertEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('name','left'))->to_a(), Sequence::make(self::$fruit)->pluck('name','right')->to_a());
-        $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(self::$fruit)->pluck('missing', 'bye')->to_a());
-        $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(self::$fruit)->pluck('missing')->to_a());
-        $this->assertNotEquals(Sequence::make(self::$fruit)->map(FnGen::fnPluck('name'))->to_a(), Sequence::make(self::$people)->pluck('name')->to_a());
+        $this->assertEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('name'))->to_a(), Sequence::make(TestData::$fruit)->pluck('name')->to_a());
+        $this->assertEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('count'))->to_a(), Sequence::make(TestData::$fruit)->pluck('count')->to_a());
+        $this->assertEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('missing'))->to_a(), Sequence::make(TestData::$fruit)->pluck('missing')->to_a());
+        $this->assertEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(TestData::$fruit)->pluck('missing', 'hello')->to_a());
+        $this->assertEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('name','left'))->to_a(), Sequence::make(TestData::$fruit)->pluck('name','right')->to_a());
+        $this->assertNotEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(TestData::$fruit)->pluck('missing', 'bye')->to_a());
+        $this->assertNotEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('missing', 'hello'))->to_a(), Sequence::make(TestData::$fruit)->pluck('missing')->to_a());
+        $this->assertNotEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('name'))->to_a(), Sequence::make(TestData::$people)->pluck('name')->to_a());
     }
 
     public function testFlatten() {
         $values = array(
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
             array('tropical'=>20, 'exotic'=>1),
             array('tropical'=>10, 'exotic'=>3),
         );
 
         // Should be the same for a single depth.
-        $this->assertEquals(Sequence::make(self::$fruit)->flattenOnce()->to_a(), Sequence::make(self::$fruit)->flatten()->to_a());
+        $this->assertEquals(Sequence::make(TestData::$fruit)->flattenOnce()->to_a(), Sequence::make(TestData::$fruit)->flatten()->to_a());
 
         $flattened = Sequence::make($values)->flatten()->to_a();
         $this->assertCount(4, $flattened);

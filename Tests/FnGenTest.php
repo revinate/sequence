@@ -12,17 +12,6 @@ use \PHPUnit_Framework_TestCase;
 
 class FnGenTest extends PHPUnit_Framework_TestCase {
 
-    public static $fruit = array(
-        array('name'=> 'apple', 'count' => 5 ),
-        array('name'=> 'orange', 'count' => 15 ),
-        array('name'=> 'banana', 'count' => 25 ),
-        array('name'=> 'orange', 'count' => 6 ),
-        array('name'=> 'pear', 'count' => 2 ),
-        array('name'=> 'apple', 'count' => 6 ),
-        array('name'=> 'grape', 'count' => 53 ),
-        array('name'=> 'apple', 'count' => 10 ),
-    );
-
 
     public function testFnIdentity() {
         $fn = FnGen::fnIdentity();
@@ -165,11 +154,11 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $fnMap2 = function ($v) { $v['mul'] = -strlen($v['name']) * $v['count']; return $v; };
 
         $fruitBasket = array(
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
-            self::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
+            TestData::$fruit,
         );
 
         $n1 = Sequence::make($fruitBasket)->map(FnGen::fnNestedMap($fnMap))->to_a();
@@ -396,7 +385,7 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
     public function testFnMapField() {
         $fn = FnGen::fnMapField('name', function($value) { return strtoupper($value);});
 
-        $doc = self::$fruit[0];
+        $doc = TestData::$fruit[0];
         $docU = $doc;
         $docU['name'] = strtoupper($docU['name']);
         $this->assertNotEquals($doc, $docU);

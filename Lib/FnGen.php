@@ -124,11 +124,10 @@ class FnGen {
     /** Returns a function that trims the value.
      *
      * @return callable
+     * @deprecated use FnString::fnTrim instead
      */
     public static function fnTrim() {
-        return function ($v) {
-            return trim($v);
-        };
+        return FnString::fnTrim();
     }
 
     /**
@@ -378,11 +377,10 @@ class FnGen {
      *
      * @param   string  $suffix
      * @return  callable
+     * @deprecated use FnString::fnRemoveSuffix
      */
     public static function fnRemoveSuffix($suffix) {
-        return function ($val) use ($suffix) {
-            return preg_replace('/'.preg_quote($suffix).'$/', '', $val);
-        };
+        return FnString::fnRemoveSuffix($suffix);
     }
 
     /**
@@ -390,11 +388,10 @@ class FnGen {
      *
      * @param   string  $prefix
      * @return  callable
+     * @deprecated  use FnString::fnRemovePrefix
      */
     public static function fnRemovePrefix($prefix) {
-        return function ($val) use ($prefix) {
-            return preg_replace('/^'.preg_quote($prefix).'/', '', $val);
-        };
+        return FnString::fnRemovePrefix($prefix);
     }
 
 
