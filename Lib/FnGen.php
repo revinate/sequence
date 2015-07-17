@@ -157,6 +157,14 @@ class FnGen {
     }
 
     /**
+     * @param $array
+     * @return callable
+     */
+    public static function fnKeepNotInArray($array) {
+        return function ($v) use ($array) { return ! in_array($v, $array); };
+    }
+
+    /**
      * Generate a function that returns true if an object implements an interface
      *
      * @param $className
