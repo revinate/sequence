@@ -16,7 +16,7 @@ class RecursiveSequence extends Sequence implements RecursiveIterator  {
     public function getChildren() {
         $x = $this->current();
         if ($this->canGoDeeper()) {
-            return RecursiveSequence::make($x);
+            return RecursiveSequence::make($x)->setMaxDepth($this->depth - 1);
         } else {
             return Sequence::make($x);
         }
@@ -35,6 +35,6 @@ class RecursiveSequence extends Sequence implements RecursiveIterator  {
      * @return bool - true if we can make a sequence out of the current item.
      */
     public function hasChildren() {
-        return $this->valid() && $this->canBeSequence($this->current());
+        return $this->valid() && $this->depth != 0 && $this->canBeSequence($this->current());
     }
 }

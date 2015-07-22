@@ -222,10 +222,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return Sequence
      */
     public function flattenOnce() {
-        // Make an iterator and limit the depth
-        $recursiveIterator = RecursiveSequence::make($this)->setMaxDepth(1);
-        // Simulate array_merge by sequencing numeric keys but do not touch string keys.
-        return IterationTraits::sequenceNumericKeys(Sequence::make(new RecursiveIteratorIterator($recursiveIterator)));
+        return $this->flatten(1);
     }
 
     /**
@@ -233,9 +230,15 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      *
      * @return Sequence
      */
-    public function flatten() {
-        $recursiveIterator = new RecursiveIteratorIterator(RecursiveSequence::make($this));
+    public function flatten($depth = -1) {
+        $recursiveIterator = new RecursiveIteratorIterator(RecursiveSequence::make($this)->setMaxDepth($depth));
+        // Simulate array_merge by sequencing numeric keys but do not touch string keys.
         return IterationTraits::sequenceNumericKeys(Sequence::make($recursiveIterator));
+    }
+
+    public function traverse($depth = -1) {
+        $recursiveIterator = new RecursiveIteratorIterator(TraverseSequence::make($this)->setMaxDepth($depth));
+        return Sequence::make($recursiveIterator);
     }
 
     /**

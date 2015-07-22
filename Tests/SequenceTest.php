@@ -320,4 +320,42 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertCount(4, $flattened);
         $this->assertEquals(10, $flattened['tropical']);
     }
+
+    public function testSelect() {
+        $testData = array(
+            'a1' => array(
+                'a2' => 'foo'
+            )
+        );
+
+        $data = array(
+            "hotel" => array(
+                "id" => 1,
+                "name" => "Fancy Hotel",
+                "rooms" => 200,
+                "survey" => array(
+                    "qcount" => 3,
+                    "questions" => array(
+                        "qid" => 1,
+                        "Don't you like my hotel?",
+                        "Why not?",
+                        "Where would you rather go?"
+                    )
+                ),
+                "ranking" => 5
+            )
+        );
+        //$seq = Sequence::make($data)->traverse(0)->to_a();
+        //print_r($seq);
+        //$seq = Sequence::make($data)->traverse(1)->to_a();
+        //print_r($seq);
+        //$seq = Sequence::make($data)->traverse(2)->to_a();
+        //print_r($seq);
+        //$seq = Sequence::make($data)->traverse()->to_a();
+        //print_r($seq);
+        //foreach($seq as $k => $v) {
+        //    echo "\n$k => $v\n";
+        //}
+
+    }
 }

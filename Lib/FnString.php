@@ -44,5 +44,15 @@ class FnString {
         };
     }
 
+    public static function fnAddPrefix($prefix) {
+        return function ($val) use ($prefix) {
+            return $prefix.$val;
+        };
+    }
 
+    public static function fnAddPostfix($postfix) {
+        return function ($val) use ($postfix) {
+            return $val.$postfix;
+        };
+    }
 }
