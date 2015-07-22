@@ -134,7 +134,6 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
         return IterationTraits::sort($this, $fn);
     }
 
-
     /**
      * Sort ALL the values in the sequence.  Keys ARE preserved.
      *
@@ -144,7 +143,6 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     public function asort(Closure $fn = null) {
         return IterationTraits::asort($this, $fn);
     }
-
 
     /**
      * Sort ALL the values by the keys in the sequence.  Keys ARE preserved.
@@ -228,6 +226,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     /**
      * Flatten a Sequence into a new Sequence.
      *
+     * @param int $depth
      * @return Sequence
      */
     public function flatten($depth = -1) {
@@ -236,6 +235,12 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
         return IterationTraits::sequenceNumericKeys(Sequence::make($recursiveIterator));
     }
 
+    /**
+     * Traverses a sequence storing the path as keys
+     *
+     * @param int $depth
+     * @return Sequence
+     */
     public function traverse($depth = -1) {
         $recursiveIterator = new RecursiveIteratorIterator(TraverseSequence::make($this)->setMaxDepth($depth));
         return Sequence::make($recursiveIterator);

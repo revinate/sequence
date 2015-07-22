@@ -17,6 +17,9 @@ class TraverseSequence extends RecursiveSequence {
         return $traverseSequence;
     }
 
+    /**
+     * @return TraverseSequence|MappedSequence
+     */
     public function getChildren() {
         $x = $this->current();
         if ($this->canGoDeeper()) {
@@ -30,6 +33,9 @@ class TraverseSequence extends RecursiveSequence {
         }
     }
 
+    /**
+     * @return string
+     */
     public function key() {
         $key = parent::key();
         return $this->path . $key;

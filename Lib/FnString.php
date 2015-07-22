@@ -10,7 +10,8 @@ namespace Revinate\SequenceBundle\Lib;
 
 
 class FnString {
-    /** Returns a function that trims the value.
+    /**
+     * Returns a function that trims the value.
      *
      * @return callable
      */
@@ -44,12 +45,24 @@ class FnString {
         };
     }
 
+    /**
+     * Returns a function that prefixes a string
+     *
+     * @param $prefix
+     * @return callable
+     */
     public static function fnAddPrefix($prefix) {
         return function ($val) use ($prefix) {
             return $prefix.$val;
         };
     }
 
+    /**
+     * Returns a function that postfixes a string
+     *
+     * @param $postfix
+     * @return callable
+     */
     public static function fnAddPostfix($postfix) {
         return function ($val) use ($postfix) {
             return $val.$postfix;
