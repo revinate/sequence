@@ -319,43 +319,129 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $flattened = Sequence::make($values)->flatten()->to_a();
         $this->assertCount(4, $flattened);
         $this->assertEquals(10, $flattened['tropical']);
+
+        $data = TestData::$hotel;
+
+        $seq = Sequence::make($data)->flatten(0)->to_a();
+        $expectedResult = $data;
+        $this->assertEquals($expectedResult, $seq);
+
+        $seq = Sequence::make($data)->flatten(1)->to_a();
+        $expectedResult = array(
+            'id' => 1,
+            'name' => 'Fancy Hotel',
+            'rooms' => 200,
+            'survey' => array(
+                'qcount' => 3,
+                'questions' => array(
+                    'qid' => 1,
+                    'Dont you like my hotel?',
+                    'Why not?',
+                    'Where would you rather go?'
+                )
+            ),
+            'ranking' => 5
+        );
+        $this->assertEquals($expectedResult, $seq);
+
+        $seq = Sequence::make($data)->flatten(2)->to_a();
+        $expectedResult = array(
+            'id' => 1,
+            'name' => 'Fancy Hotel',
+            'rooms' => 200,
+            'qcount' => 3,
+            'questions' => array(
+                'qid' => 1,
+                'Dont you like my hotel?',
+                'Why not?',
+                'Where would you rather go?'
+            ),
+            'ranking' => 5
+        );
+        $this->assertEquals($expectedResult, $seq);
+
+        $fullyFlattened = array(
+            'id' => 1,
+            'name' => 'Fancy Hotel',
+            'rooms' => 200,
+            'qcount' => 3,
+            'qid' => 1,
+            '0' => 'Dont you like my hotel?',
+            '1' => 'Why not?',
+            '2' => 'Where would you rather go?',
+            'ranking' => 5
+        );
+
+        $seq = Sequence::make($data)->flatten(3)->to_a();
+        $this->assertEquals($fullyFlattened, $seq);
+
+        $seq = Sequence::make($data)->flatten(4)->to_a();
+        $this->assertEquals($fullyFlattened, $seq);
+
+        $seq = Sequence::make($data)->flatten()->to_a();
+        $this->assertEquals($fullyFlattened, $seq);
+
     }
 
-    public function testSelect() {
-        $testData = array(
-            'a1' => array(
-                'a2' => 'foo'
-            )
-        );
+    public function testTraverse() {
+        $data = TestData::$hotel;
 
-        $data = array(
-            "hotel" => array(
-                "id" => 1,
-                "name" => "Fancy Hotel",
-                "rooms" => 200,
-                "survey" => array(
-                    "qcount" => 3,
-                    "questions" => array(
-                        "qid" => 1,
-                        "Don't you like my hotel?",
-                        "Why not?",
-                        "Where would you rather go?"
-                    )
-                ),
-                "ranking" => 5
-            )
-        );
-        //$seq = Sequence::make($data)->traverse(0)->to_a();
-        //print_r($seq);
-        //$seq = Sequence::make($data)->traverse(1)->to_a();
-        //print_r($seq);
-        //$seq = Sequence::make($data)->traverse(2)->to_a();
-        //print_r($seq);
-        //$seq = Sequence::make($data)->traverse()->to_a();
-        //print_r($seq);
-        //foreach($seq as $k => $v) {
-        //    echo "\n$k => $v\n";
-        //}
+        $seq = Sequence::make($data)->traverse(0)->to_a();
+        $expectedResult = $data;
+        $this->assertEquals($expectedResult, $seq);
 
+        $seq = Sequence::make($data)->traverse(1)->to_a();
+        $expectedResult = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey' => array(
+                'qcount' => 3,
+                'questions' => array(
+                    'qid' => 1,
+                    'Dont you like my hotel?',
+                    'Why not?',
+                    'Where would you rather go?'
+                )
+            ),
+            'hotel.ranking' => 5
+        );
+        $this->assertEquals($expectedResult, $seq);
+
+        $seq = Sequence::make($data)->traverse(2)->to_a();
+        $expectedResult = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey.qcount' => 3,
+            'hotel.survey.questions' => array(
+                'qid' => 1,
+                'Dont you like my hotel?',
+                'Why not?',
+                'Where would you rather go?'
+            ),
+            'hotel.ranking' => 5
+        );
+        $this->assertEquals($expectedResult, $seq);
+
+        $fullyTraversed = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey.qcount' => 3,
+            'hotel.survey.questions.qid' => 1,
+            'hotel.survey.questions.0' => 'Dont you like my hotel?',
+            'hotel.survey.questions.1' => 'Why not?',
+            'hotel.survey.questions.2' => 'Where would you rather go?',
+            'hotel.ranking' => 5
+        );
+        $seq = Sequence::make($data)->traverse(3)->to_a();
+        $this->assertEquals($fullyTraversed, $seq);
+
+        $seq = Sequence::make($data)->traverse(4)->to_a();
+        $this->assertEquals($fullyTraversed, $seq);
+
+        $seq = Sequence::make($data)->traverse()->to_a();
+        $this->assertEquals($fullyTraversed, $seq);
     }
 }

@@ -26,4 +26,21 @@ class TestData {
         array('name' => 'Robert', 'age' => 55),
         array('group' => 'student'),
     );
+    public static $hotel = array(
+        'hotel' => array(
+            'id' => 1,
+            'name' => 'Fancy Hotel',
+            'rooms' => 200,
+            'survey' => array(
+                'qcount' => 3,
+                'questions' => array(
+                    'qid' => 1,
+                    'Dont you like my hotel?',
+                    'Why not?',
+                    'Where would you rather go?'
+                )
+            ),
+            'ranking' => 5
+        )
+    );
 }
