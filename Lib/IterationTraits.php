@@ -148,17 +148,18 @@ class IterationTraits {
      *
      * @param Iterator $iterator
      * @param callable $fn
-     * @return static
+     * @return Sequence
      */
     public static function sort(Iterator $iterator, Closure $fn = null) {
-        $array = iterator_to_array($iterator);
-        if ($fn) {
-            usort($array, $fn);
-        } else {
-            sort($array);
-        }
-
-        return Sequence::make($array);
+        return Sequence::make((new OnDemandIterator(function() use ($iterator, $fn) {
+            $array = iterator_to_array($iterator);
+            if ($fn) {
+                usort($array, $fn);
+            } else {
+                sort($array);
+            }
+            return new \ArrayIterator($array);
+        })));
     }
 
     /**
@@ -166,17 +167,18 @@ class IterationTraits {
      *
      * @param Iterator $iterator
      * @param callable $fn
-     * @return static
+     * @return Sequence
      */
     public static function asort(Iterator $iterator, Closure $fn = null) {
-        $array = iterator_to_array($iterator);
-        if ($fn) {
-            uasort($array, $fn);
-        } else {
-            asort($array);
-        }
-
-        return Sequence::make($array);
+        return Sequence::make((new OnDemandIterator(function() use ($iterator, $fn) {
+            $array = iterator_to_array($iterator);
+            if ($fn) {
+                uasort($array, $fn);
+            } else {
+                asort($array);
+            }
+            return new \ArrayIterator($array);
+        })));
     }
 
     /**
@@ -184,16 +186,17 @@ class IterationTraits {
      *
      * @param Iterator $iterator
      * @param callable $fn
-     * @return static
+     * @return Sequence
      */
     public static function sortKeys(Iterator $iterator, Closure $fn = null) {
-        $array = iterator_to_array($iterator);
-        if ($fn) {
-            uksort($array, $fn);
-        } else {
-            ksort($array);
-        }
-
-        return Sequence::make($array);
+        return Sequence::make((new OnDemandIterator(function() use ($iterator, $fn) {
+            $array = iterator_to_array($iterator);
+            if ($fn) {
+                uksort($array, $fn);
+            } else {
+                ksort($array);
+            }
+            return new \ArrayIterator($array);
+        })));
     }
 }
