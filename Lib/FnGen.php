@@ -501,7 +501,7 @@ class FnGen {
     /**
      * Create a function that will cache the results of another function based upon the
      *
-     * @param callable $fnMap($value, $key) - any map function
+     * @param callable $fnMap($value,...) - any invariant map function
      * @param callable|null $fnHash  - Converts the arguments into a hash value
      * @return callable
      */
