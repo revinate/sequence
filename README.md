@@ -41,5 +41,5 @@ Things that will consume a sequence:
 - **reduce()**      - convert all the items in the sequence into a single object.
 - **walk()**        - for each item in the sequence, apply a function.  The return value is ignored. 
 - **sort()**        - at the moment any of the sort methods will consume the entire sequence and generate a new sequence.  It is possible to make this lazy as well, but it required a lot more effort to write.
-- **flattenOnce()** - this is one that could be lazy, but the effort to write it was more than the immediate benefit.
+- **flattenOnceNow()** - like flattenOnce, but it does it immediately. 
 
