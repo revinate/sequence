@@ -107,48 +107,6 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(count($results) == 2);
     }
 
-    public function testFnSum() {
-        $range = range(0, 100);
-        $this->assertEquals(array_sum($range), Sequence::make($range)->reduce(0, FnGen::fnSum()));
-
-        $fruit = array(
-            array('name'=>'apple',  'count'=>1),
-            array('name'=>'orange', 'count'=>5),
-            array('name'=>'apple',  'count'=>3),
-            array('name'=>'banana', 'count'=>9),
-        );
-
-        $this->assertEquals(18,
-            Sequence::make($fruit)
-                ->reduce(0, FnGen::fnSum(
-                    FnGen::fnPluck('count', 0)
-                )));
-    }
-
-    public function testFnAvg() {
-        $range = range(1, 10);
-        $this->assertEquals(5.5, Sequence::make($range)->reduce(0, FnGen::fnAvg()));
-
-        $fruit = array(
-            array('name'=>'apple',  'count'=>1),
-            array('name'=>'orange', 'count'=>5),
-            array('name'=>'apple',  'count'=>3),
-            array('name'=>'banana', 'count'=>9),
-            array('name'=>'Out of Stock'),
-            array('name'=>'orange', 'count'=>5),
-        );
-
-        $counts = Sequence::make($fruit)->map(FnGen::fnPluck('count'))->filter(FnGen::fnKeepIsSet())->to_a();
-        $avg = array_sum($counts) / count($counts);
-
-        $avg2 = Sequence::make($fruit)
-            ->reduce(0, FnGen::fnAvg(
-                FnGen::fnPluck('count')
-            ));
-
-        $this->assertEquals($avg, $avg2);
-    }
-
     public function testFnNestedMap() {
         $fnMap = function ($v) { $v['mul'] = strlen($v['name']) * $v['count']; return $v; };
         $fnMap2 = function ($v) { $v['mul'] = -strlen($v['name']) * $v['count']; return $v; };
@@ -173,18 +131,6 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($n3, $n1);
         $this->assertEquals($n3, $n2);
         $this->assertNotEquals($n1, $x1);
-    }
-
-    public function testFnTrim() {
-        $fn = FnGen::fnTrim();
-        $this->assertEquals('test', $fn('  test '));
-        $array = array(' 352', '354 ', '333', ' 12 34 ', "\n  Cool Stuff  \n", "\r", "CRLF\r\n");
-        $expectedTrimmedArray = array('352', '354', '333', '12 34', 'Cool Stuff', '', 'CRLF');
-        $this->assertNotEquals($array, $expectedTrimmedArray);
-        $trimmedArray = Sequence::make($array)
-            ->map(FnGen::fnTrim())
-            ->to_a();
-        $this->assertEquals($trimmedArray, $expectedTrimmedArray);
     }
 
     public function testFnEqual() {
@@ -364,24 +310,6 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertNotEquals(count(array(1,2)), $fn(array(1,2,3)));
     }
 
-    public function testFnMax() {
-        $fn = FnGen::fnMax();
-        $this->assertEquals(55, $fn(null, 55));
-        $this->assertEquals(55, $fn(55, null));
-        $this->assertEquals(-42, $fn(null, -42));
-        $this->assertEquals(2, $fn(2, -42));
-        $this->assertEquals(2, $fn(-42, 2));
-    }
-
-    public function testFnMin() {
-        $fn = FnGen::fnMin();
-        $this->assertEquals(55, $fn(null, 55));
-        $this->assertEquals(55, $fn(55, null));
-        $this->assertEquals(-42, $fn(null, -42));
-        $this->assertEquals(-42, $fn(2, -42));
-        $this->assertEquals(-42, $fn(-42, 2));
-    }
-
     public function testFnMapField() {
         $fn = FnGen::fnMapField('name', function($value) { return strtoupper($value);});
 
@@ -404,19 +332,63 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($fn2());
     }
 
-    public function testFnRemoveSuffix() {
-        $suffix = "world";
-        $fn = FnGen::fnRemoveSuffix($suffix);
+    public function testFnCacheResult() {
+        $data = array(1,1,1,1,2,2,2,2,3,3,3,3);
+        $count = 0;
+        $scale = 2;
 
-        $this->assertEquals("Hello ", $fn("Hello world"));
-        $this->assertEquals("Hello world!", $fn("Hello world!"));
+        $fn = FnGen::fnCacheResult(function ($value) use (&$count, $scale) {
+            $count += 1;
+            return $value * $scale;
+        });
+
+        foreach ($data as $value) {
+            $this->assertEquals($value * $scale, $fn($value));
+        }
+
+        $this->assertEquals(count(array_unique($data)), $count);
+
+        $data = array('one', 'One', 'oNe', 'onE', 'two', 'tWo');
+        $count = 0;
+        $scale = 2;
+        $fnToUpper = FnString::fnToUpper();
+
+        $fn = FnGen::fnCacheResult(
+            function ($value) use (&$count, $scale, $fnToUpper) {
+                $count += 1;
+                return $fnToUpper($value);
+            },
+            $fnToUpper
+        );
+
+        foreach ($data as $value) {
+            $this->assertEquals($fnToUpper($value), $fn($value));
+        }
+
+        $this->assertEquals(count(array_unique(array_map($fnToUpper, $data))), $count);
+
     }
 
-    public function testFnRemovePrefix() {
-        $prefix = "Hello";
-        $fn = FnGen::fnRemovePrefix($prefix);
+    public function testFnNestedUKeyBy() {
+        $data = array(
+            array('name'=>'Bob'),
+            array('name'=>'Alex'),
+            array('name'=>'Bill'),
+            array('name'=>'Ben'),
+            array('name'=>'Ann'),
+            array('name'=>'Tim'),
+            array('name'=>'Jerry'),
+            array('name'=>'Phil'),
+            array('name'=>'Ken'),
+        );
 
-        $this->assertEquals(" world!", $fn("Hello world!"));
-        $this->assertEquals("Oh, Hello world!", $fn("Oh, Hello world!"));
+        $fn = FnGen::fnNestedUkeyBy(FnGen::fnPluck('name'));
+        $expected = Sequence::make($data)->keyBy(FnGen::fnPluck('name'))->to_a();
+        $this->assertEquals(
+            $expected,
+            $fn($data)
+        );
     }
+
+
 }

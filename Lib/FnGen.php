@@ -194,9 +194,10 @@ class FnGen {
     /**
      * Generate a function that casts values to ints.
      * @return callable
+     * @deprecated
      */
     public static function fnCastToInt() {
-        return function ($v) { return (int)$v; };
+        return FnMap::fnCastToInt();
     }
 
     /**
@@ -374,7 +375,7 @@ class FnGen {
      * @param $fn
      * @return callable
      */
-    public static function fnNestedUkeyBy($fn) {
+    public static function fnNestedUKeyBy($fn) {
         return function ($array) use ($fn) {
             return Sequence::make($array)->keyBy($fn)->to_a();
         };
@@ -405,6 +406,7 @@ class FnGen {
 
     /********************************************************************************
      * Reduce functions
+     * have been moved to FnReduce
      */
 
 
@@ -413,32 +415,32 @@ class FnGen {
      *
      * @param Closure $fnMapValue [optional] - a function to get the needed value
      * @return callable
+     * @deprecated
      *
      * @example:
      * Get the total number of fruit.
      * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->reduce(FnGen::fnSum(FnGen::fnPluck('count'))
      */
     public static function fnSum(Closure $fnMapValue = null) {
-        if ($fnMapValue) {
-            return function ($sum, $v) use ($fnMapValue) { return $sum + $fnMapValue($v); };
-        }
-        return function ($sum, $v) { return $sum + $v; };
+        return $fnMapValue ? FnReduce::fnSum($fnMapValue) : FnReduce::fnSum();
     }
 
     /**
      * @description Generate a function that can be used with reduce to get the max value
      * @return callable
+     * @deprecated
      */
     public static function fnMax() {
-        return function ($max, $v) { return is_null($max) ? $v : (is_null($v) ? $max : max($max, $v)); };
+        return FnReduce::fnMax();
     }
 
     /**
      * @description Generate a function that can be used with reduce to get the min value
      * @return callable
+     * @deprecated
      */
     public static function fnMin() {
-        return function ($min, $v) { return is_null($min) ? $v : (is_null($v) ? $min : min($min, $v)); };
+        return FnReduce::fnMin();
     }
 
     /**
@@ -447,35 +449,19 @@ class FnGen {
      *
      * @param callable $fnMapValue [optional] - maps the value before it is computed.
      * @return callable
+     * @deprecated
      */
     public static function fnAvg(Closure $fnMapValue = null) {
-        $count = 0;
-        $sum = 0;
-
-        if (!$fnMapValue) {
-            $fnMapValue = FnGen::fnIdentity();
-        }
-
-        return function ($avg, $v) use (&$count, &$sum, $fnMapValue) {
-            $v = $fnMapValue($v);
-            if (is_null($v)) {
-                if (!$count) {
-                    return null;
-                }
-            } else {
-                $count += 1;
-                $sum += $v;
-            }
-            return $sum / $count;
-        };
+        return $fnMapValue ? FnReduce::fnAvg($fnMapValue) : FnReduce::fnAvg($fnMapValue);
     }
 
     /**
      * @description Alias for fnSum -- usage is to do a union between arrays.
      * @return callable
+     * @deprecated
      */
     public static function fnUnion() {
-        return FnGen::fnSum();
+        return FnReduce::fnUnion();
     }
 
     /**
@@ -509,6 +495,27 @@ class FnGen {
             } else {
                 return $fnMapFalse($value, $key);
             }
+        };
+    }
+
+    /**
+     * Create a function that will cache the results of another function based upon the
+     *
+     * @param callable $fnMap($value, $key) - any map function
+     * @param callable|null $fnHash  - Converts the arguments into a hash value
+     * @return callable
+     */
+    public static function fnCacheResult(Closure $fnMap, Closure $fnHash = null) {
+        $fnHash = $fnHash ?: FnGen::fnIdentity();
+        $cache = array();
+        return function($value) use ($fnMap, $fnHash, &$cache) {
+            $args = func_get_args();
+            $hashKey = call_user_func_array($fnHash, $args);
+            if (! array_key_exists($hashKey, $cache)) {
+                $cache[$hashKey] = call_user_func_array($fnMap, $args);
+            }
+
+            return $cache[$hashKey];
         };
     }
 }

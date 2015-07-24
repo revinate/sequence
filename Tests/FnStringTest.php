@@ -22,4 +22,41 @@ class FnStringTest extends \PHPUnit_Framework_TestCase {
             ->to_a();
         $this->assertEquals($trimmedArray, $expectedTrimmedArray);
     }
+
+    public function testFnRemoveSuffix() {
+        $suffix = "world";
+        $fn = FnString::fnRemoveSuffix($suffix);
+
+        $this->assertEquals("Hello ", $fn("Hello world"));
+        $this->assertEquals("Hello world!", $fn("Hello world!"));
+    }
+
+    public function testFnRemovePrefix() {
+        $prefix = "Hello";
+        $fn = FnString::fnRemovePrefix($prefix);
+
+        $this->assertEquals(" world!", $fn("Hello world!"));
+        $this->assertEquals("Oh, Hello world!", $fn("Oh, Hello world!"));
+    }
+
+    public function testFnToUpper() {
+        $fn = FnString::fnToUpper();
+        $this->assertEquals('HELLO', $fn('hello'));
+
+        $fn = FnString::fnToUpper('UTF-8');
+        $this->assertEquals('HELLO', $fn('hello'));
+        $this->assertEquals('HELLÖ', $fn('hellö'));
+        $this->assertNotEquals(strtoupper('hellö'), $fn('hellö'));
+    }
+
+    public function testFnToLower() {
+        $fn = FnString::fnToLower();
+        $this->assertEquals('hello', $fn('HELLO'));
+
+        $fn = FnString::fnToLower('UTF-8');
+        $this->assertEquals('hello', $fn('HELLO'));
+        $this->assertEquals('hellö', $fn('HELLÖ'));
+        $this->assertNotEquals(strtolower('HELLÖ'), $fn('HELLÖ'));
+    }
+
 }

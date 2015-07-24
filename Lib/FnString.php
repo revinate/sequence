@@ -68,4 +68,36 @@ class FnString {
             return $val.$postfix;
         };
     }
+
+    /**
+     * @param string|null $encoding
+     * @return \Closure
+     */
+    public static function fnToUpper($encoding = null) {
+        if ($encoding) {
+            return function ($val) use ($encoding) {
+                return mb_strtoupper($val, $encoding);
+            };
+        }
+
+        return function ($val) {
+            return mb_strtoupper($val);
+        };
+    }
+
+    /**
+     * @param string|null $encoding
+     * @return \Closure
+     */
+    public static function fnToLower($encoding = null) {
+        if ($encoding) {
+            return function ($val) use ($encoding) {
+                return mb_strtolower($val, $encoding);
+            };
+        }
+
+        return function ($val) {
+            return mb_strtolower($val);
+        };
+    }
 }
