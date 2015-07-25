@@ -259,12 +259,7 @@ class FnGen {
      */
     public static function fnPluck($key, $default = null) {
         return function ($v) use ($key, $default) {
-            if (isset($v[$key])) {
-                return $v[$key];
-            } elseif (is_object($v) && property_exists($v, $key)) {
-                return $v->{$key};
-            }
-            return $default;
+            return ArrayUtil::getField($v, $key, $default);
         };
     }
 
@@ -277,10 +272,7 @@ class FnGen {
      */
     public static function fnPluckFrom($from, $default = null) {
         return function ($key) use ($from, $default) {
-            if (isset($from[$key])) {
-                return $from[$key];
-            }
-            return $default;
+            return ArrayUtil::getField($from, $key, $default);
         };
     }
 
