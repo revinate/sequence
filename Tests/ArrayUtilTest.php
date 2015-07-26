@@ -16,6 +16,7 @@ class ArrayUtilTest extends \PHPUnit_Framework_TestCase {
         $array = array(
             0 => 'zero',
             'name' => 'Bob',
+            'null' => null,
         );
 
         $object = (object)$array;
@@ -24,10 +25,12 @@ class ArrayUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($array[0], ArrayUtil::getField($array, 0));
         $this->assertNull(ArrayUtil::getField($array, 'missing'));
         $this->assertEquals('Default', ArrayUtil::getField($array, 'missing', 'Default'));
+        $this->assertNull(ArrayUtil::getField($array, 'null', 'default'));
 
         $this->assertEquals($object->name, ArrayUtil::getField($object, 'name'));
         $this->assertNull(ArrayUtil::getField($object, 'missing'));
         $this->assertEquals('Default', ArrayUtil::getField($object, 'missing', 'Default'));
+        $this->assertNull(ArrayUtil::getField($object, 'null', 'default'));
 
         $accessTest = new TestAccessClass();
         // Test public access
@@ -43,12 +46,14 @@ class ArrayUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($arrayObject[0], ArrayUtil::getField($arrayObject, 0));
         $this->assertNull(ArrayUtil::getField($arrayObject, 'missing'));
         $this->assertEquals('Default', ArrayUtil::getField($arrayObject, 'missing', 'Default'));
+        $this->assertNull(ArrayUtil::getField($arrayObject, 'null', 'default'));
 
         $arrayObject = new \ArrayObject($object);
         $this->assertEquals($arrayObject['name'], ArrayUtil::getField($arrayObject, 'name'));
         $this->assertEquals($arrayObject[0], ArrayUtil::getField($arrayObject, 0));
         $this->assertNull(ArrayUtil::getField($arrayObject, 'missing'));
         $this->assertEquals('Default', ArrayUtil::getField($arrayObject, 'missing', 'Default'));
+        $this->assertNull(ArrayUtil::getField($arrayObject, 'null', 'default'));
 
         $arrayObject = new \ArrayObject($accessTest);
         $this->assertEquals($arrayObject['public'], ArrayUtil::getField($arrayObject, 'public'));

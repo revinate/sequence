@@ -19,8 +19,10 @@ class ArrayUtil {
      * @return mixed
      */
     public static function getField($doc, $fieldName, $default = null) {
-        if ($doc instanceof ArrayAccess || is_array($doc)) {
-            if (array_key_exists($fieldName, $doc)) {
+        if (is_array($doc) && array_key_exists($fieldName, $doc)) {
+            return $doc[$fieldName];
+        } elseif ($doc instanceof ArrayAccess) {
+            if ($doc->offsetExists($fieldName)) {
                 return $doc[$fieldName];
             }
         } elseif (is_object($doc)) {
@@ -51,7 +53,13 @@ class ArrayUtil {
         if ($doc instanceof ArrayAccess || is_array($doc)) {
             $doc[$fieldName] = $value;
         } elseif (is_object($doc)) {
-            $doc->{$fieldName} = $value;
+            // Check setter
+            $setMethod = 'set' . $fieldName;
+            if (method_exists($doc, $setMethod)) {
+                call_user_func(array($doc, $setMethod));
+            } else {
+                $doc->{$fieldName} = $value;
+            }
         }
 
         return $doc;
