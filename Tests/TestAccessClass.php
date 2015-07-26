@@ -14,12 +14,12 @@ class TestAccessClass {
     public $public = 'public';
     private $private = 'private';
 
-    public function setPrivate($value) {
+    public function setPrivateField($value) {
         $this->private = $value;
         return $this;
     }
 
-    public function getPrivate() {
+    public function getPrivateField() {
         return $this->private;
     }
 }

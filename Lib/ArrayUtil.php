@@ -23,10 +23,18 @@ class ArrayUtil {
             if (array_key_exists($fieldName, $doc)) {
                 return $doc[$fieldName];
             }
-        } elseif (is_object($doc) && property_exists($doc, $fieldName)) {
-            $values = get_object_vars($doc);
-            if (array_key_exists($fieldName, $values)) {
-                return $values[$fieldName];
+        } elseif (is_object($doc)) {
+            // Check getter
+            $getMethod = 'get' . $fieldName;
+            if (method_exists($doc, $getMethod)) {
+                return call_user_func(array($doc, $getMethod));
+            }
+
+            if (property_exists($doc, $fieldName)) {
+                $values = get_object_vars($doc);
+                if (array_key_exists($fieldName, $values)) {
+                    return $values[$fieldName];
+                }
             }
         }
 

@@ -36,6 +36,7 @@ class ArrayUtilTest extends \PHPUnit_Framework_TestCase {
         // Test protected and private access, these should return the default value (null)
         $this->assertNull(ArrayUtil::getField($accessTest, 'protected'));
         $this->assertNull(ArrayUtil::getField($accessTest, 'private'));
+        $this->assertEquals('private', ArrayUtil::getField($accessTest, 'privatefield'));
 
         $arrayObject = new \ArrayObject($array);
         $this->assertEquals($arrayObject['name'], ArrayUtil::getField($arrayObject, 'name'));
