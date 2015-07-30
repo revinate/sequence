@@ -47,8 +47,18 @@ class FnSortTest extends PHPUnit_Framework_TestCase {
         $fnSortByName = FnSort::fnSortByField('name');
         $names = Sequence::make(TestData::$fruit)->pluck('name')->sort()->to_a();
         $results = Sequence::make($fnSortByName(TestData::$fruit))->pluck('name')->to_a();
-
         $this->assertEquals($names, $results);
+
+        $fnSortByCount = FnSort::fnSortByField('count');
+        $results = $fnSortByCount(TestData::$fruit);
+        $expected = Sequence::make(TestData::$fruit)->pluck('count')->sort()->to_a();
+        $this->assertEquals($expected, Sequence::make($results)->pluck('count')->to_a());
     }
 
+    public function testFnByFieldRev() {
+        $this->assertEquals(
+            array_reverse(Sequence::make(TestData::$fruit)->pluck('name')->sort()->to_a()),
+            Sequence::make(TestData::$fruit)->sort(FnSort::fnByFieldRev('name'))->pluck('name')->to_a()
+            );
+    }
 }

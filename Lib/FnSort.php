@@ -44,6 +44,26 @@ class FnSort {
 
 
     /**
+     * Generates a comparison function that can be used to sort an array by a given field.
+     *
+     * @param string $fieldName
+     * @return callable
+     */
+    public static function fnByField($fieldName) {
+        return FnSort::fnComp(FnGen::fnPluck($fieldName));
+    }
+
+    /**
+     * Generates a comparison function that can be used to sort an array by a given field in reverse order.
+     *
+     * @param string $fieldName
+     * @return callable
+     */
+    public static function fnByFieldRev($fieldName) {
+        return FnSort::fnRevComp(FnGen::fnPluck($fieldName));
+    }
+
+    /**
      * Generate a function that can sort an array
      *
      * @param callable $fnComp($lhs, $rhs) -- see PHP usort
@@ -70,6 +90,6 @@ class FnSort {
      * @return callable
      */
     public static function fnSortByField($fieldName) {
-        return FnSort::fnSort(FnSort::fnComp(FnGen::fnPluck($fieldName)));
+        return FnSort::fnSort(FnSort::fnByField($fieldName));
     }
 }
