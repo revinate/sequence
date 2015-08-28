@@ -144,6 +144,14 @@ class IterationTraits {
     }
 
     /**
+     * @param Closure $fn
+     * @return Sequence
+     */
+    public static function wrapFunctionIntoSequenceOnDemand(Closure $fn) {
+        return Sequence::make(new OnDemandIterator($fn));
+    }
+
+    /**
      * Collect all the values into an array, sort them and return the resulting Sequence.  Keys are NOT preserved.
      *
      * @param Iterator $iterator
@@ -151,7 +159,7 @@ class IterationTraits {
      * @return Sequence
      */
     public static function sort(Iterator $iterator, Closure $fn = null) {
-        return Sequence::make((new OnDemandIterator(function() use ($iterator, $fn) {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
                 usort($array, $fn);
@@ -159,7 +167,7 @@ class IterationTraits {
                 sort($array);
             }
             return new \ArrayIterator($array);
-        })));
+        });
     }
 
     /**
@@ -170,7 +178,7 @@ class IterationTraits {
      * @return Sequence
      */
     public static function asort(Iterator $iterator, Closure $fn = null) {
-        return Sequence::make((new OnDemandIterator(function() use ($iterator, $fn) {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
                 uasort($array, $fn);
@@ -178,7 +186,7 @@ class IterationTraits {
                 asort($array);
             }
             return new \ArrayIterator($array);
-        })));
+        });
     }
 
     /**
@@ -189,7 +197,7 @@ class IterationTraits {
      * @return Sequence
      */
     public static function sortKeys(Iterator $iterator, Closure $fn = null) {
-        return Sequence::make((new OnDemandIterator(function() use ($iterator, $fn) {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
                 uksort($array, $fn);
@@ -197,6 +205,23 @@ class IterationTraits {
                 ksort($array);
             }
             return new \ArrayIterator($array);
-        })));
+        });
+    }
+
+    /**
+     * Group all the the values into an array and return the result as a Sequence.
+     *
+     * @param Iterator $iterator
+     * @param Closure  $fnToGroup
+     * @return Sequence
+     */
+    public static function groupBy(Iterator $iterator, Closure $fnToGroup) {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fnToGroup) {
+            return Sequence::make($iterator)
+                ->reduceToSequence(array(), function ($collection, $value, $key) use ($fnToGroup) {
+                    $collection[$fnToGroup($value, $key)][] = $value;
+                    return $collection;
+                });
+        });
     }
 }

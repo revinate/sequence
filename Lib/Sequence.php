@@ -70,6 +70,19 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     }
 
     /**
+     * This is a reduce function that results in a Sequence
+     * The return value of the reduce function can be anything that can
+     * be iterated over.
+     *
+     * @param mixed $init
+     * @param callable $fn($reducedValue, $value, $key)
+     * @return Sequence
+     */
+    public function reduceToSequence($init, Closure $fn) {
+        return Sequence::make($this->reduce($init, $fn));
+    }
+
+    /**
      * Get the keys
      * @return MappedSequence
      */
@@ -152,6 +165,16 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      */
     public function sortKeys(Closure $fn = null) {
         return IterationTraits::sortKeys($this, $fn);
+    }
+
+    /**
+     * Group A Sequence based upon the result of $fnMapValueToGroup($value, $key) and return the result as a Sequence
+     *
+     * @param Closure $fnMapValueToGroup($value, $key) -- return the field name to group the values under.
+     * @return Sequence
+     */
+    public function groupBy(Closure $fnMapValueToGroup) {
+        return IterationTraits::groupBy($this, $fnMapValueToGroup);
     }
 
     /**

@@ -444,4 +444,24 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $seq = Sequence::make($data)->traverse()->to_a();
         $this->assertEquals($fullyTraversed, $seq);
     }
+
+    public function testGroupBy() {
+        $fruitOrders = TestData::$fruit;
+
+        $fnExtractFruitCountsForName = function($fruit, $name) {
+            return Sequence::make($fruit)
+                ->filter(FnGen::fnCallChain(FnGen::fnPluck('name'), FnGen::fnIsEqual($name)))
+                ->values()
+                ->to_a();
+        };
+
+        $fruitByName = Sequence::make($fruitOrders)->groupBy(FnGen::fnPluck('name'))->to_a();
+
+        foreach ($fruitByName as $name => $orders) {
+            $filteredOrders = $fnExtractFruitCountsForName($fruitOrders, $name);
+            $this->assertEquals($filteredOrders, $orders);
+        }
+
+    }
+
 }
