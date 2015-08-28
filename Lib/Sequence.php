@@ -309,6 +309,85 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     public function hasChildren() {
         return false;
     }
+
+    /**
+     * @param $func
+     * @return Sequence
+     */
+    function group_by_function($func)
+    {
+        return Sequence::make(self::group_by($this->to_a(), $func));
+    }
+
+    /** static functions */
+    public static function group_by($arr, $func) {
+        $ret = array();
+        foreach($arr as $val) {
+            $ret[$func($val)][] = $val;
+        }
+        return $ret;
+    }
+
+    /**
+     * get the standard deviation of the given list
+     *
+     * @param float[]|int[]
+     * @return float
+     */
+    public function getStandardDeviation() {
+        $array = $this->to_a();
+        return sqrt(
+            array_sum(
+                array_map(
+                    function($x, $mean) {
+                        return pow($x - $mean,2); }, $array,
+                    array_fill(0,count($array),
+                        (array_sum($array) / count($array)) ) ) ) / (count($array)-1) );
+    }
+
+
+    function fill_values($func) {
+        $r = $this->to_a();
+        foreach ($this as $k)	{
+            $r[$k] = $func($k);
+        }
+        return new Sequence($r);
+    }
+
+    function key_by($rekey_by) {
+        $rekeyed_data = array();
+        foreach ($this->to_a() as $index => $data) {
+            if (isset($data[$rekey_by])) {
+                $rekeyed_data[$data[$rekey_by]] = $data;
+            }
+        }
+        return new self($rekeyed_data);
+    }
+
+    function sort_by_attribute($attribute) {
+        return $this->usort(function($a, $b) use ($attribute){
+            return call_user_func_array(array($a, $attribute), array()) > call_user_func_array(array($b,$attribute), array()) ? 1 : -1;
+        });
+    }
+
+    /**
+     * @return Sequence
+     */
+    function usort($func) {
+        $arr = $this->to_a();
+        usort($arr,$func);
+        return new self($arr);
+    }
+
+    /**
+     * @return Sequence
+     */
+    function reverse() {
+        $arr = $this->to_a();
+        $arr = array_reverse($arr);
+        return new self($arr);
+    }
+
 }
 
 
