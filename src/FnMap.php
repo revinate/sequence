@@ -8,30 +8,37 @@
 
 namespace Revinate\Sequence;
 
+use Revinate\Sequence\fn as fn;
+
+/**
+ * Class FnMap
+ * @package Revinate\Sequence
+ * @description This is a static wrapper class for backwards compatibility
+ */
 class FnMap {
 
     public static function fnCastToInt() {
-        return fnCastToInt();
+        return fn\fnCastToInt();
     }
 
     public static function fnCastToFloat() {
-        return fnCastToFloat();
+        return fn\fnCastToFloat();
     }
 
     public static function fnCastToDouble() {
-        return fnCastToDouble();
+        return fn\fnCastToDouble();
     }
 
     public static function fnCastToString() {
-        return fnCastToString();
+        return fn\fnCastToString();
     }
 
     public static function fnCastToArray() {
-        return fnCastToArray();
+        return fn\fnCastToArray();
     }
 
     public static function fnCastToObject() {
-        return fnCastToObject();
+        return fn\fnCastToObject();
     }
 
 }

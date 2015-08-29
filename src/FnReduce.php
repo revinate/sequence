@@ -8,6 +8,7 @@
 
 namespace Revinate\Sequence;
 
+use Revinate\Sequence\fn as fn;
 use \Closure;
 
 class FnReduce {
@@ -22,10 +23,7 @@ class FnReduce {
      * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->reduce(FnGen::fnSum(FnGen::fnPluck('count'))
      */
     public static function fnSum(Closure $fnMapValue = null) {
-        if ($fnMapValue) {
-            return function ($sum, $v) use ($fnMapValue) { return $sum + $fnMapValue($v); };
-        }
-        return function ($sum, $v) { return $sum + $v; };
+        return fn\fnSum($fnMapValue);
     }
 
     /**
@@ -33,7 +31,7 @@ class FnReduce {
      * @return callable
      */
     public static function fnMax() {
-        return function ($max, $v) { return max(array($max, $v)); };
+        return fn\fnMax();
     }
 
     /**
@@ -41,7 +39,7 @@ class FnReduce {
      * @return callable
      */
     public static function fnMin() {
-        return function ($min, $v) { return is_null($min) ? $v : (is_null($v) ? $min : min($min, $v)); };
+        return fn\fnMin();
     }
 
     /**
@@ -52,25 +50,7 @@ class FnReduce {
      * @return callable
      */
     public static function fnAvg(Closure $fnMapValue = null) {
-        $count = 0;
-        $sum = 0;
-
-        if (!$fnMapValue) {
-            $fnMapValue = FnGen::fnIdentity();
-        }
-
-        return function ($avg, $v) use (&$count, &$sum, $fnMapValue) {
-            $v = $fnMapValue($v);
-            if (is_null($v)) {
-                if (!$count) {
-                    return null;
-                }
-            } else {
-                $count += 1;
-                $sum += $v;
-            }
-            return $sum / $count;
-        };
+        return fn\fnAvg($fnMapValue);
     }
 
     /**
@@ -78,8 +58,6 @@ class FnReduce {
      * @return callable
      */
     public static function fnUnion() {
-        return FnReduce::fnSum();
+        return fn\fnUnion();
     }
-
-
 }

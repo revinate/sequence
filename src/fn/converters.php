@@ -6,11 +6,11 @@
  * Time: 10:19
  */
 
-namespace Revinate\Sequence;
+namespace Revinate\Sequence\fn;
 
 
 /**
- * Returns a function that will case a value to an int
+ * Returns a function that will cast a value to an int
  * @return \Closure
  */
 function fnCastToInt() {
@@ -18,7 +18,7 @@ function fnCastToInt() {
 }
 
 /**
- * Returns a function that will case a value to an float
+ * Returns a function that will cast a value to an float
  * @return \Closure
  */
 function fnCastToFloat() {
@@ -26,7 +26,7 @@ function fnCastToFloat() {
 }
 
 /**
- * Returns a function that will case a value to an double
+ * Returns a function that will cast a value to an double
  * @return \Closure
  */
 function fnCastToDouble() {
@@ -34,7 +34,7 @@ function fnCastToDouble() {
 }
 
 /**
- * Returns a function that will case a value to an string
+ * Returns a function that will cast a value to an string
  * @return \Closure
  */
 function fnCastToString() {
@@ -42,7 +42,7 @@ function fnCastToString() {
 }
 
 /**
- * Returns a function that will case a value to an array
+ * Returns a function that will cast a value to an array
  * @return \Closure
  */
 function fnCastToArray() {
@@ -50,9 +50,17 @@ function fnCastToArray() {
 }
 
 /**
- * Returns a function that will case a value to an object
+ * Returns a function that will cast a value to an object
  * @return \Closure
  */
 function fnCastToObject() {
     return function ($value) { return (object)$value; };
+}
+
+/**
+ * Returns a function that will cast a value to a boolean
+ * @return \Closure
+ */
+function fnCastToBool() {
+    return function ($value) { return (bool)$value; };
 }

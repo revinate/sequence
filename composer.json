@@ -27,9 +27,11 @@
       "Revinate\\Sequence\\" : "src"
     },
     "files": [
-      "src/converters.php",
-      "src/filters.php",
-      "src/mappers.php"
+      "src/fn/converters.php",
+      "src/fn/filters.php",
+      "src/fn/mappers.php",
+      "src/fn/reducers.php",
+      "src/fn/strings.php"
     ]
   },
   "target-dir" : "Revinate/Sequence"

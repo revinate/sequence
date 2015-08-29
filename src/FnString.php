@@ -8,6 +8,7 @@
 
 namespace Revinate\Sequence;
 
+use Revinate\Sequence\fn as fn;
 
 class FnString {
     /**
@@ -16,9 +17,7 @@ class FnString {
      * @return callable
      */
     public static function fnTrim() {
-        return function ($v) {
-            return trim($v);
-        };
+        return fn\fnTrim();
     }
 
     /**
@@ -28,9 +27,7 @@ class FnString {
      * @return  callable
      */
     public static function fnRemoveSuffix($suffix) {
-        return function ($val) use ($suffix) {
-            return preg_replace('/'.preg_quote($suffix).'$/', '', $val);
-        };
+        return fn\fnRemoveSuffix($suffix);
     }
 
     /**
@@ -40,9 +37,7 @@ class FnString {
      * @return  callable
      */
     public static function fnRemovePrefix($prefix) {
-        return function ($val) use ($prefix) {
-            return preg_replace('/^'.preg_quote($prefix).'/', '', $val);
-        };
+        return fn\fnRemovePrefix($prefix);
     }
 
     /**
@@ -52,9 +47,7 @@ class FnString {
      * @return callable
      */
     public static function fnAddPrefix($prefix) {
-        return function ($val) use ($prefix) {
-            return $prefix.$val;
-        };
+        return fn\fnAddPrefix($prefix);
     }
 
     /**
@@ -64,9 +57,7 @@ class FnString {
      * @return callable
      */
     public static function fnAddPostfix($postfix) {
-        return function ($val) use ($postfix) {
-            return $val.$postfix;
-        };
+        return fn\fnAddPostfix($postfix);
     }
 
     /**
@@ -74,15 +65,7 @@ class FnString {
      * @return \Closure
      */
     public static function fnToUpper($encoding = null) {
-        if ($encoding) {
-            return function ($val) use ($encoding) {
-                return mb_strtoupper($val, $encoding);
-            };
-        }
-
-        return function ($val) {
-            return mb_strtoupper($val);
-        };
+        return fn\fnToUpper($encoding);
     }
 
     /**
@@ -90,14 +73,6 @@ class FnString {
      * @return \Closure
      */
     public static function fnToLower($encoding = null) {
-        if ($encoding) {
-            return function ($val) use ($encoding) {
-                return mb_strtolower($val, $encoding);
-            };
-        }
-
-        return function ($val) {
-            return mb_strtolower($val);
-        };
+        return fn\fnToLower($encoding);
     }
 }
