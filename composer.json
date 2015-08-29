@@ -1,8 +1,7 @@
 {
   "name": "revinate/sequence",
-  "description": "A functional programming bundle for PHP",
+  "description": "A functional programming library for PHP",
   "keywords": ["functional"],
-  "type": "symfony-bundle",
   "license": "MIT",
   "authors": [
     {"name" : "Jason Dent"},
@@ -23,7 +22,15 @@
   "autoload": {
     "psr-0": {
       "Revinate\\SequenceBundle\\": ""
-    }
+    },
+    "psr-4": {
+      "Revinate\\Sequence\\" : "src"
+    },
+    "files": [
+      "src/converters.php",
+      "src/filters.php",
+      "src/mappers.php"
+    ]
   },
-  "target-dir" : "Revinate/SequenceBundle"
+  "target-dir" : "Revinate/Sequence"
 }

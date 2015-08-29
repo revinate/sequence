@@ -6,7 +6,7 @@
  * Time: 21:01
  */
 
-namespace Revinate\SequenceBundle\Lib;
+namespace Revinate\Sequence;
 
 
 class FnReduceTest extends \PHPUnit_Framework_TestCase {

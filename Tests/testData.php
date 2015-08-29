@@ -6,7 +6,7 @@
  * Time: 15:28
  */
 
-namespace Revinate\SequenceBundle\Lib;
+namespace Revinate\Sequence;
 
 class TestData {
     public static $fruit  = array(

@@ -6,7 +6,7 @@
  * Time: 16:59
  */
 
-namespace Revinate\SequenceBundle\Lib;
+namespace Revinate\Sequence;
 
 
 class OnDemandIteratorTest extends \PHPUnit_Framework_TestCase {

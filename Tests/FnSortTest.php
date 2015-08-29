@@ -6,7 +6,7 @@
  * Time: 15:24
  */
 
-namespace Revinate\SequenceBundle\Lib;
+namespace Revinate\Sequence;
 
 use \PHPUnit_Framework_TestCase;
 

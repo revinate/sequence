@@ -9,44 +9,10 @@
 namespace Revinate\SequenceBundle\Lib;
 
 
-class OnDemandIterator implements \Iterator {
-    /** @var  \Closure */
-    protected $fnGetIterator;
-    protected $iterator = null;
+/**
+ * Class OnDemandIterator
+ * For namespace backwards compatibility
+ * @deprecated
+ */
+class OnDemandIterator extends \Revinate\Sequence\OnDemandIterator {}
 
-    public function __construct($fnGetIterator) {
-        $this->fnGetIterator = $fnGetIterator;
-    }
-
-    /**
-     * @return \Iterator
-     */
-    public function getIterator() {
-        if (is_null($this->iterator)) {
-            $fn = $this->fnGetIterator;
-            $this->iterator = $fn();
-        }
-
-        return $this->iterator;
-    }
-
-    public function current() {
-        return $this->getIterator()->current();
-    }
-
-    public function next() {
-        $this->getIterator()->next();
-    }
-
-    public function key() {
-        return $this->getIterator()->key();
-    }
-
-    public function valid() {
-        return $this->getIterator()->valid();
-    }
-
-    public function rewind() {
-        $this->getIterator()->rewind();
-    }
-}

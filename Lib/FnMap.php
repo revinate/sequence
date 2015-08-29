@@ -8,32 +8,9 @@
 
 namespace Revinate\SequenceBundle\Lib;
 
-use \Closure;
-
-class FnMap {
-
-    public static function fnCastToInt() {
-        return function ($value) { return (int)$value; };
-    }
-
-    public static function fnCastToFloat() {
-        return function ($value) { return (float)$value; };
-    }
-
-    public static function fnCastToDouble() {
-        return function ($value) { return (double)$value; };
-    }
-
-    public static function fnCastToString() {
-        return function ($value) { return (string)$value; };
-    }
-
-    public static function fnCastToArray() {
-        return function ($value) { return (array)$value; };
-    }
-
-    public static function fnCastToObject() {
-        return function ($value) { return (object)$value; };
-    }
-
-}
+/**
+ * Class FnMap
+ * For namespace backwards compatibility
+ * @deprecated
+ */
+class FnMap extends \Revinate\Sequence\FnMap {}

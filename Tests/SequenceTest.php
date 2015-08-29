@@ -6,11 +6,11 @@
  * Time: 14:01
  */
 
-namespace Revinate\SequenceBundle\Lib;
+namespace Revinate\Sequence;
 
 use \ArrayObject;
 use \PHPUnit_Framework_TestCase;
-use Revinate\SequenceBundle\Lib\FancyArray;
+use Revinate\Sequence\Test\FancyArray;
 
 class SequenceTest extends PHPUnit_Framework_TestCase  {
 

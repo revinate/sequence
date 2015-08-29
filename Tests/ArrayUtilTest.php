@@ -6,7 +6,7 @@
  * Time: 18:50
  */
 
-namespace Revinate\SequenceBundle\Lib;
+namespace Revinate\Sequence;
 
 require 'TestAccessClass.php';
 

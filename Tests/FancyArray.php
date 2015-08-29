@@ -3,7 +3,7 @@
  * From: http://justafewlines.com/2009/10/whats-wrong-with-php-closures/
  */
 
-namespace Revinate\SequenceBundle\Lib;
+namespace Revinate\Sequence\Test;
 
 class FancyArray extends \ArrayObject {
 

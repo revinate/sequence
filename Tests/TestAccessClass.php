@@ -6,7 +6,7 @@
  * Time: 18:57
  */
 
-namespace Revinate\SequenceBundle\Lib;
+namespace Revinate\Sequence;
 
 
 class TestAccessClass {
