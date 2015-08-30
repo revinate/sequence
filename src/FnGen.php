@@ -16,14 +16,14 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepNotEmpty() {
-        return fn\fnKeepNotEmpty();
+        return fn\fnIsNotEmpty();
     }
 
     /**
      * @return callable
      */
     public static function fnKeepIsSet() {
-        return fn\fnKeepIsSet();
+        return fn\fnIsSet();
     }
 
     /**
@@ -51,7 +51,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepInMap($map) {
-        return fn\fnKeepInMap($map);
+        return fn\fnIsInMap($map);
     }
 
     /**
@@ -61,7 +61,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepNotInMap($map) {
-        return fn\fnKeepNotInMap($map);
+        return fn\fnIsNotInMap($map);
     }
 
     /**
@@ -146,7 +146,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepInArray($array) {
-        return fn\fnKeepInArray($array);
+        return fn\fnIsInArray($array);
     }
 
     /**
@@ -154,7 +154,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepNotInArray($array) {
-        return fn\fnKeepNotInArray($array);
+        return fn\fnIsNotInArray($array);
     }
 
     /**
@@ -164,7 +164,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepImplements($className) {
-        return fn\fnKeepImplements($className);
+        return fn\fnImplements($className);
     }
 
     /**
@@ -173,7 +173,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepIfIsObject() {
-        return fn\fnKeepIfIsObject();
+        return fn\fnIsObject();
     }
 
     /**
@@ -208,7 +208,7 @@ class FnGen {
      * @return callable
      */
     public static function fnMapToKey() {
-        return fn\fnMapToKey();
+        return fn\fnKey();
     }
 
     /**

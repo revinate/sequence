@@ -16,10 +16,11 @@ use Revinate\Sequence\FnSequence;
 
 /**
  * @param ArrayAccess|array $map
+ * @param mixed $default -- default value to use if the value is not set in the map.
  * @return callable
  */
-function fnMap($map) {
-    return function ($v) use ($map) { return $map[$v]; };
+function fnMap($map, $default = null) {
+    return function ($v) use ($map, $default) { return isset($map[$v]) ? $map[$v] : $default; };
 }
 
 /**
@@ -37,7 +38,7 @@ function fnSwapParamsPassThrough($fn) {
  *
  * @return callable
  */
-function fnMapToKey() {
+function fnKey() {
     return function ($v, $k) { return $k; };
 }
 
@@ -128,41 +129,6 @@ function fnCounter($startingValue = 0) {
 }
 
 /**
- * Generate a function that when called, will call a set of functions passing the result as input to the next function.
- *
- * @param Callable[]|Callable $fn
- * @return callable
- */
-function fnCallChain($fn) {
-    if (is_array($fn)) {
-        $args = $fn;
-    } else {
-        $args = func_get_args();
-    }
-    return function ($v) use ($args) {
-        $fn = array_shift($args);
-        $v = call_user_func_array($fn, func_get_args());
-        foreach ($args as $fn) {
-            $v = $fn($v);
-        }
-        return $v;
-    };
-}
-
-/**
- * Generate a function that will return the specified parameter
- *
- * @param int $num
- * @return callable
- */
-function fnParam($num) {
-    return function () use ($num) {
-        $args = func_get_args();
-        return isset($args[$num]) ? $args[$num] : null;
-    };
-}
-
-/**
  * Returns a function that applies a function to a nested array and returns the results.
  *
  * @return callable
@@ -237,3 +203,22 @@ function fnCacheResult(Closure $fnMap, Closure $fnHash = null) {
         return $cache[$hashKey];
     };
 }
+
+/**
+ * Generates a function that always returns true
+ *
+ * @return callable
+ */
+function fnTrue() {
+    return function () { return true; };
+}
+
+/**
+ * Generates a function that always returns false
+ *
+ * @return callable
+ */
+function fnFalse() {
+    return function () { return false; };
+}
+

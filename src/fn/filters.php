@@ -13,14 +13,14 @@ use \ArrayAccess;
 /**
  * @return callable
  */
-function fnKeepNotEmpty() {
+function fnIsNotEmpty() {
     return function ($v) { return ! empty($v); };
 }
 
 /**
  * @return callable
  */
-function fnKeepIsSet() {
+function fnIsSet() {
     return function ($v) { return isset($v); };
 }
 
@@ -32,7 +32,7 @@ function fnKeepIsSet() {
  * @return callable
  */
 function fnClean() {
-    return fnKeepNotEmpty();
+    return fnIsNotEmpty();
 }
 
 /**
@@ -48,7 +48,7 @@ function fnIsEmpty() {
  * @param array|ArrayAccess $map
  * @return callable
  */
-function fnKeepInMap($map) {
+function fnIsInMap($map) {
     if (is_array($map)) {
         return function ($v) use ($map) { return array_key_exists($v, $map); };
     } else {
@@ -66,8 +66,8 @@ function fnKeepInMap($map) {
  * @param array|ArrayAccess $map
  * @return callable
  */
-function fnKeepNotInMap($map) {
-    $fnInMap = fnKeepInMap($map);
+function fnIsNotInMap($map) {
+    $fnInMap = fnIsInMap($map);
     return function ($v) use ($fnInMap) { return ! $fnInMap($v); };
 }
 
@@ -123,28 +123,10 @@ function fnIsNumeric() {
 }
 
 /**
- * Generates a function that always returns true
- *
- * @return callable
- */
-function fnTrue() {
-    return function () { return true; };
-}
-
-/**
- * Generates a function that always returns false
- *
- * @return callable
- */
-function fnFalse() {
-    return function () { return false; };
-}
-
-/**
  * @param $array
  * @return callable
  */
-function fnKeepInArray($array) {
+function fnIsInArray($array) {
     return function ($v) use ($array) { return in_array($v, $array); };
 }
 
@@ -152,7 +134,7 @@ function fnKeepInArray($array) {
  * @param $array
  * @return callable
  */
-function fnKeepNotInArray($array) {
+function fnIsNotInArray($array) {
     return function ($v) use ($array) { return ! in_array($v, $array); };
 }
 
@@ -162,7 +144,7 @@ function fnKeepNotInArray($array) {
  * @param $className
  * @return callable
  */
-function fnKeepImplements($className) {
+function fnImplements($className) {
     return function ($v) use ($className) { return class_implements($v, $className); };
 }
 
@@ -171,7 +153,7 @@ function fnKeepImplements($className) {
  *
  * @return callable
  */
-function fnKeepIfIsObject() {
+function fnIsObject() {
     return function ($v) { return is_object($v); };
 }
 

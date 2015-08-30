@@ -31,7 +31,8 @@
       "src/fn/filters.php",
       "src/fn/mappers.php",
       "src/fn/reducers.php",
-      "src/fn/strings.php"
+      "src/fn/strings.php",
+      "src/fn/paramBinding.php"
     ]
   },
   "target-dir" : "Revinate/Sequence"
