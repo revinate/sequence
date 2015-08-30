@@ -11,14 +11,14 @@ namespace Revinate\Sequence\fn;
 use \ArrayAccess;
 
 /**
- * @return callable
+ * @return \Closure
  */
 function fnIsNotEmpty() {
     return function ($v) { return ! empty($v); };
 }
 
 /**
- * @return callable
+ * @return \Closure
  */
 function fnIsSet() {
     return function ($v) { return isset($v); };
@@ -29,7 +29,7 @@ function fnIsSet() {
  *
  * Usage Sequence::make($values)->filter(FnGen::clean())->to_a();
  *
- * @return callable
+ * @return \Closure
  */
 function fnClean() {
     return fnIsNotEmpty();
@@ -46,7 +46,7 @@ function fnIsEmpty() {
  * Generates a function that returns true if $map has a key that matches the value.
  *
  * @param array|ArrayAccess $map
- * @return callable
+ * @return \Closure
  */
 function fnIsInMap($map) {
     if (is_array($map)) {
@@ -64,7 +64,7 @@ function fnIsInMap($map) {
  * Generates a function that returns false if $map has a key that matches the value.
  *
  * @param array|ArrayAccess $map
- * @return callable
+ * @return \Closure
  */
 function fnIsNotInMap($map) {
     $fnInMap = fnIsInMap($map);
@@ -75,7 +75,7 @@ function fnIsNotInMap($map) {
  * Generates a function that returns true if a value is equal
  *
  * @param $value
- * @return callable
+ * @return \Closure
  */
 function fnIsEqual($value) {
     return function ($v) use ($value) { return $value == $v; };
@@ -85,7 +85,7 @@ function fnIsEqual($value) {
  * Generates a function that returns true if a value is equal
  *
  * @param $value
- * @return callable
+ * @return \Closure
  */
 function fnIsEqualEqual($value) {
     return function ($v) use ($value) { return $value === $v; };
@@ -95,7 +95,7 @@ function fnIsEqualEqual($value) {
  * Generates a function that returns true if a value is not equal
  *
  * @param $value
- * @return callable
+ * @return \Closure
  */
 function fnIsNotEqual($value) {
     return function ($v) use ($value) { return $value != $v; };
@@ -106,7 +106,7 @@ function fnIsNotEqual($value) {
  * Generates a function that returns true if a value is not equal
  *
  * @param $value
- * @return callable
+ * @return \Closure
  */
 function fnIsNotEqualEqual($value) {
     return function ($v) use ($value) { return $value !== $v; };
@@ -116,7 +116,7 @@ function fnIsNotEqualEqual($value) {
 /**
  * Generates a function that returns true if a value is numeric
  *
- * @return callable
+ * @return \Closure
  */
 function fnIsNumeric() {
     return function ($v) { return is_numeric($v); };
@@ -124,7 +124,7 @@ function fnIsNumeric() {
 
 /**
  * @param $array
- * @return callable
+ * @return \Closure
  */
 function fnIsInArray($array) {
     return function ($v) use ($array) { return in_array($v, $array); };
@@ -132,7 +132,7 @@ function fnIsInArray($array) {
 
 /**
  * @param $array
- * @return callable
+ * @return \Closure
  */
 function fnIsNotInArray($array) {
     return function ($v) use ($array) { return ! in_array($v, $array); };
@@ -141,19 +141,36 @@ function fnIsNotInArray($array) {
 /**
  * Generate a function that returns true if an object implements an interface
  *
- * @param $className
- * @return callable
+ * @param $interface
+ * @return \Closure
  */
-function fnImplements($className) {
-    return function ($v) use ($className) { return class_implements($v, $className); };
+function fnImplements($interface) {
+    return function ($v) use ($interface) { return class_implements($v, $interface); };
+}
+
+/**
+ * @param $className
+ * @return \Closure
+ */
+function fnInstanceOf($className) {
+    return function ($v) use ($className) { return $v instanceof $className; };
 }
 
 /**
  * Generate a function that returns true if a value is an object
  *
- * @return callable
+ * @return \Closure
  */
 function fnIsObject() {
     return function ($v) { return is_object($v); };
+}
+
+
+/**
+ * Generate a function that returns the NOT of the passed in value.
+ * @return \Closure
+ */
+function fnNot() {
+    return function ($v) { return ! $v; };
 }
 
