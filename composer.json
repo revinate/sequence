@@ -20,11 +20,9 @@
     }
   },
   "autoload": {
-    "psr-0": {
-      "Revinate\\SequenceBundle\\": ""
-    },
     "psr-4": {
-      "Revinate\\Sequence\\" : "src"
+      "Revinate\\Sequence\\" : "src",
+      "Revinate\\SequenceBundle\\Lib\\": "Lib"
     },
     "files": [
       "src/fn/converters.php",
