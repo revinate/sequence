@@ -72,15 +72,7 @@ function fnAddPostfix($postfix) {
  * @return \Closure
  */
 function fnToUpper($encoding = null) {
-    if ($encoding) {
-        return function ($val) use ($encoding) {
-            return mb_strtoupper($val, $encoding);
-        };
-    }
-
-    return function ($val) {
-        return mb_strtoupper($val);
-    };
+    return fnConvertCase(MB_CASE_UPPER, $encoding);
 }
 
 /**
@@ -88,14 +80,117 @@ function fnToUpper($encoding = null) {
  * @return \Closure
  */
 function fnToLower($encoding = null) {
+    return fnConvertCase(MB_CASE_LOWER, $encoding);
+}
+
+/**
+ * Generate a function that will take a string $subject and apply preg_replace using $pattern and $replace
+ *
+ * @param string $pattern
+ * @param string $replace
+ * @return \Closure
+ */
+function fnPregReplace($pattern, $replace) {
+    return function ($subject) use ($pattern, $replace) {
+        return preg_replace($pattern, $replace, $subject);
+    };
+}
+
+/**
+ * @param int $mode  -- MB_CASE_TITLE, MB_CASE_UPPER, MB_CASE_LOWER
+ * @param null $encoding
+ * @return \Closure
+ */
+function fnConvertCase($mode, $encoding = null) {
     if ($encoding) {
-        return function ($val) use ($encoding) {
-            return mb_strtolower($val, $encoding);
+        return function ($subject) use ($mode, $encoding) {
+            return mb_convert_case($subject, $mode, $encoding);
         };
     }
+    return function ($subject) use ($mode) {
+        return mb_convert_case($subject, $mode);
+    };
+}
 
-    return function ($val) {
-        return mb_strtolower($val);
+/**
+ * @param null $encoding
+ * @return \Closure
+ */
+function fnTitleCase($encoding = null) {
+    return fnConvertCase(MB_CASE_TITLE, $encoding);
+}
+
+/**
+ * Alias of fnTitleCase()
+ *
+ * @param null $encoding
+ * @return \Closure
+ */
+function fnUcWords($encoding = null) {
+    return fnTitleCase($encoding);
+}
+
+/**
+ * @param null $encoding
+ * @return \Closure
+ */
+function fnCamelCase($encoding = null) {
+    return fnCallChain(
+        fnPregReplace('|_|', ' '),
+        fnTitleCase($encoding),
+        fnPregReplace('|\s|', '')
+    );
+}
+
+/**
+ * @param null $encoding
+ * @return mixed
+ */
+function fnSnakeCase($encoding = null) {
+    $encoding = $encoding ?: mb_internal_encoding();
+    $pattern = '|(\w)(?=[A-Z])|';
+    if ($encoding == 'UTF-8') {
+        $pattern = '|(\p{L})(?=\p{Lu})|u';
+    }
+    return fnCallChain(
+        fnPregReplace($pattern, '$1_'),  // Add a _ after any word character followed by a upper case character.
+        fnToLower($encoding)
+    );
+}
+
+/**
+ * @param $encoding
+ * @return \Closure
+ */
+function fnUcFirst($encoding = null) {
+    $encoding = $encoding ?: mb_internal_encoding();
+    $pattern = '||';
+    if ($encoding == 'UTF-8') {
+        $pattern = '||u';
+    }
+
+    return function ($string) use ($encoding, $pattern) {
+        $parts = preg_split($pattern, $string, 2, PREG_SPLIT_NO_EMPTY);
+        $parts[0] = mb_strtoupper($parts[0], $encoding);
+        return implode('', $parts);
+    };
+}
+
+/**
+ * @param $encoding
+ * @return \Closure
+ */
+function fnLcFirst($encoding = null) {
+    $encoding = $encoding ?: mb_internal_encoding();
+    $pattern = '||';
+    if ($encoding == 'UTF-8') {
+        $pattern = '||u';
+    }
+
+    return function ($string) use ($encoding, $pattern) {
+        $parts = preg_split($pattern, $string, 2, PREG_SPLIT_NO_EMPTY);
+        $parts[0] = mb_strtolower($parts[0], $encoding);
+        return implode('', $parts);
     };
 }
 

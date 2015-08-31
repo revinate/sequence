@@ -28,6 +28,19 @@ class FiltersTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($fnNot(null));
         $this->assertTrue($fnNot(''));
         $this->assertTrue($fnNot('0'));
+
+        $fnNotNot = fnNot(fnNot());
+        $this->assertInternalType('bool', $fnNotNot(true));
+        $this->assertTrue($fnNotNot(true));
+        $this->assertTrue($fnNotNot(1));
+        $this->assertTrue($fnNotNot(100));
+        $this->assertTrue($fnNotNot('Hello'));
+
+        $this->assertFalse($fnNotNot(false));
+        $this->assertFalse($fnNotNot(0));
+        $this->assertFalse($fnNotNot(null));
+        $this->assertFalse($fnNotNot(''));
+        $this->assertFalse($fnNotNot('0'));
     }
 
     public function testFnInstanceOf() {

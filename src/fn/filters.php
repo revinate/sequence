@@ -168,9 +168,15 @@ function fnIsObject() {
 
 /**
  * Generate a function that returns the NOT of the passed in value.
+ *
+ * @param callable|null $fn($value) -- optional function to call on the value before notting the returned result
+ *
  * @return \Closure
  */
-function fnNot() {
+function fnNot($fn = null) {
+    if ($fn) {
+        return function ($v) use ($fn) { return ! $fn($v); };
+    }
     return function ($v) { return ! $v; };
 }
 
