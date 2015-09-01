@@ -6,6 +6,7 @@ This Symfony2-compatible library adds functional programming styles to PHP
 
 Install the package via composer by adding this section to the composer.json file:
 
+```JSON
     "repositories": [
         {
             "name": "revinate/sequence",
@@ -16,6 +17,7 @@ Install the package via composer by adding this section to the composer.json fil
     "require": {
         "revinate/sequence": "~0.3"
     },
+```
 
 This is a tiny script to get a feeling of how Sequence works.
 
