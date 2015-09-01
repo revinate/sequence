@@ -19,6 +19,7 @@ Install the package via composer by adding this section to the composer.json fil
 
 This is a tiny script to get a feeling of how Sequence works.
 
+```php
     <?php
     require_once __DIR__.'/vendor/autoload.php';
 
@@ -39,6 +40,7 @@ This is a tiny script to get a feeling of how Sequence works.
     foreach($twice as $num) {
         echo "$num\n";
     }
+```
 
 and the output of this program will be:
 
