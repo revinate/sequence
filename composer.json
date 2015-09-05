@@ -25,6 +25,7 @@
       "src/fn/filters.php",
       "src/fn/mappers.php",
       "src/fn/reducers.php",
+      "src/fn/sorting.php",
       "src/fn/strings.php",
       "src/fn/paramBinding.php"
     ]
