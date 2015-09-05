@@ -1,4 +1,5 @@
 <?php
+namespace Revinate\Sequence\Tutorial;
 
 /**
  * Created by PhpStorm.

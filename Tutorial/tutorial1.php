@@ -5,15 +5,16 @@
  * Date: 30/08/15
  * Time: 18:06
  */
+namespace Revinate\Sequence\Tutorial;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Revinate\Sequence\Sequence;
 use Revinate\Sequence\fn as fn;
-
-require_once 'SampleDataLoader.php';
+use Revinate\Sequence\Tutorial\SampleDataLoader;
 
 function employeeExample1() {
+
     $employeeData = SampleDataLoader::getEmployees(true);
 
     $employees = $employeeData['employees'];

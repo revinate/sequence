@@ -17,7 +17,8 @@
   "autoload": {
     "psr-4": {
       "Revinate\\Sequence\\" : "src",
-      "Revinate\\SequenceBundle\\Lib\\": "Lib"
+      "Revinate\\SequenceBundle\\Lib\\" : "Lib",
+      "Revinate\\Sequence\\Tutorial\\" : "Tutorial"
     },
     "files": [
       "src/fn/converters.php",
