@@ -30,11 +30,11 @@ class SampleDataLoader {
     }
 
     /**
+     * @description Data from: http://www.librarything.com/api_getdata.php?userid=timspalding&showstructure=1&max=10&showCollections=1&showTags=1&booksort=title_REV&responseType=json
      * @param bool|true $asArray
      * @return mixed
      */
     public static function getLibraryThingComSample($asArray = true) {
-        // http://www.librarything.com/api_getdata.php?userid=timspalding&showstructure=1&max=10&showCollections=1&showTags=1&booksort=title_REV&responseType=json
         $filename = __DIR__.'/Data/example_data_donuts.json';
         return self::dataLoader($filename, $asArray);
     }
@@ -47,5 +47,15 @@ class SampleDataLoader {
         $filename = __DIR__.'/Data/employees.json';
         $employeeData = self::dataLoader($filename, $asArray);
         return $employeeData['employees'];
+    }
+
+    /**
+     * @description people data generated at: http://json-generator.com/4y2Ny-V6
+     * @param bool|true $asArray
+     * @return mixed
+     */
+    public static function getPeople($asArray = true) {
+        $filename = __DIR__.'/Data/people.json';
+        return self::dataLoader($filename, $asArray);
     }
 }

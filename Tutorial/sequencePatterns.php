@@ -118,3 +118,42 @@ function exampleKeyByIdSortByEmployeeLastName2($employees) {
     return $employeesSortedById;
 }
 
+/**
+ * @param array|\iterator $peopleKeyedById
+ * @return array
+ */
+function exampleExtractKeys1($peopleKeyedById) {
+    $keys = Sequence::make($peopleKeyedById)    // make the array|iterator into a Sequence
+        ->keys()                                // get the keys
+        ->to_a();
+
+    return $keys;
+}
+
+/**
+ * @param array|\iterator $peopleKeyedById
+ * @return array
+ */
+function exampleExtractKeys2($peopleKeyedById) {
+    $keys = Sequence::make($peopleKeyedById)    // make the array|iterator into a Sequence
+        ->map(function ($value, $key) {         // write a Closure to extract $key
+            return $key;
+        })
+        ->values()                              // Re-key starting with 0
+        ->to_a();
+
+    return $keys;
+}
+
+/**
+ * @param array|\iterator $peopleKeyedById
+ * @return array
+ */
+function exampleExtractKeys3($peopleKeyedById) {
+    $keys = Sequence::make($peopleKeyedById)
+        ->map(fn\fnSwapParamsPassThrough(fn\fnIdentity()))
+        ->values()
+        ->to_a();
+
+    return $keys;
+}

@@ -9,6 +9,7 @@
 namespace Revinate\Sequence\Tutorial;
 
 use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\Sequence;
 
 require_once __DIR__.'/../sequencePatterns.php';
 
@@ -64,6 +65,18 @@ class sequencePatternsTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotEquals($employees, $employeesSorted1);
         $this->assertEquals($employeesSorted1, $employeesSorted2);
         $this->assertNotEquals($employeesSorted1, $employeesSorted1Wrong);
+    }
+
+    public function testExampleExtractKey() {
+        $people = SampleDataLoader::getPeople(true);
+        $peopleSeq = Sequence::make($people)->keyBy(fn\fnPluck('_id'));
+
+        $keys1 = exampleExtractKeys1($peopleSeq);
+        $keys2 = exampleExtractKeys2($peopleSeq);
+        $keys3 = exampleExtractKeys3($peopleSeq);
+
+        $this->assertEquals($keys1, $keys2);
+        $this->assertEquals($keys2, $keys3);
     }
 
 
