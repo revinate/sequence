@@ -16,7 +16,7 @@ use \Closure;
  * @param Closure $fnExtractValue -- Function that will extract the values to be compared.
  * @return Closure -- returns a function to be used with sort
  */
-function fnComp(Closure $fnExtractValue) {
+function fnCompare(Closure $fnExtractValue) {
     return function ($lhs, $rhs) use ($fnExtractValue) {
         $lhsValue = $fnExtractValue($lhs);
         $rhsValue = $fnExtractValue($rhs);
@@ -39,8 +39,8 @@ function fnComp(Closure $fnExtractValue) {
  * @param Closure $fnExtractValue -- Function that will extract the values to be compared.
  * @return Closure -- returns a function to be used with sort
  */
-function fnRevComp(Closure $fnExtractValue) {
-    return fnSwapParamsPassThrough(fnComp($fnExtractValue));
+function fnCompareRev(Closure $fnExtractValue) {
+    return fnSwapParamsPassThrough(fnCompare($fnExtractValue));
 }
 
 
@@ -50,8 +50,8 @@ function fnRevComp(Closure $fnExtractValue) {
  * @param string $fieldName
  * @return Closure
  */
-function fnByField($fieldName) {
-    return fnComp(fnPluck($fieldName));
+function fnCompareField($fieldName) {
+    return fnCompare(fnPluck($fieldName));
 }
 
 /**
@@ -60,8 +60,8 @@ function fnByField($fieldName) {
  * @param string $fieldName
  * @return Closure
  */
-function fnByFieldRev($fieldName) {
-    return fnRevComp(fnPluck($fieldName));
+function fnCompareFieldRev($fieldName) {
+    return fnCompareRev(fnPluck($fieldName));
 }
 
 /**
@@ -70,7 +70,7 @@ function fnByFieldRev($fieldName) {
  * @param Closure|null $fnComp ($lhs, $rhs) -- see PHP usort
  * @return Closure
  */
-function fnSort($fnComp = null) {
+function fnSortArray($fnComp = null) {
     if ($fnComp) {
         return function ($array) use ($fnComp) {
             usort($array, $fnComp);
@@ -90,6 +90,6 @@ function fnSort($fnComp = null) {
  * @param string $fieldName
  * @return Closure
  */
-function fnSortByField($fieldName) {
-    return fnSort(fnByField($fieldName));
+function fnSortArrayByField($fieldName) {
+    return fnSortArray(fnCompareField($fieldName));
 }

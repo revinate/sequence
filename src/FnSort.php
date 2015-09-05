@@ -19,7 +19,7 @@ class FnSort {
      * @return Closure -- returns a function to be used with sort
      */
     public static function fnComp(Closure $fnExtractValue) {
-        return fn\fnComp($fnExtractValue);
+        return fn\fnCompare($fnExtractValue);
     }
 
     /**
@@ -30,7 +30,7 @@ class FnSort {
      * @return Closure -- returns a function to be used with sort
      */
     public static function fnRevComp(Closure $fnExtractValue) {
-        return fn\fnRevComp($fnExtractValue);
+        return fn\fnCompareRev($fnExtractValue);
     }
 
 
@@ -41,7 +41,7 @@ class FnSort {
      * @return Closure
      */
     public static function fnByField($fieldName) {
-        return fn\fnByField($fieldName);
+        return fn\fnCompareField($fieldName);
     }
 
     /**
@@ -51,7 +51,7 @@ class FnSort {
      * @return Closure
      */
     public static function fnByFieldRev($fieldName) {
-        return fn\fnByFieldRev($fieldName);
+        return fn\fnCompareFieldRev($fieldName);
     }
 
     /**
@@ -61,7 +61,7 @@ class FnSort {
      * @return Closure
      */
     public static function fnSort(Closure $fnComp = null) {
-        return fn\fnSort($fnComp);
+        return fn\fnSortArray($fnComp);
     }
 
     /**
@@ -71,6 +71,6 @@ class FnSort {
      * @return Closure
      */
     public static function fnSortByField($fieldName) {
-        return fn\fnSortByField($fieldName);
+        return fn\fnSortArrayByField($fieldName);
     }
 }

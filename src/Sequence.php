@@ -140,10 +140,10 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     /**
      * Sort ALL the values in the sequence.  Keys are NOT preserved.
      *
-     * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see usort
+     * @param null|Closure $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see usort
      * @return Sequence
      */
-    public function sort(Closure $fn = null) {
+    public function sort($fn = null) {
         return IterationTraits::sort($this, $fn);
     }
 
