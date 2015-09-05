@@ -4,7 +4,10 @@
          bootstrap="Tests/bootstrap.php"
          backupGlobals="false"
          verbose="true">
-  <testsuite name="Sequence">
-    <directory suffix="Test.php">Tests</directory>
-  </testsuite>
+    <testsuite name="Sequence">
+        <directory suffix="Test.php">Tests</directory>
+    </testsuite>
+    <testsuite name="Tutorial">
+        <directory suffix="Test.php">Tutorial/test</directory>
+    </testsuite>
 </phpunit>

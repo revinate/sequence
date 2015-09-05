@@ -45,6 +45,7 @@ class SampleDataLoader {
      */
     public static function getEmployees($asArray = true) {
         $filename = __DIR__.'/Data/employees.json';
-        return self::dataLoader($filename, $asArray);
+        $employeeData = self::dataLoader($filename, $asArray);
+        return $employeeData['employees'];
     }
 }

@@ -15,9 +15,7 @@ use Revinate\Sequence\Tutorial\SampleDataLoader;
 
 function employeeExample1() {
 
-    $employeeData = SampleDataLoader::getEmployees(true);
-
-    $employees = $employeeData['employees'];
+    $employees = SampleDataLoader::getEmployees(true);
 
     // Assignment -- get a list of employees names
 
