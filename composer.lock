@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9d255c72a3ee48c97be88bfcf3cb10a4",
+    "hash": "2cbc6249855825ae8e87dd06f66a1dfa",
     "packages": [
         {
             "name": "react/partial",
