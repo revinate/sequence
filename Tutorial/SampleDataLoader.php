@@ -1,5 +1,6 @@
 <?php
 namespace Revinate\Sequence\Tutorial;
+use Revinate\Sequence\Tutorial\util\StreamReaderIterator;
 
 /**
  * Created by PhpStorm.
@@ -58,4 +59,21 @@ class SampleDataLoader {
         $filename = __DIR__.'/Data/people.json';
         return self::dataLoader($filename, $asArray);
     }
+
+    /**
+     * @return resource
+     */
+    public static function getEmployeesCsvStream() {
+        $filename = __DIR__.'/Data/employee.csv';
+        return fopen($filename, 'r');
+    }
+
+    /**
+     * @return string
+     */
+    public static function getEmployeesCsv() {
+        $filename = __DIR__.'/Data/employee.csv';
+        return file_get_contents($filename);
+    }
+
 }

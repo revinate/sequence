@@ -11,7 +11,6 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use Revinate\Sequence\Sequence;
 use Revinate\Sequence\fn as fn;
-use Revinate\Sequence\Tutorial\SampleDataLoader;
 
 /**
  * @param array[] $employees
@@ -168,3 +167,6 @@ function exampleIdentity($employees) {
         ->to_a();
     return $values;
 }
+
+
+
