@@ -157,3 +157,14 @@ function exampleExtractKeys3($peopleKeyedById) {
 
     return $keys;
 }
+
+/**
+ * @param array|\iterator $employees
+ * @return array
+ */
+function exampleIdentity($employees) {
+    $values = Sequence::make($employees)
+        ->map(fn\fnIdentity())          // Copies the array values
+        ->to_a();
+    return $values;
+}

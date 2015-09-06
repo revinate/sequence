@@ -79,5 +79,12 @@ class sequencePatternsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($keys2, $keys3);
     }
 
+    public function testIdentity() {
+        $employees = SampleDataLoader::getEmployees(true);
+
+        $copy = exampleIdentity($employees);
+        $this->assertEquals($employees, $copy);
+    }
+
 
 }
