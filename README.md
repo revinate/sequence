@@ -1,4 +1,4 @@
-# Sequence
+# Sequence [![Build Status](https://travis-ci.org/revinate/sequence.svg)](https://travis-ci.org/revinate/sequence)
 
 This Symfony2-compatible library adds functional programming styles to PHP
 
