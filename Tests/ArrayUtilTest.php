@@ -107,7 +107,6 @@ class ArrayUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('zero', ArrayUtil::getPath($data, array(0,'name')));
 
         $this->assertNull(ArrayUtil::getPath($data, array(2,'children',0)));
-        $this->assertNull(ArrayUtil::getPath($data, array(0,'name',1)));
     }
 
     public function testSetPath() {
