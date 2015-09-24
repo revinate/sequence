@@ -18,6 +18,25 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
         );
     }
 
+    public function providerSnakeAndCamelCase() {
+        return array(
+            // Encoding, Snake, Camel, tests (S = Snake Equals, s = Snake Not Equals)
+            array('UTF-8',      'it_is_time_to_take_a_nap', 'ItIsTimeToTakeANap',   'SC'),
+            array('ISO-8859-1', 'it_is_time_to_take_a_nap', 'ItIsTimeToTakeANap',   'SC'),
+            array('UTF-8',      'it_is_time_to_take_á_nap', 'ItIsTimeToTakeÁNap',   'SC'),
+            array('UTF-8',      'it_is_time2_take_a_nap',   'ItIsTime2TakeANap',    'SC'),
+            array('ISO-8859-1', 'it_is_time2_take_a_nap',   'ItIsTime2TakeANap',    'SC'),
+            array('UTF-8',      'it_is_time222_take_a_nap', 'ItIsTime222TakeANap',  'SC'),
+            array('ISO-8859-1', 'it_is_time222_take_a_nap', 'ItIsTime222TakeANap',  'SC'),
+            array('UTF-8',      'It_Is_Time_To_Take',       'ItIsTimeToTake',       'sC'),
+            array('ISO-8859-1', 'It_Is_Time_To_Take',       'ItIsTimeToTake',       'sC'),
+            array('UTF-8',      'It__Is_Time_To_Take',      'ItIsTimeToTake',       'sC'),
+            array('ISO-8859-1', 'It__Is_Time_To_Take',      'ItIsTimeToTake',       'sC'),
+            array('UTF-8',      'it__is',                   'It_Is',                'Sc'),
+            array('ISO-8859-1', 'it__is',                   'It_Is',                'Sc'),
+        );
+    }
+
     /**
      * @param $encoding
      * @dataProvider providerEncodings
@@ -35,18 +54,27 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param $encoding
-     * @dataProvider providerEncodings
+     * @param string $encoding
+     * @param string $snake
+     * @param string $camel
+     * @dataProvider providerSnakeAndCamelCase
      */
-    public function testSnakeCaseAndCamelCase($encoding) {
+    public function testSnakeCaseAndCamelCase($encoding, $snake, $camel, $tests) {
         mb_internal_encoding($encoding);
         $fnSnakeCase = fnSnakeCase();
         $fnCamelCase = fnCamelCase();
-
-        $subject = 'ItIsTimeToTakeANap';
-        $result = $fnSnakeCase($subject);
-        $this->assertEquals('it_is_time_to_take_a_nap', $result);
-        $this->assertEquals($subject, $fnCamelCase($result));
+        if (strpos($tests, 'C') !== false) {
+            $this->assertEquals($camel, $fnCamelCase($snake));
+        }
+        if (strpos($tests, 'c') !== false) {
+            $this->assertNotEquals($camel, $fnCamelCase($snake));
+        }
+        if (strpos($tests, 'S') !== false) {
+            $this->assertEquals($snake, $fnSnakeCase($camel));
+        }
+        if (strpos($tests, 's') !== false) {
+            $this->assertNotEquals($snake, $fnSnakeCase($camel));
+        }
     }
 
     public function testSnakeCaseAndCamelCaseUTF8() {

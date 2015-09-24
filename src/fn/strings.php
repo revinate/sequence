@@ -150,7 +150,7 @@ function fnSnakeCase($encoding = null) {
     $encoding = $encoding ?: mb_internal_encoding();
     $pattern = '|(\w)(?=[A-Z])|';
     if ($encoding == 'UTF-8') {
-        $pattern = '|(\p{L})(?=\p{Lu})|u';
+        $pattern = '/(\p{L}|\w)(?=\p{Lu})/u';
     }
     return fnCallChain(
         fnPregReplace($pattern, '$1_'),  // Add a _ after any word character followed by a upper case character.
