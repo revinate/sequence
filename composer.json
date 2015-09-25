@@ -9,7 +9,7 @@
   ],
   "require": {
     "php":                        ">=5.3.0",
-    "revinate/php-getter-setter": "~0.2",
+    "revinate/php-getter-setter": "~0.2.2",
     "react/partial":              "~2.0"
   },
   "require-dev": {

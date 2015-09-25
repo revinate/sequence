@@ -127,4 +127,12 @@ class ArrayUtilTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($object, $rootWithOneChildAndObject2['other']['object']);
         $this->assertEquals('inside', ArrayUtil::getPath($rootWithOneChildAndObject2, explode('.', 'other.object.location')));
     }
+
+    public function testGetOnNull() {
+        $notFound = (object)array();
+
+        $this->assertEquals($notFound, ArrayUtil::getField(null, 'name', $notFound));
+        $this->assertEquals($notFound, ArrayUtil::getPath(null, array('name'), $notFound));
+        $this->assertEquals($notFound, ArrayUtil::getPath(null, null, $notFound));
+    }
 }

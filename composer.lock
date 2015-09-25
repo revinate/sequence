@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c6ec5111cce324c2b0e0ed56190bc6a4",
-    "content-hash": "da43c35ce1f69164ef65dbb0e9fea03e",
+    "hash": "8db275d7a261fc900dc1659442600b6c",
+    "content-hash": "51a522680d00d7694c221c239a22c441",
     "packages": [
         {
             "name": "react/partial",
@@ -51,16 +51,16 @@
         },
         {
             "name": "revinate/php-getter-setter",
-            "version": "0.2.1",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/revinate/php-getter-setter.git",
-                "reference": "4b0a7e63485405928daf89356182dac358da4980"
+                "reference": "66b894adc58a6106e81aeb372ff71c53dca698c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/revinate/php-getter-setter/zipball/4b0a7e63485405928daf89356182dac358da4980",
-                "reference": "4b0a7e63485405928daf89356182dac358da4980",
+                "url": "https://api.github.com/repos/revinate/php-getter-setter/zipball/66b894adc58a6106e81aeb372ff71c53dca698c4",
+                "reference": "66b894adc58a6106e81aeb372ff71c53dca698c4",
                 "shasum": ""
             },
             "require": {
@@ -92,7 +92,7 @@
                 }
             ],
             "description": "PHP library to simplify getting and setting values in arrays and objects.",
-            "time": "2015-09-15 08:06:25"
+            "time": "2015-09-24 17:13:25"
         }
     ],
     "packages-dev": [
@@ -452,16 +452,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.4.7",
+            "version": "1.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "6f1447a60f068c89d345ceee32025a51dd630f1c"
+                "reference": "3144ae21711fb6cac0b1ab4cbe63b75ce3d4e8da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/6f1447a60f068c89d345ceee32025a51dd630f1c",
-                "reference": "6f1447a60f068c89d345ceee32025a51dd630f1c",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/3144ae21711fb6cac0b1ab4cbe63b75ce3d4e8da",
+                "reference": "3144ae21711fb6cac0b1ab4cbe63b75ce3d4e8da",
                 "shasum": ""
             },
             "require": {
@@ -497,7 +497,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2015-09-14 18:56:12"
+            "time": "2015-09-15 10:49:45"
         },
         {
             "name": "phpunit/phpunit",
