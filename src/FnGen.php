@@ -4,7 +4,6 @@ namespace Revinate\Sequence;
 
 use Revinate\Sequence\fn as fn;
 use \ArrayAccess;
-use \Closure;
 
 /**
  * Class FnGen
@@ -185,7 +184,7 @@ class FnGen {
     }
 
     /**
-     * Generate a function that casts values to ints.
+     * Generate a function that casts values to integers.
      * @return callable
      */
     public static function fnCastToInt() {
@@ -364,7 +363,7 @@ class FnGen {
     /**
      * Used in Sequence::Reduce to sum all values.
      *
-     * @param Closure $fnMapValue [optional] - a function to get the needed value
+     * @param callable $fnMapValue [optional] - a function to get the needed value
      * @return callable
      * @deprecated
      *
@@ -372,7 +371,7 @@ class FnGen {
      * Get the total number of fruit.
      * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->reduce(FnGen::fnSum(FnGen::fnPluck('count'))
      */
-    public static function fnSum(Closure $fnMapValue = null) {
+    public static function fnSum($fnMapValue = null) {
         return fn\fnSum($fnMapValue);
     }
 
@@ -402,7 +401,7 @@ class FnGen {
      * @return callable
      * @deprecated
      */
-    public static function fnAvg(Closure $fnMapValue = null) {
+    public static function fnAvg($fnMapValue = null) {
         return fn\fnAvg($fnMapValue);
     }
 
@@ -421,7 +420,7 @@ class FnGen {
      * @param callable $fnReduce(mixed, $value)
      * @return callable
      */
-    public static function fnReduce(Closure $fnReduce) {
+    public static function fnReduce($fnReduce) {
         return $fnReduce($fnReduce);
     }
 
@@ -433,7 +432,7 @@ class FnGen {
      * @param callable $fnMapFalse($value, $key)    -- the map function to use if the test is false
      * @return callable
      */
-    public static function fnIfMap(Closure $fnTest, Closure $fnMapTrue, Closure $fnMapFalse = null) {
+    public static function fnIfMap($fnTest, $fnMapTrue, $fnMapFalse = null) {
         return fn\fnIfMap($fnTest, $fnMapTrue, $fnMapFalse);
     }
 
@@ -444,7 +443,7 @@ class FnGen {
      * @param callable|null $fnHash  - Converts the arguments into a hash value
      * @return callable
      */
-    public static function fnCacheResult(Closure $fnMap, Closure $fnHash = null) {
+    public static function fnCacheResult($fnMap, $fnHash = null) {
         return fn\fnCacheResult($fnMap, $fnHash);
     }
 }
