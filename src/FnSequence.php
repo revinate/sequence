@@ -10,10 +10,10 @@ use \Closure;
  * @package Revinate\Sequence
  */
 class FnSequence {
-    /** @var Closure|null  */
+    /** @var Closure|callable|null  */
     protected $fnToApply = null;
 
-    public function __construct(Closure $fnPrev = null) {
+    public function __construct($fnPrev = null) {
         if (! $fnPrev) {
             $fnPrev = FnGen::fnIdentity();
         }
@@ -30,7 +30,7 @@ class FnSequence {
      * @param callable $fnMapKey
      * @return FnSequence
      */
-    public function map(Closure $fnMap, Closure $fnMapKey = null) {
+    public function map($fnMap, $fnMapKey = null) {
         $self = $this;
         $fnApply = function($values) use ($self, $fnMap, $fnMapKey) {
             return $self->apply($values)->map($fnMap, $fnMapKey);
@@ -44,7 +44,7 @@ class FnSequence {
      * @param callable $fnMapKey($key, $value) -- function that returns the new key
      * @return FnSequence
      */
-    public function mapKey(Closure $fnMapKey) {
+    public function mapKey($fnMapKey) {
         $self = $this;
         $fnApply = function($values) use ($self, $fnMapKey) {
             return $self->apply($values)->mapKeys($fnMapKey);
@@ -58,7 +58,7 @@ class FnSequence {
      * @param callable $fnMap($value, $key) -- function that returns the new key
      * @return FnSequence
      */
-    public function keyBy(Closure $fnMap) {
+    public function keyBy($fnMap) {
         $self = $this;
         $fnApply = function($values) use ($self, $fnMap) {
             return $self->apply($values)->keyBy($fnMap);
@@ -72,7 +72,7 @@ class FnSequence {
      * @param callable $fnFilter($value, $key)
      * @return FnSequence
      */
-    public function filter(Closure $fnFilter) {
+    public function filter($fnFilter) {
         $self = $this;
         $fnApply = function($values) use ($self, $fnFilter) {
             return $self->apply($values)->filter($fnFilter);
@@ -84,7 +84,7 @@ class FnSequence {
      * @param callable $fn($key, $value)
      * @return Sequence
      */
-    public function filterKeys(Closure $fn) {
+    public function filterKeys($fn) {
         $self = $this;
         $fnApply = function($values) use ($self, $fn) {
             return $self->apply($values)->filterKeys($fn);
@@ -139,7 +139,7 @@ class FnSequence {
      * @param callable $fn($values)
      * @return callable - a function
      */
-    public function append(Closure $fn) {
+    public function append($fn) {
         $self = $this;
         return function($values) use ($self, $fn) {
             return $fn($self->apply($values));
@@ -150,7 +150,7 @@ class FnSequence {
      * @param callable $fnToApplyToEachElement
      * @return FnSequence
      */
-    public function walk(Closure $fnToApplyToEachElement) {
+    public function walk($fnToApplyToEachElement) {
         $self = $this;
         $fnApply = function($values) use ($self, $fnToApplyToEachElement) {
             return $self->apply($values)->walk($fnToApplyToEachElement);
@@ -167,7 +167,7 @@ class FnSequence {
      * @param callable $fn($current, $value, $key)
      * @return callable ($values)
      */
-    public function reduceBounded($initialValue, Closure $fn) {
+    public function reduceBounded($initialValue, $fn) {
         $self = $this;
         $fnApply = function($values) use ($self, $fn, $initialValue) {
             return $self->apply($values)->reduce($initialValue, $fn);
@@ -183,7 +183,7 @@ class FnSequence {
      * @param callable $fn($current, $value, $key)
      * @return callable ($init, $values)
      */
-    public function reduce(Closure $fn) {
+    public function reduce($fn) {
         $self = $this;
         $fnApply = function($initialValue, $values) use ($self, $fn) {
             return $self->apply($values)->reduce($initialValue, $fn);
@@ -234,7 +234,7 @@ class FnSequence {
      * @param callable $fnBaseMap($values) [optional] -- this the first function applied.
      * @return FnSequence
      */
-    public static function make(Closure $fnBaseMap = null) {
+    public static function make($fnBaseMap = null) {
         return new FnSequence($fnBaseMap);
     }
 }

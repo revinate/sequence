@@ -12,13 +12,13 @@ use \Iterator;
  */
 class MappedSequence extends Sequence {
 
-    /** @var Closure $fnMapValueFunction */
+    /** @var Closure|callable $fnMapValueFunction */
     protected $fnMapValueFunction;
 
-    /** @var Closure $fnMapKeyFunction */
+    /** @var Closure|callable $fnMapKeyFunction */
     protected $fnMapKeyFunction;
 
-    public function __construct(Iterator $iterator, Closure $fnMapValueFunction, Closure $fnMapKeyFunction) {
+    public function __construct(Iterator $iterator, $fnMapValueFunction, $fnMapKeyFunction) {
         parent::__construct($iterator);
         if (!$fnMapKeyFunction) {
             $fnMapKeyFunction = FnGen::fnIdentity();

@@ -3,7 +3,6 @@
 namespace Revinate\Sequence;
 
 use \ArrayIterator;
-use \Closure;
 use \EmptyIterator;
 use \Iterator;
 use \IteratorIterator;
@@ -20,44 +19,44 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     /**
      * @param callable $fnValueMap($value, $key) -- function that returns the new value.
      * @param callable $fnKeyMap($key, $value) [optional] -- function that returns the new key
-     * @return MappedSequence
+     * @return static
      */
-    public function map(Closure $fnValueMap, Closure $fnKeyMap = null) {
-        return IterationTraits::map($this, $fnValueMap, $fnKeyMap);
+    public function map($fnValueMap, $fnKeyMap = null) {
+        return static::make(IterationTraits::map($this, $fnValueMap, $fnKeyMap));
     }
 
     /**
      * Map the keys of a sequence
      *
      * @param callable $fnKeyMap($key, $value) -- function that returns the new key
-     * @return MappedSequence
+     * @return static
      */
-    public function mapKeys(Closure $fnKeyMap) {
-        return IterationTraits::mapKeys($this, $fnKeyMap);
+    public function mapKeys($fnKeyMap) {
+        return static::make(IterationTraits::mapKeys($this, $fnKeyMap));
     }
 
     /**
      * @param callable $fnMap($value, $key) -- function that returns the new key
-     * @return MappedSequence
+     * @return static
      */
-    public function keyBy(Closure $fnMap) {
-        return IterationTraits::mapKeys($this, FnGen::fnSwapParamsPassThrough($fnMap));
+    public function keyBy($fnMap) {
+        return static::make(IterationTraits::mapKeys($this, FnGen::fnSwapParamsPassThrough($fnMap)));
     }
 
     /**
      * @param callable $fn
-     * @return Sequence
+     * @return static
      */
-    public function filter(Closure $fn) {
-        return IterationTraits::filter($this, $fn);
+    public function filter($fn) {
+        return static::make(IterationTraits::filter($this, $fn));
     }
 
     /**
      * @param callable $fn($key, $value)
-     * @return Sequence
+     * @return static
      */
-    public function filterKeys(Closure $fn) {
-        return IterationTraits::filterKeys($this, $fn);
+    public function filterKeys($fn) {
+        return static::make(IterationTraits::filterKeys($this, $fn));
     }
 
     /**
@@ -65,7 +64,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @param callable $fn($reducedValue, $value, $key)
      * @return mixed
      */
-    public function reduce($init, Closure $fn) {
+    public function reduce($init, $fn) {
         return IterationTraits::reduce($this, $init, $fn);
     }
 
@@ -76,27 +75,27 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      *
      * @param mixed $init
      * @param callable $fn($reducedValue, $value, $key)
-     * @return Sequence
+     * @return static
      */
-    public function reduceToSequence($init, Closure $fn) {
-        return Sequence::make($this->reduce($init, $fn));
+    public function reduceToSequence($init, $fn) {
+        return static::make($this->reduce($init, $fn));
     }
 
     /**
      * Get the keys
-     * @return MappedSequence
+     * @return static
      */
     public function keys() {
-        return IterationTraits::keys($this);
+        return static::make(IterationTraits::keys($this));
     }
 
     /**
      * Get the values
      *
-     * @return MappedSequence
+     * @return static
      */
     public function values() {
-        return IterationTraits::values($this);
+        return static::make(IterationTraits::values($this));
     }
 
     /**
@@ -113,7 +112,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @param callable $fn($value, $key)
      * @return Iterator
      */
-    public function walk(Closure $fn) {
+    public function walk($fn) {
         return IterationTraits::walk($this, $fn);
     }
 
@@ -121,30 +120,30 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * Limit the number of values returned
      *
      * @param int $limit
-     * @return Sequence
+     * @return static
      */
     public function limit($limit) {
-        return IterationTraits::limit($this, $limit);
+        return static::make(IterationTraits::limit($this, $limit));
     }
 
     /**
      * Skip $offset number of values
      *
      * @param int $offset
-     * @return Sequence
+     * @return static
      */
     public function offset($offset) {
-        return IterationTraits::offset($this, $offset);
+        return static::make(IterationTraits::offset($this, $offset));
     }
 
     /**
      * Sort ALL the values in the sequence.  Keys are NOT preserved.
      *
-     * @param null|Closure $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see usort
-     * @return Sequence
+     * @param null|$fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see usort
+     * @return static
      */
     public function sort($fn = null) {
-        return IterationTraits::sort($this, $fn);
+        return static::make(IterationTraits::sort($this, $fn));
     }
 
     /**
@@ -153,8 +152,8 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uasort
      * @return Sequence
      */
-    public function asort(Closure $fn = null) {
-        return IterationTraits::asort($this, $fn);
+    public function asort($fn = null) {
+        return static::make(IterationTraits::asort($this, $fn));
     }
 
     /**
@@ -163,18 +162,18 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uksort
      * @return Sequence
      */
-    public function sortKeys(Closure $fn = null) {
-        return IterationTraits::sortKeys($this, $fn);
+    public function sortKeys($fn = null) {
+        return static::make(IterationTraits::sortKeys($this, $fn));
     }
 
     /**
      * Group A Sequence based upon the result of $fnMapValueToGroup($value, $key) and return the result as a Sequence
      *
-     * @param Closure $fnMapValueToGroup($value, $key) -- return the field name to group the values under.
+     * @param $fnMapValueToGroup($value, $key) -- return the field name to group the values under.
      * @return Sequence
      */
-    public function groupBy(Closure $fnMapValueToGroup) {
-        return IterationTraits::groupBy($this, $fnMapValueToGroup);
+    public function groupBy($fnMapValueToGroup) {
+        return static::make(IterationTraits::groupBy($this, $fnMapValueToGroup));
     }
 
     /**
@@ -184,7 +183,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      *
      * @param string $fieldName -- name of the field to extract
      * @param mixed $default = null
-     * @return MappedSequence
+     * @return static
      */
     public function pluck($fieldName, $default = null) {
         return $this->map(FnGen::fnPluck($fieldName, $default));
@@ -196,7 +195,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @param callable|null $fnTest($value, $key)
      * @return null|mixed
      */
-    public function first(Closure $fnTest = null) {
+    public function first($fnTest = null) {
         if ($fnTest) {
             return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
         }
@@ -209,7 +208,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @param callable|null $fnTest($value, $key)
      * @return mixed
      */
-    public function firstKey(Closure $fnTest = null) {
+    public function firstKey($fnTest = null) {
         if ($fnTest) {
             return $this->filter($fnTest)->limit(1)->keys()->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
         }
@@ -234,13 +233,13 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
             $result[] = $value;
             return $result;
         });
-        return Sequence::make($result);
+        return static::make($result);
     }
 
     /**
      * Flatten a Sequence by one level into a new Sequence.
      *
-     * @return Sequence
+     * @return static
      */
     public function flattenOnce() {
         return $this->flatten(1);
@@ -250,23 +249,23 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * Flatten a Sequence into a new Sequence.
      *
      * @param int $depth
-     * @return Sequence
+     * @return static
      */
     public function flatten($depth = -1) {
         $recursiveIterator = new RecursiveIteratorIterator(RecursiveSequence::make($this)->setMaxDepth($depth));
         // Simulate array_merge by sequencing numeric keys but do not touch string keys.
-        return IterationTraits::sequenceNumericKeys(Sequence::make($recursiveIterator));
+        return static::make(IterationTraits::sequenceNumericKeys(Sequence::make($recursiveIterator)));
     }
 
     /**
      * Traverses a sequence storing the path as keys
      *
      * @param int $depth
-     * @return Sequence
+     * @return static
      */
     public function traverse($depth = -1) {
         $recursiveIterator = new RecursiveIteratorIterator(TraverseSequence::make($this)->setMaxDepth($depth));
-        return Sequence::make($recursiveIterator);
+        return static::make($recursiveIterator);
     }
 
     /**
