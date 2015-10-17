@@ -10,7 +10,7 @@ namespace Revinate\Sequence;
 
 
 class OnDemandIterator implements \Iterator {
-    /** @var  \Closure */
+    /** @var  \Closure|callable */
     protected $fnGetIterator;
     protected $iterator = null;
 

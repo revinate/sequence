@@ -18,6 +18,11 @@ class MappedSequence extends Sequence {
     /** @var Closure|callable $fnMapKeyFunction */
     protected $fnMapKeyFunction;
 
+    /**
+     * @param Iterator      $iterator
+     * @param callable|null $fnMapValueFunction($value, $key)
+     * @param callable|null $fnMapKeyFunction($key, $value)
+     */
     public function __construct(Iterator $iterator, $fnMapValueFunction, $fnMapKeyFunction) {
         parent::__construct($iterator);
         if (!$fnMapKeyFunction) {
