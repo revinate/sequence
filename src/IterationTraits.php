@@ -2,7 +2,6 @@
 
 namespace Revinate\Sequence;
 
-use \Closure;
 use \Iterator;
 use \LimitIterator;
 
@@ -19,7 +18,7 @@ class IterationTraits {
      * @param callable $fnKey($key, $value) [optional]
      * @return MappedSequence
      */
-    public static function map(Iterator $iterator, Closure $fnValue, Closure $fnKey = null) {
+    public static function map(Iterator $iterator, $fnValue, $fnKey = null) {
         if (empty($fnKey)) {
             $fnKey = FnGen::fnIdentity();
         }
@@ -31,7 +30,7 @@ class IterationTraits {
      * @param callable $fn($key, $value)
      * @return MappedSequence
      */
-    public static function mapKeys(Iterator $iterator, Closure $fn) {
+    public static function mapKeys(Iterator $iterator, $fn) {
         return new MappedSequence($iterator, FnGen::fnIdentity(), $fn);
     }
 
@@ -40,7 +39,7 @@ class IterationTraits {
      * @param callable $fn($value, $key)
      * @return Sequence
      */
-    public static function filter(Iterator $iterator, Closure $fn) {
+    public static function filter(Iterator $iterator, $fn) {
         return Sequence::make(new FilteredSequence($iterator, $fn));
     }
 
@@ -49,7 +48,7 @@ class IterationTraits {
      * @param callable $fn($key, $value)
      * @return Sequence
      */
-    public static function filterKeys(Iterator $iterator, Closure $fn) {
+    public static function filterKeys(Iterator $iterator, $fn) {
         return Sequence::make(new FilteredSequence($iterator, FnGen::fnSwapParamsPassThrough($fn)));
     }
 
@@ -81,7 +80,7 @@ class IterationTraits {
      * @param callable $fn($reducedValue, $value, $key) - function that takes the following params ($reducedValue, $value, $key) where $reducedValue is the current
      * @return mixed
      */
-    public static function reduce(Iterator $iterator, $init, Closure $fn) {
+    public static function reduce(Iterator $iterator, $init, $fn) {
         $reducedValue = $init;
         foreach ($iterator as $key => $value) {
             $reducedValue = $fn($reducedValue, $value, $key);
@@ -135,7 +134,7 @@ class IterationTraits {
      * @param callable $fn($value, $key) -- the function to call for each item.
      * @return Iterator
      */
-    public static function walk(Iterator $iterator, Closure $fn) {
+    public static function walk(Iterator $iterator, $fn) {
         foreach ($iterator as $key => $value) {
             $fn($value, $key);
         }
@@ -143,11 +142,25 @@ class IterationTraits {
         return $iterator;
     }
 
+
     /**
-     * @param Closure $fn
+     * Allow for a function to be called for each element.
+     *
+     * @param Iterator $iterator
+     * @param callable $fnTap($value, $key) - called with each $key/$value pair, the return value is ignored.
+     * @return MappedSequence
+     */
+    public static function tap(Iterator $iterator, $fnTap) {
+        $fnValue = function ($v, $k) use ($fnTap) { $fnTap($v, $k); return $v; };
+        return new MappedSequence($iterator, $fnValue, null);
+    }
+
+
+    /**
+     * @param callable $fn
      * @return Sequence
      */
-    public static function wrapFunctionIntoSequenceOnDemand(Closure $fn) {
+    public static function wrapFunctionIntoSequenceOnDemand($fn) {
         return Sequence::make(new OnDemandIterator($fn));
     }
 
@@ -158,7 +171,7 @@ class IterationTraits {
      * @param callable $fn
      * @return Sequence
      */
-    public static function sort(Iterator $iterator, Closure $fn = null) {
+    public static function sort(Iterator $iterator, $fn = null) {
         return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
@@ -177,7 +190,7 @@ class IterationTraits {
      * @param callable $fn
      * @return Sequence
      */
-    public static function asort(Iterator $iterator, Closure $fn = null) {
+    public static function asort(Iterator $iterator, $fn = null) {
         return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
@@ -196,7 +209,7 @@ class IterationTraits {
      * @param callable $fn
      * @return Sequence
      */
-    public static function sortKeys(Iterator $iterator, Closure $fn = null) {
+    public static function sortKeys(Iterator $iterator, $fn = null) {
         return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
@@ -212,10 +225,10 @@ class IterationTraits {
      * Group all the the values into an array and return the result as a Sequence.
      *
      * @param Iterator $iterator
-     * @param Closure  $fnToGroup
+     * @param callable  $fnToGroup
      * @return Sequence
      */
-    public static function groupBy(Iterator $iterator, Closure $fnToGroup) {
+    public static function groupBy(Iterator $iterator, $fnToGroup) {
         return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fnToGroup) {
             return Sequence::make($iterator)
                 ->reduceToSequence(array(), function ($collection, $value, $key) use ($fnToGroup) {

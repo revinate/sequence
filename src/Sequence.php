@@ -99,6 +99,17 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     }
 
     /**
+     * Calls $fnTap for each element.  This function is like walk, but does not consume the iterator.
+     * Example: Sequence::make($values)->tap($fnLogValue)->map(...)
+     *
+     * @param callable $fnTap($value, $key) -- called for each element.  The return value is ignored.
+     * @return static
+     */
+    public function tap($fnTap) {
+        return static::make(IterationTraits::tap($this, $fnTap));
+    }
+
+    /**
      * Convert to an array.
      * @return array
      */
@@ -150,7 +161,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * Sort ALL the values in the sequence.  Keys ARE preserved.
      *
      * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uasort
-     * @return Sequence
+     * @return static
      */
     public function asort($fn = null) {
         return static::make(IterationTraits::asort($this, $fn));
@@ -160,7 +171,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * Sort ALL the values by the keys in the sequence.  Keys ARE preserved.
      *
      * @param callable $fn($a, $b) [optional] -- function to use to sort the values, needs to return an int see uksort
-     * @return Sequence
+     * @return static
      */
     public function sortKeys($fn = null) {
         return static::make(IterationTraits::sortKeys($this, $fn));
@@ -170,7 +181,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * Group A Sequence based upon the result of $fnMapValueToGroup($value, $key) and return the result as a Sequence
      *
      * @param $fnMapValueToGroup($value, $key) -- return the field name to group the values under.
-     * @return Sequence
+     * @return static
      */
     public function groupBy($fnMapValueToGroup) {
         return static::make(IterationTraits::groupBy($this, $fnMapValueToGroup));
@@ -220,7 +231,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      *
      * In its current implementation it forces the evaluation of ALL the items in the Sequence.
      *
-     * @return Sequence
+     * @return static
      */
     public function flattenOnceNow() {
         $result = $this->reduce(array(), function($result, $value) {

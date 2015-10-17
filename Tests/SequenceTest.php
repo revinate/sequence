@@ -464,4 +464,20 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
     }
 
+    public function testTap() {
+        $values = range(100, 200);
+        $tappedValues = array();
+        $tappedKeys = array();
+
+        $result = Sequence::make($values)
+            // Grab Values
+            ->tap(function($v, $k) use (&$tappedValues) { $tappedValues[] = $v; })
+            ->tap(function($v, $k) use (&$tappedKeys) { $tappedKeys[] = $k; })
+            ->to_a();
+
+        $this->assertEquals($values, $result);
+        $this->assertEquals(array_values($values), $tappedValues);
+        $this->assertEquals(array_keys($values), $tappedKeys);
+    }
+
 }
