@@ -57,6 +57,39 @@ function fnMapToKeyValuePair() {
     return function ($v, $k) { return array($k, $v); };
 }
 
+/**
+ * Alias of fnMapToKeyValuePair - to match underscore library.
+ * @see fnMapToKeyValuePair
+ * @return Closure
+ */
+function fnPair() {
+    return fnMapToKeyValuePair();
+}
+
+/**
+ * Generate a function that splits out the key from a [key, value] tuple
+ * @return Closure
+ */
+function fnPairKey() {
+    /**
+     * @param mixed $v - Value
+     * @return mixed returns the key portion of a [key, value] tuple
+     */
+    return function ($v) { return $v[0]; };
+}
+
+
+/**
+ * Generate a function that splits out the value from a [key, value] tuple
+ * @return Closure
+ */
+function fnPairValue() {
+    /**
+     * @param mixed $v - Value
+     * @return mixed returns the value portion of a [key, value] tuple
+     */
+    return function ($v) { return $v[1]; };
+}
 
 /**
  * Generates a function that will apply a mapping function to a sub field of a record
