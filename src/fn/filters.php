@@ -36,7 +36,7 @@ function fnClean() {
 }
 
 /**
- * @return callable
+ * @return \Closure
  */
 function fnIsEmpty() {
     return function ($v) { return empty($v); };

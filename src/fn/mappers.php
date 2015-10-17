@@ -17,7 +17,7 @@ use Revinate\Sequence\FnSequence;
 /**
  * @param ArrayAccess|array $map
  * @param mixed $default -- default value to use if the value is not set in the map.
- * @return callable
+ * @return Closure
  */
 function fnMap($map, $default = null) {
     return function ($v) use ($map, $default) { return isset($map[$v]) ? $map[$v] : $default; };
@@ -27,7 +27,7 @@ function fnMap($map, $default = null) {
  * Generate a function that swaps the order of the parameters and calls $fn
  *
  * @param callable $fn
- * @return callable
+ * @return Closure
  */
 function fnSwapParamsPassThrough($fn) {
     return function ($a, $b) use ($fn) { return $fn($b, $a); };
@@ -36,16 +36,22 @@ function fnSwapParamsPassThrough($fn) {
 /**
  * Generate a function that returns the key from a map call.
  *
- * @return callable
+ * @return Closure
  */
 function fnKey() {
+    /** @noinspection PhpUnusedParameterInspection */
+    /**
+     * @param mixed            $v -- Value
+     * @param string|int|mixed $k -- Key
+     * @return mixed returns the key
+     */
     return function ($v, $k) { return $k; };
 }
 
 /**
  * Generate a function that combines the key and the value into a tuple.
  *
- * @return callable
+ * @return Closure
  */
 function fnMapToKeyValuePair() {
     return function ($v, $k) { return array($k, $v); };
@@ -57,7 +63,7 @@ function fnMapToKeyValuePair() {
  *
  * @param string $fieldName
  * @param callable $fnMap($fieldValue, $fieldName, $parentRecord, $parentKey)
- * @return callable
+ * @return Closure
  */
 function fnMapField($fieldName, $fnMap) {
     return function ($record, $key = null) use ($fieldName, $fnMap) {
@@ -78,7 +84,7 @@ function fnMapField($fieldName, $fnMap) {
  *
  * @param string $key - the name / key, of the field to get the value from.
  * @param mixed $default - the default value to assign if the field does not exist.
- * @return callable
+ * @return Closure
  */
 function fnPluck($key, $default = null) {
     return function ($v) use ($key, $default) {
@@ -91,7 +97,7 @@ function fnPluck($key, $default = null) {
  *
  * @param array|ArrayAccess $from
  * @param null|mixed $default
- * @return callable
+ * @return Closure
  */
 function fnPluckFrom($from, $default = null) {
     return function ($key) use ($from, $default) {
@@ -102,7 +108,7 @@ function fnPluckFrom($from, $default = null) {
 /**
  * Generate a function that returns the value given.
  *
- * @return callable
+ * @return Closure
  */
 function fnIdentity() {
     return function ($v) { return $v; };
@@ -111,7 +117,7 @@ function fnIdentity() {
 /**
  * @description Generate a function that will return the result of calling count()
  *
- * @return callable
+ * @return Closure
  */
 function fnCount() {
     return function ($v) { return count($v); };
@@ -121,7 +127,7 @@ function fnCount() {
  * Generate a function that returns a counter.
  *
  * @param int $startingValue
- * @return callable
+ * @return Closure
  */
 function fnCounter($startingValue = 0) {
     $count = $startingValue;
@@ -131,7 +137,7 @@ function fnCounter($startingValue = 0) {
 /**
  * Returns a function that applies a function to a nested array and returns the results.
  *
- * @return callable
+ * @return Closure
  */
 function fnNestedSort() {
     return function ($array) {
@@ -143,7 +149,7 @@ function fnNestedSort() {
  * Returns a function that applies a function to a nested array and returns the results.
  *
  * @param $fn
- * @return callable
+ * @return Closure
  */
 function fnNestedMap($fn) {
     return FnSequence::make()->map($fn)->to_a();
@@ -153,7 +159,7 @@ function fnNestedMap($fn) {
  * Returns a function that applies a function to a nested array and returns the results.
  *
  * @param $fn
- * @return callable
+ * @return Closure
  */
 function fnNestedUKeyBy($fn) {
     return function ($array) use ($fn) {
@@ -164,12 +170,12 @@ function fnNestedUKeyBy($fn) {
 /**
  * Returns a map function that will allow different map functions to be called based upon the result of a test function.
  *
- * @param Closure $fnTest($value, $key)        -- the test function
- * @param Closure $fnMapTrue($value, $key)     -- the map function to use if the test is true
- * @param Closure $fnMapFalse($value, $key)    -- the map function to use if the test is false
- * @return callable
+ * @param callable $fnTest($value, $key)        -- the test function
+ * @param callable $fnMapTrue($value, $key)     -- the map function to use if the test is true
+ * @param callable $fnMapFalse($value, $key)    -- the map function to use if the test is false
+ * @return Closure
  */
-function fnIfMap(Closure $fnTest, Closure $fnMapTrue, Closure $fnMapFalse = null) {
+function fnIfMap($fnTest, $fnMapTrue, $fnMapFalse = null) {
     if (is_null($fnMapFalse)) {
         $fnMapFalse = fnIdentity();
     }
@@ -186,11 +192,11 @@ function fnIfMap(Closure $fnTest, Closure $fnMapTrue, Closure $fnMapFalse = null
 /**
  * Create a function that will cache the results of another function based upon the
  *
- * @param Closure $fnMap($value,...) - any invariant map function
- * @param Closure|null $fnHash  - Converts the arguments into a hash value
- * @return callable
+ * @param callable $fnMap($value,...) - any invariant map function
+ * @param callable|null $fnHash  - Converts the arguments into a hash value
+ * @return Closure
  */
-function fnCacheResult(Closure $fnMap, Closure $fnHash = null) {
+function fnCacheResult($fnMap, $fnHash = null) {
     $fnHash = $fnHash ?: fnIdentity();
     $cache = array();
     return function($value) use ($fnMap, $fnHash, &$cache) {
@@ -207,7 +213,7 @@ function fnCacheResult(Closure $fnMap, Closure $fnHash = null) {
 /**
  * Generates a function that always returns true
  *
- * @return callable
+ * @return Closure
  */
 function fnTrue() {
     return function () { return true; };
@@ -216,7 +222,7 @@ function fnTrue() {
 /**
  * Generates a function that always returns false
  *
- * @return callable
+ * @return Closure
  */
 function fnFalse() {
     return function () { return false; };

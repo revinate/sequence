@@ -7,11 +7,12 @@
  */
 
 namespace Revinate\Sequence\fn;
+use \Closure;
 
 /**
  * Returns a function that trims the value.
  *
- * @return callable
+ * @return Closure
  */
 function fnTrim() {
     return function ($v) {
@@ -20,10 +21,32 @@ function fnTrim() {
 }
 
 /**
+ * Returns a function that trims spaces form the left.
+ *
+ * @return Closure
+ */
+function fnTrimLeft() {
+    return function ($v) {
+        return ltrim($v);
+    };
+}
+
+/**
+ * Returns a function that trims spaces from the right.
+ *
+ * @return Closure
+ */
+function fnTrimRight() {
+    return function ($v) {
+        return rtrim($v);
+    };
+}
+
+/**
  * Returns a function that removes a suffix from a string if it exists
  *
  * @param   string $suffix
- * @return  callable
+ * @return  Closure
  */
 function fnRemoveSuffix($suffix) {
     return function ($val) use ($suffix) {
@@ -35,7 +58,7 @@ function fnRemoveSuffix($suffix) {
  * Returns a function that removes a prefix from a string if it exists
  *
  * @param   string $prefix
- * @return  callable
+ * @return  Closure
  */
 function fnRemovePrefix($prefix) {
     return function ($val) use ($prefix) {
@@ -47,7 +70,7 @@ function fnRemovePrefix($prefix) {
  * Returns a function that prefixes a string
  *
  * @param $prefix
- * @return callable
+ * @return Closure
  */
 function fnAddPrefix($prefix) {
     return function ($val) use ($prefix) {
@@ -59,7 +82,7 @@ function fnAddPrefix($prefix) {
  * Returns a function that postfixes a string
  *
  * @param $postfix
- * @return callable
+ * @return Closure
  */
 function fnAddPostfix($postfix) {
     return function ($val) use ($postfix) {

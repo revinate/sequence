@@ -13,10 +13,10 @@ use \Closure;
 /**
  * Generate a comparison function that uses an extractor to get the values for comparison
  *
- * @param Closure $fnExtractValue -- Function that will extract the values to be compared.
+ * @param callable $fnExtractValue -- Function that will extract the values to be compared.
  * @return Closure -- returns a function to be used with sort
  */
-function fnCompare(Closure $fnExtractValue) {
+function fnCompare($fnExtractValue) {
     return function ($lhs, $rhs) use ($fnExtractValue) {
         $lhsValue = $fnExtractValue($lhs);
         $rhsValue = $fnExtractValue($rhs);
@@ -36,10 +36,10 @@ function fnCompare(Closure $fnExtractValue) {
  * Generate a comparison function that uses an extractor to get the values for comparison
  * The order of the comparison is reversed.
  *
- * @param Closure $fnExtractValue -- Function that will extract the values to be compared.
+ * @param callable $fnExtractValue -- Function that will extract the values to be compared.
  * @return Closure -- returns a function to be used with sort
  */
-function fnCompareRev(Closure $fnExtractValue) {
+function fnCompareRev($fnExtractValue) {
     return fnSwapParamsPassThrough(fnCompare($fnExtractValue));
 }
 
@@ -67,7 +67,7 @@ function fnCompareFieldRev($fieldName) {
 /**
  * Generate a function that can sort an array
  *
- * @param Closure|null $fnComp ($lhs, $rhs) -- see PHP usort
+ * @param callable|null $fnComp ($lhs, $rhs) -- see PHP usort
  * @return Closure
  */
 function fnSortArray($fnComp = null) {

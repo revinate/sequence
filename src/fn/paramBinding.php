@@ -7,12 +7,13 @@
  */
 
 namespace Revinate\Sequence\fn;
+use \Closure;
 
 /**
  * Generate a function that when called, will call a set of functions passing the result as input to the next function.
  *
- * @param Callable[]|Callable $fn
- * @return callable
+ * @param callable[]|callable $fn
+ * @return Closure
  */
 function fnCallChain($fn) {
     if (is_array($fn) && ! is_callable($fn)) {
@@ -34,7 +35,7 @@ function fnCallChain($fn) {
  * Generate a function that will return the specified parameter
  *
  * @param int $num
- * @return callable
+ * @return Closure
  */
 function fnParam($num) {
     return function () use ($num) {

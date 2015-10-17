@@ -57,6 +57,7 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
      * @param string $encoding
      * @param string $snake
      * @param string $camel
+     * @param string $tests
      * @dataProvider providerSnakeAndCamelCase
      */
     public function testSnakeCaseAndCamelCase($encoding, $snake, $camel, $tests) {
@@ -148,8 +149,15 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @dataProvider providerUcFirstAndLcFirst
+     * @param string $expectedLc
+     * @param string $expectedUc
+     * @param string $string
+     * @param string $encoding
+     * @param string $equal
      */
-    public function testUcFirst($expectedLc, $expectedUc, $string, $encoding, $equal) {
+    public function testUcFirst(
+        /** @noinspection PhpUnusedParameterInspection */
+        $expectedLc, $expectedUc, $string, $encoding, $equal) {
         $fnUcFirst = fnUcFirst($encoding);
         if ($equal) {
             $this->assertEquals($expectedUc, $fnUcFirst($string));
@@ -160,8 +168,14 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @dataProvider providerUcFirstAndLcFirst
+     * @param string $expectedLc
+     * @param string $expectedUc
+     * @param string $string
+     * @param string $encoding
+     * @param string $equal
      */
-    public function testLcFirst($expectedLc, $expectedUc, $string, $encoding, $equal) {
+    public function testLcFirst($expectedLc, /** @noinspection PhpUnusedParameterInspection */
+                                $expectedUc, $string, $encoding, $equal) {
         $fnUcFirst = fnLcFirst($encoding);
         if ($equal) {
             $this->assertEquals($expectedLc, $fnUcFirst($string));
@@ -170,4 +184,44 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
+
+    public function providerTrim() {
+        return array(
+            array("\t\tmiddle\t\t"),
+            array("\t\t some words \n \t\t"),
+            array("Start Here\n\t\t"),
+            array("\t\t\nEnd Here"),
+            array("  \nMulti\nLine\nTest\n"),
+        );
+    }
+
+    /**
+     * @param string $value
+     * @dataProvider providerTrim
+     */
+    public function testTrim($value) {
+        $fnTrim = fnTrim();
+        $this->assertInstanceOf('\Closure', $fnTrim);
+        $this->assertEquals(trim($value), $fnTrim($value));
+    }
+
+    /**
+     * @param string $value
+     * @dataProvider providerTrim
+     */
+    public function testTrimLeft($value) {
+        $fnTrim = fnTrimLeft();
+        $this->assertInstanceOf('\Closure', $fnTrim);
+        $this->assertEquals(ltrim($value), $fnTrim($value));
+    }
+
+    /**
+     * @param string $value
+     * @dataProvider providerTrim
+     */
+    public function testTrimRight($value) {
+        $fnTrim = fnTrimRight();
+        $this->assertInstanceOf('\Closure', $fnTrim);
+        $this->assertEquals(rtrim($value), $fnTrim($value));
+    }
 }

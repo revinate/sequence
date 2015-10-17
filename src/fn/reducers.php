@@ -9,7 +9,6 @@
 namespace Revinate\Sequence\fn;
 
 use Revinate\Sequence\Sequence;
-
 use \Closure;
 
 /********************************************************************************
@@ -25,7 +24,7 @@ use \Closure;
  * @param callable $fnReduce (mixed, $value)
  * @return callable
  */
-function fnReduce(Closure $fnReduce) {
+function fnReduce($fnReduce) {
     return function ($current, $values) use ($fnReduce) {
         return Sequence::make($values)->reduce($current, $fnReduce);
     };
@@ -34,14 +33,14 @@ function fnReduce(Closure $fnReduce) {
 /**
  * Used in Sequence::Reduce to sum all values.
  *
- * @param Closure $fnMapValue [optional] - a function to get the needed value
+ * @param callable|null $fnMapValue [optional] - a function to get the needed value
  * @return callable
  *
  * @example:
  * Get the total number of fruit.
  * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->reduce(FnGen::fnSum(FnGen::fnPluck('count'))
  */
-function fnSum(Closure $fnMapValue = null) {
+function fnSum($fnMapValue = null) {
     if ($fnMapValue) {
         return function ($sum, $v) use ($fnMapValue) { return $sum + $fnMapValue($v); };
     }
@@ -50,7 +49,7 @@ function fnSum(Closure $fnMapValue = null) {
 
 /**
  * @description Generate a function that can be used with reduce to get the max value
- * @return callable
+ * @return Closure
  */
 function fnMax() {
     return function ($max, $v) { return max(array($max, $v)); };
@@ -58,7 +57,7 @@ function fnMax() {
 
 /**
  * @description Generate a function that can be used with reduce to get the min value
- * @return callable
+ * @return Closure
  */
 function fnMin() {
     return function ($min, $v) { return is_null($min) ? $v : (is_null($v) ? $min : min($min, $v)); };
@@ -68,10 +67,10 @@ function fnMin() {
  * Generate a function that will:
  * Calculate the average of a set of values.  Null values are skipped.
  *
- * @param callable $fnMapValue [optional] - maps the value before it is computed.
- * @return callable
+ * @param callable|null $fnMapValue [optional] - maps the value before it is computed.
+ * @return Closure
  */
-function fnAvg(Closure $fnMapValue = null) {
+function fnAvg($fnMapValue = null) {
     $count = 0;
     $sum   = 0;
 
@@ -79,6 +78,12 @@ function fnAvg(Closure $fnMapValue = null) {
         $fnMapValue = fnIdentity();
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
+    /**
+     * @param float|int $avg -- Ignored because the average will be recalculated.
+     * @param float|int|null $v -- the value
+     * @return float|int|null
+     */
     return function ($avg, $v) use (&$count, &$sum, $fnMapValue) {
         $v = $fnMapValue($v);
         if (is_null($v)) {
@@ -95,7 +100,7 @@ function fnAvg(Closure $fnMapValue = null) {
 
 /**
  * @description Alias for fnSum -- usage is to do a union between arrays.
- * @return callable
+ * @return Closure
  */
 function fnUnion() {
     return fnSum();
