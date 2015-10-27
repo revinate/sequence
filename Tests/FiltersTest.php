@@ -56,5 +56,11 @@ class FiltersTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testFnMatch() {
+        $fnMatch = fnMatch('/^as\d+df$/');
+        $this->assertTrue($fnMatch('as1df'));
+        $this->assertFalse($fnMatch('asdf'));
+        $this->assertFalse($fnMatch(' as123df'));
+    }
 
 }
