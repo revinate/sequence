@@ -184,9 +184,19 @@ function fnNot($fn = null) {
 /**
  * Generate a function that returns true if preg_match of the passed value succeeds against specified pattern.
  * @param string $pattern same as for preg_match
- * @return callable
+ * @return \Closure
+ * @deprecated
  */
 function fnMatch($pattern) {
+    return fnPregMatch($pattern);
+}
+
+/**
+ * Generate a function that returns true if preg_match of the passed value succeeds against specified pattern.
+ * @param string $pattern same as for preg_match
+ * @return \Closure
+ */
+function fnPregMatch($pattern) {
     return function($v) use ($pattern) {
         return preg_match($pattern, $v) ? true : false;
     };
