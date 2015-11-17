@@ -225,16 +225,43 @@ class IterationTraits {
      * Group all the the values into an array and return the result as a Sequence.
      *
      * @param Iterator $iterator
-     * @param callable  $fnToGroup
+     * @param callable $fnToGroup
+     * @param null $keys
      * @return Sequence
      */
-    public static function groupBy(Iterator $iterator, $fnToGroup) {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fnToGroup) {
+    public static function groupBy(Iterator $iterator, $fnToGroup, $keys = null) {
+        $init = self::initKeysForGroupBy($keys);
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fnToGroup, $init) {
             return Sequence::make($iterator)
-                ->reduceToSequence(array(), function ($collection, $value, $key) use ($fnToGroup) {
+                ->reduceToSequence($init, function ($collection, $value, $key) use ($fnToGroup) {
                     $collection[$fnToGroup($value, $key)][] = $value;
                     return $collection;
                 });
         });
+    }
+
+    /**
+     * Initializes an array of arrays keyed based on the input. The behavior depends on the input type, as follows:
+     *
+     * If $keys is...
+     *  null  -> empty array; no nested arrays (default)
+     *  int   -> indexed array with length = $keys
+     *  array -> associative array keyed by the values of $keys
+     *
+     * @param null|int|array $keys
+     * @return array
+     */
+    protected static function initKeysForGroupBy($keys = null)
+    {
+        if (is_null($keys)) {
+            return array();
+        }
+
+        if (is_numeric($keys)) {
+            $keys = range(0, $keys-1);
+        }
+        return Sequence::make($keys)
+            ->map(function() { return array(); }, FnGen::fnMapToKey())
+            ->to_a();
     }
 }
