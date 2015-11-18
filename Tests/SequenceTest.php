@@ -227,6 +227,15 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
     }
 
+    public function testFirstByKey() {
+        $values = TestData::$fruit;
+
+        $this->assertEquals($values[2], Sequence::make($values)->firstByKey(FnGen::fnIsEqual(2)));
+
+        // Test it without a function, it should return the first value in the list.
+        $this->assertEquals($values[0], Sequence::make($values)->first());
+    }
+
     public function testMake() {
         $values = TestData::$fruit[0];
 

@@ -227,6 +227,19 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     }
 
     /**
+     * Returns the first element where $fnTest returns true, where $fnTest receives only the key as a parameter
+     *
+     * @param callable|null $fnTest($key, $value)
+     * @return null|mixed
+     */
+    public function firstByKey($fnTest = null) {
+        if ($fnTest) {
+            return $this->filterKeys($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        }
+        return $this->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+    }
+
+    /**
      * Flatten a Sequence by one level into a new Sequence.
      *
      * In its current implementation it forces the evaluation of ALL the items in the Sequence.
