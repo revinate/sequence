@@ -226,7 +226,7 @@ class IterationTraits {
      *
      * @param Iterator $iterator
      * @param callable $fnToGroup
-     * @param null $keys
+     * @param null|int|array $keys -- Defines the array which values are grouped into. @see IterationTraits::initKeysForGroupBy()
      * @return Sequence
      */
     public static function groupBy(Iterator $iterator, $fnToGroup, $keys = null) {
@@ -245,7 +245,7 @@ class IterationTraits {
      *
      * If $keys is...
      *  null  -> empty array; no nested arrays (default)
-     *  int   -> indexed array with length = $keys
+     *  int   -> indexed array with length = $keys and indices 0 to $keys-1
      *  array -> associative array keyed by the values of $keys
      *
      * @param null|int|array $keys
