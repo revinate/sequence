@@ -261,3 +261,12 @@ function fnFalse() {
     return function () { return false; };
 }
 
+/**
+ * Generate a function that always returns $const
+ *
+ * @param mixed $const
+ * @return Closure
+ */
+function fnConst($const) {
+    return function () use ($const) { return $const; };
+}

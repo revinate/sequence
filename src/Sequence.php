@@ -110,11 +110,35 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     }
 
     /**
-     * Convert to an array.
+     * Convert to an array, alias of toArray.
      * @return array
      */
     public function to_a() {
+        return $this->toArray();
+    }
+
+    /**
+     * Convert to an array.
+     * @return array
+     */
+    public function toArray() {
         return IterationTraits::to_a($this);
+    }
+
+    /**
+     * Convert to an array of values
+     * @return array
+     */
+    public function toValues() {
+        return $this->values()->toArray();
+    }
+
+    /**
+     * Convert to an array of keys
+     * @return array
+     */
+    public function toKeys() {
+        return $this->keys()->toArray();
     }
 
     /**
@@ -207,10 +231,8 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return null|mixed
      */
     public function first($fnTest = null) {
-        if ($fnTest) {
-            return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
-        }
-        return $this->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        $fnTest = $fnTest ?: fn\fnTrue();
+        return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
     }
 
     /**
@@ -220,23 +242,19 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return mixed
      */
     public function firstKey($fnTest = null) {
-        if ($fnTest) {
-            return $this->filter($fnTest)->limit(1)->keys()->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
-        }
-        return $this->limit(1)->keys()->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        $fnTest = $fnTest ?: fn\fnTrue();
+        return $this->filter($fnTest)->limit(1)->keys()->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
     }
 
     /**
-     * Returns the first element where $fnTest returns true, where $fnTest receives only the key as a parameter
+     * Returns the first element where $fnTest returns true
      *
      * @param callable|null $fnTest($key, $value)
      * @return null|mixed
      */
     public function firstByKey($fnTest = null) {
-        if ($fnTest) {
-            return $this->filterKeys($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
-        }
-        return $this->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        $fnFilter = $fnTest ? fn\fnSwapParamsPassThrough($fnTest) : null;
+        return $this->first($fnFilter);
     }
 
     /**

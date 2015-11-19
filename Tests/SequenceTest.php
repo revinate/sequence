@@ -489,4 +489,25 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array_keys($values), $tappedKeys);
     }
 
+    public function testToValues() {
+        $values = range(100, 200);
+        $this->assertEquals($values, Sequence::make($values)->toValues());
+        $this->assertEquals($values, Sequence::make(array_combine($values, $values))->toValues());
+
+        // Test the case of duplicate keys
+        $this->assertEquals($values, Sequence::make($values)->mapKeys(fn\fnConst(0))->toValues());
+        $this->assertNotEquals($values, Sequence::make($values)->mapKeys(fn\fnConst(0))->toArray());
+    }
+
+    public function testToKeys() {
+        $values = range(100, 200);
+        $this->assertEquals(range(0,100), Sequence::make($values)->toKeys());
+        $this->assertEquals($values, Sequence::make(array_combine($values, $values))->toKeys());
+
+        // Test the case of duplicate keys
+        $this->assertEquals(array_fill(0, 101, 'value'), Sequence::make($values)->mapKeys(fn\fnConst('value'))->toKeys());
+        $this->assertEquals(array('dup-key'), array_keys(Sequence::make($values)->mapKeys(fn\fnConst('dup-key'))->toArray()));
+    }
+
+
 }
