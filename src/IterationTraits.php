@@ -225,16 +225,34 @@ class IterationTraits {
      * Group all the the values into an array and return the result as a Sequence.
      *
      * @param Iterator $iterator
-     * @param callable  $fnToGroup
+     * @param callable $fnToGroup($value, $key) -- return the field name to group the values under.
+     * @param null|array|\ArrayAccess|\Closure $init - used to initialize the resulting groups
      * @return Sequence
      */
-    public static function groupBy(Iterator $iterator, $fnToGroup) {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fnToGroup) {
+    public static function groupBy(Iterator $iterator, $fnToGroup, $init = null) {
+        $init = $init ?: array();
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fnToGroup, $init) {
+            // Allow for late binding of the initial value.
+            if ($init instanceof \Closure) {
+                $init = $init();
+            }
             return Sequence::make($iterator)
-                ->reduceToSequence(array(), function ($collection, $value, $key) use ($fnToGroup) {
+                ->reduceToSequence($init, function ($collection, $value, $key) use ($fnToGroup) {
                     $collection[$fnToGroup($value, $key)][] = $value;
                     return $collection;
                 });
         });
+    }
+
+    /**
+     * Group A Sequence based upon the result of $fnMapValueToGroup($value, $key) and return the result as a Sequence
+     *
+     * @param Iterator $iterator
+     * @param callable $fnToGroup($value, $key) -- return the field name to group the values under.
+     * @param array $keys - used to initialize the keys for the resulting groups
+     * @return static
+     */
+    public static function groupByInitWithKeys(Iterator $iterator, $fnToGroup, $keys) {
+        return self::groupBy($iterator, $fnToGroup, array_fill_keys($keys, array()));
     }
 }

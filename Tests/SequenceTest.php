@@ -471,7 +471,23 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
             $this->assertEquals($filteredOrders, $orders);
         }
 
+        $peopleByAge = Sequence::make(TestData::$people)->groupBy(fn\fnPluck('age'), array_fill(0, 100, array()))->toArray();
+        $this->assertEquals(array(), $peopleByAge[0]);
+        $peopleAge55 = Sequence::make(TestData::$people)->filter(fn\fnCallChain(fn\fnPluck('age'), fn\fnIsEqual(55)))->toValues();
+        $this->assertEquals($peopleAge55, $peopleByAge[55]);
+
+        // Test late binding of $init
+        $peopleByAgeFnInit = Sequence::make(TestData::$people)->groupBy(fn\fnPluck('age'), function() { return array_fill(0, 100, array()); })->toArray();
+        $this->assertEquals($peopleByAge, $peopleByAgeFnInit);
     }
+
+    public function testGroupByInitWithKeys() {
+        $peopleByAgeB = Sequence::make(TestData::$people)->groupByInitWithKeys(fn\fnPluck('age'), range(0, 100))->toArray();
+        $peopleByAgeA = Sequence::make(TestData::$people)->groupBy(fn\fnPluck('age'), array_fill(0, 101, array()))->toArray();
+        $this->assertEquals($peopleByAgeA, $peopleByAgeB);
+    }
+
+
 
     public function testTap() {
         $values = range(100, 200);
@@ -508,6 +524,4 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array_fill(0, 101, 'value'), Sequence::make($values)->mapKeys(fn\fnConst('value'))->toKeys());
         $this->assertEquals(array('dup-key'), array_keys(Sequence::make($values)->mapKeys(fn\fnConst('dup-key'))->toArray()));
     }
-
-
 }
