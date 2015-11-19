@@ -24,7 +24,7 @@ function fnMap($map, $default = null) {
 }
 
 /**
- * Generate a function that swaps the order of the parameters and calls $fn
+ * Generate a function that swaps the order of the first two parameters and calls $fn
  *
  * @param callable $fn
  * @return Closure
