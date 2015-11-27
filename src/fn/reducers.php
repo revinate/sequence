@@ -31,14 +31,14 @@ function fnReduce($fnReduce) {
 }
 
 /**
- * Used in Sequence::Reduce to sum all values.
+ * Used in Sequence::fold to sum all values.
  *
  * @param callable|null $fnMapValue [optional] - a function to get the needed value
  * @return callable
  *
  * @example:
  * Get the total number of fruit.
- * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->reduce(FnGen::fnSum(FnGen::fnPluck('count'))
+ * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->fold(FnGen::fnSum(FnGen::fnPluck('count'))
  */
 function fnSum($fnMapValue = null) {
     if ($fnMapValue) {
@@ -48,7 +48,7 @@ function fnSum($fnMapValue = null) {
 }
 
 /**
- * @description Generate a function that can be used with reduce to get the max value
+ * @description Generate a function that can be used with reduce or fold to get the max value
  * @return Closure
  */
 function fnMax() {
@@ -56,7 +56,7 @@ function fnMax() {
 }
 
 /**
- * @description Generate a function that can be used with reduce to get the min value
+ * @description Generate a function that can be used with reduce or fold to get the min value
  * @return Closure
  */
 function fnMin() {

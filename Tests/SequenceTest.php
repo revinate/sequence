@@ -112,13 +112,13 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
     public function testReduce() {
-        $fn = function($result, $v, $k) {
+        $fn = function($result, $v) {
             return $result + $v;
         };
 
         $n = 100;
 
-        $result = Sequence::make(range(1,$n))->reduce(0, $fn);
+        $result = Sequence::make(range(1, $n))->reduce(0, $fn);
 
         $this->assertTrue($result == $n * ($n +1) / 2);
     }
@@ -344,7 +344,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
                 'qcount' => 3,
                 'questions' => array(
                     'qid' => 1,
-                    'Dont you like my hotel?',
+                    'Do you like my hotel?',
                     'Why not?',
                     'Where would you rather go?'
                 )
@@ -361,7 +361,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
             'qcount' => 3,
             'questions' => array(
                 'qid' => 1,
-                'Dont you like my hotel?',
+                'Do you like my hotel?',
                 'Why not?',
                 'Where would you rather go?'
             ),
@@ -375,7 +375,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
             'rooms' => 200,
             'qcount' => 3,
             'qid' => 1,
-            '0' => 'Dont you like my hotel?',
+            '0' => 'Do you like my hotel?',
             '1' => 'Why not?',
             '2' => 'Where would you rather go?',
             'ranking' => 5
@@ -408,7 +408,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
                 'qcount' => 3,
                 'questions' => array(
                     'qid' => 1,
-                    'Dont you like my hotel?',
+                    'Do you like my hotel?',
                     'Why not?',
                     'Where would you rather go?'
                 )
@@ -425,7 +425,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
             'hotel.survey.qcount' => 3,
             'hotel.survey.questions' => array(
                 'qid' => 1,
-                'Dont you like my hotel?',
+                'Do you like my hotel?',
                 'Why not?',
                 'Where would you rather go?'
             ),
@@ -439,7 +439,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
             'hotel.rooms' => 200,
             'hotel.survey.qcount' => 3,
             'hotel.survey.questions.qid' => 1,
-            'hotel.survey.questions.0' => 'Dont you like my hotel?',
+            'hotel.survey.questions.0' => 'Do you like my hotel?',
             'hotel.survey.questions.1' => 'Why not?',
             'hotel.survey.questions.2' => 'Where would you rather go?',
             'hotel.ranking' => 5
@@ -494,6 +494,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $tappedValues = array();
         $tappedKeys = array();
 
+        /** @noinspection PhpUnusedParameterInspection */
         $result = Sequence::make($values)
             // Grab Values
             ->tap(function($v, $k) use (&$tappedValues) { $tappedValues[] = $v; })
@@ -532,5 +533,18 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $tFruit = Sequence::make(TestData::$fruit)->transpose()->toArray();
         $fruit = Sequence::make($tFruit)->transpose()->toArray();
         $this->assertEquals(TestData::$fruit, $fruit);
+    }
+
+    public function testFold() {
+        $values = array('one', 'two', 'three');
+        $seq = Sequence::make($values);
+
+        $this->assertEquals(implode('', $values), $seq->fold(fn\fnStringConcat()));
+        $this->assertEquals(implode(', ', $values), $seq->fold(fn\fnStringConcat(', ')));
+
+        $this->assertEquals(11, $seq->map(fn\fnStrLen())->fold(fn\fnSum()));
+
+        // test on an empty list.
+        $this->assertNull(Sequence::make(null)->fold(fn\fnSum()));
     }
 }

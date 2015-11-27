@@ -35,7 +35,7 @@ class TestData {
                 'qcount' => 3,
                 'questions' => array(
                     'qid' => 1,
-                    'Dont you like my hotel?',
+                    'Do you like my hotel?',
                     'Why not?',
                     'Where would you rather go?'
                 )

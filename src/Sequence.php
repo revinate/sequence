@@ -82,6 +82,17 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     }
 
     /**
+     * fold - Fold is like reduce, but it is used for combining values into values of the same type.  This is perfect for things like
+     * summing values, concatenating strings, union arrays, etc.
+     *
+     * @param callable $fn($valueLeft, $valueRight) -- The $fn predicate is a function(T $left, T $right) that returns type T|null.
+     * @return mixed
+     */
+    public function fold($fn) {
+        return IterationTraits::fold($this, $fn);
+    }
+
+    /**
      * Get the keys
      * @return static
      */
