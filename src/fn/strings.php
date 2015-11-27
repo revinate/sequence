@@ -217,3 +217,36 @@ function fnLcFirst($encoding = null) {
     };
 }
 
+/**
+ * @return Closure
+ */
+function fnStrLen() {
+    return function ($str) {
+        return strlen($str);
+    };
+}
+
+/**
+ * @param null|string $encoding -- @see mb_strlen
+ * @return Closure
+ */
+function fnMbStrLen($encoding = null) {
+    $encoding = $encoding ?: mb_internal_encoding();
+    return function ($str) use ($encoding) {
+        return mb_strlen($str, $encoding);
+    };
+}
+
+/******************************
+ * Fold functions
+ */
+
+/**
+ * @param string $glue
+ * @return Closure
+ */
+function fnStringConcat($glue = '') {
+    return function($a, $b) use ($glue) {
+        return $a . $glue . $b;
+    };
+}

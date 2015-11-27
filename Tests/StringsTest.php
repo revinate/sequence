@@ -192,6 +192,7 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
             array("Start Here\n\t\t"),
             array("\t\t\nEnd Here"),
             array("  \nMulti\nLine\nTest\n"),
+            array("  \nMultî\nLiné\nเมืองนี้เป็น สถานที่ที่ \n"),
         );
     }
 
@@ -224,4 +225,37 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('\Closure', $fnTrim);
         $this->assertEquals(rtrim($value), $fnTrim($value));
     }
+
+    /**
+     * @param string $value
+     * @dataProvider providerTrim
+     */
+    public function testStrLen($value) {
+        $fnStrLen = fnStrLen();
+        $this->assertInstanceOf('\Closure', $fnStrLen);
+        $this->assertEquals(strlen($value), $fnStrLen($value));
+    }
+
+    /**
+     * @param string $value
+     * @dataProvider providerTrim
+     */
+    public function testMbStrLen($value) {
+        $fnStrLen = fnMbStrLen();
+        $this->assertInstanceOf('\Closure', $fnStrLen);
+        $this->assertEquals(mb_strlen($value), $fnStrLen($value));
+    }
+
+    /**
+     * @param string $value
+     * @dataProvider providerTrim
+     */
+    public function testStringConcat($value) {
+        $fn = fnStringConcat($value);
+        $this->assertInstanceOf('\Closure', $fn);
+        $this->assertEquals('['.$value.']', $fn('[',']'));
+        $this->assertEquals($value.']', $fn('',']'));
+    }
+
+
 }
