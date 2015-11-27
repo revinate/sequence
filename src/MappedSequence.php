@@ -46,4 +46,13 @@ class MappedSequence extends Sequence {
         $fn = $this->fnMapKeyFunction;
         return $fn(parent::key(), parent::current());
     }
+
+    /**
+     * @inheritDoc
+     */
+    public static function make($iterator) {
+        // Force it to be a Sequence because the constructor for MappedSequence isn't identical
+        return Sequence::make($iterator);
+    }
+
 }

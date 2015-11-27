@@ -299,4 +299,20 @@ class IterationTraits {
                 });
         });
     }
+
+    /**
+     * Returns an iterator that will return the items in reverse order.
+     * Note: the original iterator fill be fully traversed when the first item of the returned iterator is requested
+     *
+     * @param Iterator $iterator
+     * @return Sequence
+     */
+    public static function reverse(Iterator $iterator) {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator) {
+            // So we do not lose values due to duplicate keys, we need to store the keys along with the values.
+            $array = Sequence::make($iterator)->map(fn\fnMapToKeyValuePair())->toValues();
+            // separate the key/value pair and return the resulting sequence.
+            return Sequence::make(array_reverse($array))->keyBy(fn\fnPairKey())->map(fn\fnPairValue());
+        });
+    }
 }

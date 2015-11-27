@@ -372,6 +372,9 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return static
      */
     public static function make($iterator) {
+        if ($iterator instanceof static) {
+            return $iterator;
+        }
         if (! $iterator instanceof Traversable) {
             if (is_array($iterator) || is_object($iterator)) {
                 $iterator = new ArrayIterator($iterator);
