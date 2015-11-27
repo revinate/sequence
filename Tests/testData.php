@@ -43,4 +43,21 @@ class TestData {
             'ranking' => 5
         )
     );
+
+    public static $matrix3x3 = array(
+        array(1,2,3),
+        array(4,5,6),
+        array(7,8,9),
+    );
+
+    public static $matrix2x3 = array(
+        array(1,2),
+        array(3,4),
+        array(5,6)
+    );
+
+    public static $matrix3x2 = array(
+        array(1,3,5),
+        array(2,4,6),
+    );
 }

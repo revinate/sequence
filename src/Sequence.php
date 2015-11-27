@@ -223,6 +223,16 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
         return static::make(IterationTraits::groupByInitWithKeys($this, $fnMapValueToGroup, $keys));
     }
 
+    /**
+     * Transpose a sequence into another sequence
+     * It is a sparse transpose
+     *
+     * @return static
+     */
+    public function transpose() {
+        return static::make(IterationTraits::transpose($this));
+    }
+
 
     /**
      * Map -- extracts a given field from the values.
@@ -331,6 +341,17 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
         return $thing instanceof Traversable
         || is_array($thing)
         || is_object($thing);
+    }
+
+    /**
+     * A Closure for Sequence::canBeSequence
+     *
+     * @return \Closure
+     */
+    public static function fnCanBeSequence() {
+        return function($thing) {
+            return Sequence::canBeSequence($thing);
+        };
     }
 
     /**

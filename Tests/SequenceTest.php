@@ -524,4 +524,13 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array_fill(0, 101, 'value'), Sequence::make($values)->mapKeys(fn\fnConst('value'))->toKeys());
         $this->assertEquals(array('dup-key'), array_keys(Sequence::make($values)->mapKeys(fn\fnConst('dup-key'))->toArray()));
     }
+
+    public function testTranspose() {
+        $newMatrix = Sequence::make(TestData::$matrix2x3)->transpose()->toArray();
+        $this->assertEquals(TestData::$matrix3x2, $newMatrix);
+
+        $tFruit = Sequence::make(TestData::$fruit)->transpose()->toArray();
+        $fruit = Sequence::make($tFruit)->transpose()->toArray();
+        $this->assertEquals(TestData::$fruit, $fruit);
+    }
 }

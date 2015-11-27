@@ -222,11 +222,14 @@ class IterationTraits {
     }
 
     /**
-     * Group all the the values into an array and return the result as a Sequence.
+     * Group all the the values into an array and return the result as a Sequence
      *
      * @param Iterator $iterator
      * @param callable $fnToGroup($value, $key) -- return the field name to group the values under.
      * @param null|array|\ArrayAccess|\Closure $init - used to initialize the resulting groups
+     *                                               $init should be an array of arrays or a Closure
+     *                                               that will return an array of arrays.
+     *                                               Example: ['one'=>[], 'two'=>[]] or [[],[],[]]
      * @return Sequence
      */
     public static function groupBy(Iterator $iterator, $fnToGroup, $init = null) {
@@ -249,10 +252,31 @@ class IterationTraits {
      *
      * @param Iterator $iterator
      * @param callable $fnToGroup($value, $key) -- return the field name to group the values under.
-     * @param array $keys - used to initialize the keys for the resulting groups
+     * @param int|array $keys - used to initialize the keys for the resulting groups
+     *                        int $n - will generate keys 0 to $n-1
+     *
      * @return static
      */
     public static function groupByInitWithKeys(Iterator $iterator, $fnToGroup, $keys) {
+        $keys = is_numeric($keys) ? range(0, $keys-1) : $keys;
         return self::groupBy($iterator, $fnToGroup, array_fill_keys($keys, array()));
+    }
+
+    /**
+     * @param Iterator $iterator
+     * @return static
+     */
+    public static function transpose(Iterator $iterator) {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator) {
+            return Sequence::make($iterator)
+                ->filter(Sequence::fnCanBeSequence())
+                ->reduceToSequence(array(), function ($collection, $row, $keyCol) {
+                    return Sequence::make($row)
+                        ->reduce($collection, function ($collection, $value, $keyRow) use ($keyCol) {
+                            $collection[$keyRow][$keyCol] = $value;
+                            return $collection;
+                        });
+                });
+        });
     }
 }
