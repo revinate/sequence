@@ -359,6 +359,17 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     }
 
     /**
+     * Reassembles a traversed sequence into its original shape
+     *
+     * Note that this should only be used following a call to Sequence::traverse()
+     *
+     * @return static
+     */
+    public function reassemble() {
+        return static::make(IterationTraits::reassemble($this));
+    }
+
+    /**
      * @param mixed $thing
      * @return bool - return true if we can iterate over it.
      */

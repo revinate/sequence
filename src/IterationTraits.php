@@ -327,4 +327,34 @@ class IterationTraits {
             return Sequence::make(array_reverse($array))->keyBy(fn\fnPairKey())->map(fn\fnPairValue());
         });
     }
+
+
+    /**
+     * Reassembles a traversed sequence into its original shape
+     *
+     * @param Iterator $iterator
+     * @return Sequence
+     */
+    public static function reassemble(Iterator $iterator) {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator) {
+           return Sequence::make($iterator)
+               ->reduceToSequence(array(), function ($collection, $value, $path) {
+                   $keys = explode('.', $path);
+
+                   $pointer = &$collection;
+                   foreach ($keys as $index => $key) {
+                       if ($index !== count($keys)-1) {
+                           if (! isset($pointer[$key])) {
+                               $pointer[$key] = array();
+                           }
+                           $pointer = &$pointer[$key];
+                       } else {
+                           $pointer[$key] = $value;
+                       }
+                   }
+
+                   return $collection;
+               });
+        });
+    }
 }
