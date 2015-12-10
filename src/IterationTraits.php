@@ -4,6 +4,7 @@ namespace Revinate\Sequence;
 
 use \Iterator;
 use \LimitIterator;
+use Revinate\GetterSetter as gs;
 
 /**
  * Class IterationTraits
@@ -339,21 +340,7 @@ class IterationTraits {
         return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator) {
            return Sequence::make($iterator)
                ->reduceToSequence(array(), function ($collection, $value, $path) {
-                   $keys = explode('.', $path);
-
-                   $pointer = &$collection;
-                   foreach ($keys as $index => $key) {
-                       if ($index !== count($keys)-1) {
-                           if (! isset($pointer[$key])) {
-                               $pointer[$key] = array();
-                           }
-                           $pointer = &$pointer[$key];
-                       } else {
-                           $pointer[$key] = $value;
-                       }
-                   }
-
-                   return $collection;
+                   return gs\set($collection, $path, $value);
                });
         });
     }
