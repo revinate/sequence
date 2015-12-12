@@ -82,14 +82,28 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     }
 
     /**
-     * fold - Fold is like reduce, but it is used for combining values into values of the same type.  This is perfect for things like
+     * reduceLeft - ReduceLeft is like reduce, but it is used for combining values into values of the same type.  This is perfect for things like
      * summing values, concatenating strings, union arrays, etc.
      *
-     * @param callable $fn($valueLeft, $valueRight) -- The $fn predicate is a function(T $left, T $right) that returns type T|null.
+     * @param callable $fn($prevValue, $currentValue, $currentKey) -- The $fn predicate is a function(T $prevValue, T $currentValue) that returns type T|null.
      * @return mixed
      */
-    public function fold($fn) {
-        return IterationTraits::fold($this, $fn);
+    public function reduceLeft($fn) {
+        return IterationTraits::reduceLeft($this, $fn);
+    }
+
+    /**
+     * reduceRight - ReduceRight is like reduce, but it is used for combining values into values of the same type.  This is perfect for things like
+     * summing values, concatenating strings, union arrays, etc.
+     * Note, the items will be walked in reverse order.  This means the entire sequence will be reversed before the reduce is applied.
+     *
+     * Example: Sequence::make(['one','two','three'])->reduceRight(fn\fnStringConcat('.')) = 'three.two.one'
+     *
+     * @param callable $fn($prevValue, $currentValue, $currentKey) -- The $fn predicate is a function(T $prevValue, T $currentValue) that returns type T|null.
+     * @return mixed
+     */
+    public function reduceRight($fn) {
+        return IterationTraits::reduceRight($this, $fn);
     }
 
     /**

@@ -238,7 +238,7 @@ function fnMbStrLen($encoding = null) {
 }
 
 /******************************
- * Fold functions
+ * Reduce functions
  */
 
 /**

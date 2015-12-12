@@ -535,16 +535,23 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(TestData::$fruit, $fruit);
     }
 
-    public function testFold() {
+    public function testReduceLeft() {
         $values = array('one', 'two', 'three');
-        $seq = Sequence::make($values);
 
-        $this->assertEquals(implode('', $values), $seq->fold(fn\fnStringConcat()));
-        $this->assertEquals(implode(', ', $values), $seq->fold(fn\fnStringConcat(', ')));
+        $this->assertEquals(implode('', $values), Sequence::make($values)->reduceLeft(fn\fnStringConcat()));
+        $this->assertEquals(implode(', ', $values), Sequence::make($values)->reduceLeft(fn\fnStringConcat(', ')));
 
-        $this->assertEquals(11, $seq->map(fn\fnStrLen())->fold(fn\fnSum()));
+        $this->assertEquals(11, Sequence::make($values)->map(fn\fnStrLen())->reduceLeft(fn\fnSum()));
 
         // test on an empty list.
-        $this->assertNull(Sequence::make(null)->fold(fn\fnSum()));
+        $this->assertNull(Sequence::make(null)->reduceLeft(fn\fnSum()));
+    }
+
+    public function testReduceRight() {
+        $values = array('one', 'two', 'three');
+        $this->assertEquals(implode('', array_reverse($values)), Sequence::make($values)->reduceRight(fn\fnStringConcat()));
+
+        // test on an empty list.
+        $this->assertNull(Sequence::make(null)->reduceRight(fn\fnSum()));
     }
 }

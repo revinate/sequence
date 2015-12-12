@@ -90,14 +90,14 @@ class IterationTraits {
     }
 
     /**
-     * fold - Fold is like reduce, but it is used for combining values into values of the same type.  This is perfect for things like
+     * reduceLeft - ReduceLeft is like reduce, but it is used for combining values into values of the same type.  This is perfect for things like
      * summing values, concatenating strings, union arrays, etc.
      *
      * @param Iterator $iterator
-     * @param callable         $fn($valueLeft, $valueRight) -- The $fn predicate is a function(T $left, T $right) that returns type T|null.
+     * @param callable $fn ($valueLeft, $valueRight) -- The $fn predicate is a function(T $left, T $right) that returns type T|null.
      * @return mixed
      */
-    public static function fold(Iterator $iterator, $fn) {
+    public static function reduceLeft(Iterator $iterator, $fn) {
         $nil = (object)array('Nil');
         $result = self::reduce($iterator, $nil, function($valueLeft, $valueRight) use ($nil, $fn) {
             if ($valueLeft === $nil) {
@@ -107,6 +107,18 @@ class IterationTraits {
             return $fn($valueLeft, $valueRight);
         });
         return ($result === $nil) ? null : $result;
+    }
+
+    /**
+     * reduceRight - ReduceRight is like reduce, but it is used for combining values into values of the same type.  This is perfect for things like
+     * summing values, concatenating strings, union arrays, etc.  The value are processed from right to left.
+     *
+     * @param Iterator $iterator
+     * @param callable $fn ($previousValue, $currentValue, [$currentKey]) -- The $fn predicate is a function(T $right, T $left) that returns type T|null.
+     * @return mixed
+     */
+    public static function reduceRight(Iterator $iterator, $fn) {
+        return self::reduceLeft(self::reverse($iterator), $fn);
     }
 
     /**
