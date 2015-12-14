@@ -334,13 +334,14 @@ class IterationTraits {
      * Reassembles a traversed sequence into its original shape
      *
      * @param Iterator $iterator
+     * @param string $pathSeparator
      * @return Sequence
      */
-    public static function reassemble(Iterator $iterator) {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator) {
+    public static function reassemble(Iterator $iterator, $pathSeparator = '.') {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $pathSeparator) {
            return Sequence::make($iterator)
-               ->reduceToSequence(array(), function ($collection, $value, $path) {
-                   return gs\set($collection, $path, $value);
+               ->reduceToSequence(array(), function ($collection, $value, $path) use ($pathSeparator) {
+                   return gs\set($collection, $path, $value, $pathSeparator);
                });
         });
     }

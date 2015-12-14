@@ -4,16 +4,19 @@ namespace Revinate\Sequence;
 
 class TraverseSequence extends RecursiveSequence {
     protected $path;
+    protected $pathSeparator = '.';
 
     /**
      * @param $iterator
      * @param null|string $path
+     * @param string $pathSeparator
      * @return TraverseSequence
      */
-    public static function make($iterator, $path = null) {
+    public static function make($iterator, $path = null, $pathSeparator = '.') {
         /** @var TraverseSequence $traverseSequence */
         $traverseSequence = parent::make($iterator);
-        $traverseSequence->path = is_null($path) ? '' : $path . '.';
+        $traverseSequence->pathSeparator = $pathSeparator;
+        $traverseSequence->path = is_null($path) ? '' : $path . $pathSeparator;
         return $traverseSequence;
     }
 
@@ -23,12 +26,12 @@ class TraverseSequence extends RecursiveSequence {
     public function getChildren() {
         $x = $this->current();
         if ($this->canGoDeeper()) {
-            return TraverseSequence::make($x, $this->key())->setMaxDepth($this->depth - 1);
+            return TraverseSequence::make($x, $this->key(), $this->pathSeparator)->setMaxDepth($this->depth - 1);
         } else {
             return IterationTraits::map(
                 Sequence::make($x),
                 FnGen::fnIdentity(),
-                FnString::fnAddPrefix($this->key() . ".")
+                FnString::fnAddPrefix($this->key() . $this->pathSeparator)
             );
         }
     }

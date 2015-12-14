@@ -351,10 +351,11 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * Traverses a sequence storing the path as keys
      *
      * @param int $depth
+     * @param string $pathSeparator
      * @return static
      */
-    public function traverse($depth = -1) {
-        $recursiveIterator = new RecursiveIteratorIterator(TraverseSequence::make($this)->setMaxDepth($depth));
+    public function traverse($depth = -1, $pathSeparator = '.') {
+        $recursiveIterator = new RecursiveIteratorIterator(TraverseSequence::make($this, null, $pathSeparator)->setMaxDepth($depth));
         return static::make($recursiveIterator);
     }
 
@@ -363,10 +364,11 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      *
      * Note that this should only be used following a call to Sequence::traverse()
      *
+     * @param string $pathSeparator The character used to parse the key path
      * @return static
      */
-    public function reassemble() {
-        return static::make(IterationTraits::reassemble($this));
+    public function reassemble($pathSeparator = '.') {
+        return static::make(IterationTraits::reassemble($this, $pathSeparator));
     }
 
     /**

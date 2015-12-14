@@ -454,6 +454,86 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals($fullyTraversed, $seq);
     }
 
+    public function testTraverseSeparators()
+    {
+        $data = TestData::$hotel;
+
+        $default = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey.qcount' => 3,
+            'hotel.survey.questions.qid' => 1,
+            'hotel.survey.questions.0' => 'Do you like my hotel?',
+            'hotel.survey.questions.1' => 'Why not?',
+            'hotel.survey.questions.2' => 'Where would you rather go?',
+            'hotel.ranking' => 5
+        );
+
+        $seq = Sequence::make($data)->traverse()->to_a();
+        $this->assertEquals($default, $seq);
+
+        $pipes = array(
+            'hotel|id' => 1,
+            'hotel|name' => 'Fancy Hotel',
+            'hotel|rooms' => 200,
+            'hotel|survey|qcount' => 3,
+            'hotel|survey|questions|qid' => 1,
+            'hotel|survey|questions|0' => 'Do you like my hotel?',
+            'hotel|survey|questions|1' => 'Why not?',
+            'hotel|survey|questions|2' => 'Where would you rather go?',
+            'hotel|ranking' => 5
+        );
+
+        $seq = Sequence::make($data)->traverse(-1, '|')->to_a();
+        $this->assertEquals($pipes, $seq);
+
+        $colons = array(
+            'hotel:id' => 1,
+            'hotel:name' => 'Fancy Hotel',
+            'hotel:rooms' => 200,
+            'hotel:survey:qcount' => 3,
+            'hotel:survey:questions:qid' => 1,
+            'hotel:survey:questions:0' => 'Do you like my hotel?',
+            'hotel:survey:questions:1' => 'Why not?',
+            'hotel:survey:questions:2' => 'Where would you rather go?',
+            'hotel:ranking' => 5
+        );
+
+        $seq = Sequence::make($data)->traverse(-1, ':')->to_a();
+        $this->assertEquals($colons, $seq);
+
+        $forwardSlashes = array(
+            'hotel/id' => 1,
+            'hotel/name' => 'Fancy Hotel',
+            'hotel/rooms' => 200,
+            'hotel/survey/qcount' => 3,
+            'hotel/survey/questions/qid' => 1,
+            'hotel/survey/questions/0' => 'Do you like my hotel?',
+            'hotel/survey/questions/1' => 'Why not?',
+            'hotel/survey/questions/2' => 'Where would you rather go?',
+            'hotel/ranking' => 5
+        );
+
+        $seq = Sequence::make($data)->traverse(-1, '/')->to_a();
+        $this->assertEquals($forwardSlashes, $seq);
+
+        $backSlashes = array(
+            'hotel\id' => 1,
+            'hotel\name' => 'Fancy Hotel',
+            'hotel\rooms' => 200,
+            'hotel\survey\qcount' => 3,
+            'hotel\survey\questions\qid' => 1,
+            'hotel\survey\questions\0' => 'Do you like my hotel?',
+            'hotel\survey\questions\1' => 'Why not?',
+            'hotel\survey\questions\2' => 'Where would you rather go?',
+            'hotel\ranking' => 5
+        );
+
+        $seq = Sequence::make($data)->traverse(-1, '\\')->to_a();
+        $this->assertEquals($backSlashes, $seq);
+    }
+
     public function testGroupBy() {
         $fruitOrders = TestData::$fruit;
 
