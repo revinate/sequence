@@ -362,7 +362,8 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     /**
      * Reassembles a traversed sequence into its original shape
      *
-     * Note that this should only be used following a call to Sequence::traverse()
+     * Note that this only has an effect if the Sequenced data has the path-keyed
+     *      structure that results from a call to Sequence::traverse()
      *
      * @param string $pathSeparator The character used to parse the key path
      * @return static
