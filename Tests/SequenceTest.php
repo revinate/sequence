@@ -454,6 +454,220 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals($fullyTraversed, $seq);
     }
 
+    public function testTraverseSeparators()
+    {
+        $data = TestData::$hotel;
+
+        $default = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey.qcount' => 3,
+            'hotel.survey.questions.qid' => 1,
+            'hotel.survey.questions.0' => 'Do you like my hotel?',
+            'hotel.survey.questions.1' => 'Why not?',
+            'hotel.survey.questions.2' => 'Where would you rather go?',
+            'hotel.ranking' => 5
+        );
+        $seq = Sequence::make($data)->traverse()->toArray();
+        $this->assertEquals($default, $seq);
+
+        $pipes = array(
+            'hotel|id' => 1,
+            'hotel|name' => 'Fancy Hotel',
+            'hotel|rooms' => 200,
+            'hotel|survey|qcount' => 3,
+            'hotel|survey|questions|qid' => 1,
+            'hotel|survey|questions|0' => 'Do you like my hotel?',
+            'hotel|survey|questions|1' => 'Why not?',
+            'hotel|survey|questions|2' => 'Where would you rather go?',
+            'hotel|ranking' => 5
+        );
+        $seq = Sequence::make($data)->traverse(-1, '|')->toArray();
+        $this->assertEquals($pipes, $seq);
+
+        $colons = array(
+            'hotel:id' => 1,
+            'hotel:name' => 'Fancy Hotel',
+            'hotel:rooms' => 200,
+            'hotel:survey:qcount' => 3,
+            'hotel:survey:questions:qid' => 1,
+            'hotel:survey:questions:0' => 'Do you like my hotel?',
+            'hotel:survey:questions:1' => 'Why not?',
+            'hotel:survey:questions:2' => 'Where would you rather go?',
+            'hotel:ranking' => 5
+        );
+        $seq = Sequence::make($data)->traverse(-1, ':')->toArray();
+        $this->assertEquals($colons, $seq);
+
+        $forwardSlashes = array(
+            'hotel/id' => 1,
+            'hotel/name' => 'Fancy Hotel',
+            'hotel/rooms' => 200,
+            'hotel/survey/qcount' => 3,
+            'hotel/survey/questions/qid' => 1,
+            'hotel/survey/questions/0' => 'Do you like my hotel?',
+            'hotel/survey/questions/1' => 'Why not?',
+            'hotel/survey/questions/2' => 'Where would you rather go?',
+            'hotel/ranking' => 5
+        );
+        $seq = Sequence::make($data)->traverse(-1, '/')->toArray();
+        $this->assertEquals($forwardSlashes, $seq);
+
+        $backSlashes = array(
+            'hotel\id' => 1,
+            'hotel\name' => 'Fancy Hotel',
+            'hotel\rooms' => 200,
+            'hotel\survey\qcount' => 3,
+            'hotel\survey\questions\qid' => 1,
+            'hotel\survey\questions\0' => 'Do you like my hotel?',
+            'hotel\survey\questions\1' => 'Why not?',
+            'hotel\survey\questions\2' => 'Where would you rather go?',
+            'hotel\ranking' => 5
+        );
+        $seq = Sequence::make($data)->traverse(-1, '\\')->toArray();
+        $this->assertEquals($backSlashes, $seq);
+    }
+
+    public function testReassemble()
+    {
+        $expectedResult = TestData::$hotel;
+
+        $seq = Sequence::make($expectedResult)->reassemble()->toArray();
+        $this->assertEquals($expectedResult, $seq);
+
+        $oneLevel = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey' => array(
+                'qcount' => 3,
+                'questions' => array(
+                    'qid' => 1,
+                    'Do you like my hotel?',
+                    'Why not?',
+                    'Where would you rather go?'
+                )
+            ),
+            'hotel.ranking' => 5
+        );
+        $seq = Sequence::make($oneLevel)->reassemble()->toArray();
+        $this->assertEquals($expectedResult, $seq);
+
+        $twoLevels = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey.qcount' => 3,
+            'hotel.survey.questions' => array(
+                'qid' => 1,
+                'Do you like my hotel?',
+                'Why not?',
+                'Where would you rather go?'
+            ),
+            'hotel.ranking' => 5
+        );
+        $seq = Sequence::make($twoLevels)->reassemble()->toArray();
+        $this->assertEquals($expectedResult, $seq);
+
+        $fullyTraversed = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey.qcount' => 3,
+            'hotel.survey.questions.qid' => 1,
+            'hotel.survey.questions.0' => 'Do you like my hotel?',
+            'hotel.survey.questions.1' => 'Why not?',
+            'hotel.survey.questions.2' => 'Where would you rather go?',
+            'hotel.ranking' => 5
+        );
+        $seq = Sequence::make($fullyTraversed)->reassemble()->toArray();
+        $this->assertEquals($expectedResult, $seq);
+    }
+
+    public function testReassembleSeparators()
+    {
+        $expectedResult = TestData::$hotel;
+
+        $default = array(
+            'hotel.id' => 1,
+            'hotel.name' => 'Fancy Hotel',
+            'hotel.rooms' => 200,
+            'hotel.survey.qcount' => 3,
+            'hotel.survey.questions.qid' => 1,
+            'hotel.survey.questions.0' => 'Do you like my hotel?',
+            'hotel.survey.questions.1' => 'Why not?',
+            'hotel.survey.questions.2' => 'Where would you rather go?',
+            'hotel.ranking' => 5
+        );
+        $seq = Sequence::make($default)->reassemble()->toArray();
+        $this->assertEquals($expectedResult, $seq);
+
+        $pipes = array(
+            'hotel|id' => 1,
+            'hotel|name' => 'Fancy Hotel',
+            'hotel|rooms' => 200,
+            'hotel|survey|qcount' => 3,
+            'hotel|survey|questions|qid' => 1,
+            'hotel|survey|questions|0' => 'Do you like my hotel?',
+            'hotel|survey|questions|1' => 'Why not?',
+            'hotel|survey|questions|2' => 'Where would you rather go?',
+            'hotel|ranking' => 5
+        );
+        $seq = Sequence::make($pipes)->reassemble('|')->toArray();
+        $this->assertEquals($expectedResult, $seq);
+
+        $colons = array(
+            'hotel:id' => 1,
+            'hotel:name' => 'Fancy Hotel',
+            'hotel:rooms' => 200,
+            'hotel:survey:qcount' => 3,
+            'hotel:survey:questions:qid' => 1,
+            'hotel:survey:questions:0' => 'Do you like my hotel?',
+            'hotel:survey:questions:1' => 'Why not?',
+            'hotel:survey:questions:2' => 'Where would you rather go?',
+            'hotel:ranking' => 5
+        );
+        $seq = Sequence::make($colons)->reassemble(':')->toArray();
+        $this->assertEquals($expectedResult, $seq);
+
+        $forwardSlashes = array(
+            'hotel/id' => 1,
+            'hotel/name' => 'Fancy Hotel',
+            'hotel/rooms' => 200,
+            'hotel/survey/qcount' => 3,
+            'hotel/survey/questions/qid' => 1,
+            'hotel/survey/questions/0' => 'Do you like my hotel?',
+            'hotel/survey/questions/1' => 'Why not?',
+            'hotel/survey/questions/2' => 'Where would you rather go?',
+            'hotel/ranking' => 5
+        );
+        $seq = Sequence::make($forwardSlashes)->reassemble('/')->toArray();
+        $this->assertEquals($expectedResult, $seq);
+
+        $backSlashes = array(
+            'hotel\id' => 1,
+            'hotel\name' => 'Fancy Hotel',
+            'hotel\rooms' => 200,
+            'hotel\survey\qcount' => 3,
+            'hotel\survey\questions\qid' => 1,
+            'hotel\survey\questions\0' => 'Do you like my hotel?',
+            'hotel\survey\questions\1' => 'Why not?',
+            'hotel\survey\questions\2' => 'Where would you rather go?',
+            'hotel\ranking' => 5
+        );
+        $seq = Sequence::make($backSlashes)->reassemble('\\')->toArray();
+        $this->assertEquals($expectedResult, $seq);
+    }
+
+    public function testTraverseReassemble()
+    {
+        $expectedResult = TestData::$hotel;
+
+        $seq = Sequence::make($expectedResult)->traverse()->reassemble()->toArray();
+        $this->assertEquals($expectedResult, $seq);
+    }
+
     public function testGroupBy() {
         $fruitOrders = TestData::$fruit;
 

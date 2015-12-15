@@ -4,6 +4,7 @@ namespace Revinate\Sequence;
 
 use \Iterator;
 use \LimitIterator;
+use Revinate\GetterSetter as gs;
 
 /**
  * Class IterationTraits
@@ -325,6 +326,23 @@ class IterationTraits {
             $array = Sequence::make($iterator)->map(fn\fnMapToKeyValuePair())->toValues();
             // separate the key/value pair and return the resulting sequence.
             return Sequence::make(array_reverse($array))->keyBy(fn\fnPairKey())->map(fn\fnPairValue());
+        });
+    }
+
+
+    /**
+     * Reassembles a traversed sequence into its original shape
+     *
+     * @param Iterator $iterator
+     * @param string $pathSeparator
+     * @return Sequence
+     */
+    public static function reassemble(Iterator $iterator, $pathSeparator = '.') {
+        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $pathSeparator) {
+           return Sequence::make($iterator)
+               ->reduceToSequence(array(), function ($collection, $value, $path) use ($pathSeparator) {
+                   return gs\set($collection, $path, $value, $pathSeparator);
+               });
         });
     }
 }
