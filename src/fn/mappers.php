@@ -115,13 +115,22 @@ function fnMapField($fieldName, $fnMap) {
 /**
  * Generate a pluck function that returns the value of a field, or null if the field does not exist.
  *
- * @param string $key - the name / key, of the field to get the value from.
+ * @param string|string[] $key - the name / key, of the field to get the value from, or array to get values from
+ *        multidimensional arrays.
  * @param mixed $default - the default value to assign if the field does not exist.
  * @return Closure
  */
 function fnPluck($key, $default = null) {
     return function ($v) use ($key, $default) {
-        return ArrayUtil::getField($v, $key, $default);
+        if (! is_array($key)) {
+            return ArrayUtil::getField($v, $key, $default);
+        } else {
+            foreach ($key as $thisKey){
+                if (!is_array($v) && !is_object($v)) return $default;
+                $v = ArrayUtil::getField($v, $thisKey, $default);
+            }
+            return $v;
+        }
     };
 }
 

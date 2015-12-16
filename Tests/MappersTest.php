@@ -29,7 +29,7 @@ class MappersTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    public function testFnCallGetterFunction(){
+    public function testFnCallGetterFunction() {
         $src = array(
             new MappersTest_sampleObject(1),
             new MappersTest_sampleObject(3),
@@ -54,10 +54,63 @@ class MappersTest extends \PHPUnit_Framework_TestCase {
                 ->to_a()
         );
     }
+
+    public function testFnPluck() {
+        $srcOf1DArrays = array(
+            array('id'=>1),
+            array('id'=>3),
+            array('id'=>5)
+        );
+        $srcOf2DArrays = array(
+            array('inner'=>array('id'=>21)),
+            array('inner'=>array('id'=>23)),
+            array('inner'=>array('id'=>25))
+        );
+        $srcOf1DObjects = array(
+            new MappersTest_sampleObject(1),
+            new MappersTest_sampleObject(3),
+            new MappersTest_sampleObject(5)
+        );
+        $srcOf2DObjects = array(
+            new MappersTest_sampleObject(new MappersTest_sampleObject(21)),
+            new MappersTest_sampleObject(new MappersTest_sampleObject(23)),
+            new MappersTest_sampleObject(new MappersTest_sampleObject(25))
+        );
+        $this->assertEquals(
+            array(1, 3, 5),
+            Sequence::make($srcOf1DArrays)
+                ->map(fn\fnPluck('id'))
+                ->to_a()
+        );
+        $this->assertEquals(
+            array(21, 23, 25),
+            Sequence::make($srcOf2DArrays)
+                ->map(fn\fnPluck(array('inner', 'id')))
+                ->to_a()
+        );
+        $this->assertEquals(
+            array(22, 22, 22),
+            Sequence::make($srcOf2DArrays)
+                ->map(fn\fnPluck(array('inner', 'id', 'nonExistantKey'), 22))
+                ->to_a()
+        );
+        $this->assertEquals(
+            array(1, 3, 5),
+            Sequence::make($srcOf1DObjects)
+                ->map(fn\fnPluck('value'))
+                ->to_a()
+        );
+        $this->assertEquals(
+            array(21, 23, 25),
+            Sequence::make($srcOf2DObjects)
+                ->map(fn\fnPluck(array('value', 'value')))
+                ->to_a()
+        );
+    }
 }
 
 class MappersTest_sampleObject{
-    protected $value;
+    public $value;
     public function __construct($value) {
         $this->value = $value;
     }
