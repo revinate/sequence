@@ -139,6 +139,27 @@ function fnPluckFrom($from, $default = null) {
 }
 
 /**
+ * Generate a pluck function that returns the result after calling getter function, or $default if getter does not exist
+ * Gets any number of $getterParamX parameters -- all those will be passed to getter function
+ * @param string $getterName
+ * @param mixed|null $default
+ * @param mixed|null $getterParam1
+ * @param mixed|null $getterParam2
+ * @return Closure
+ */
+function fnCallGetter($getterName, $default = null, $getterParam1 = null, $getterParam2 = null) {
+    $args = func_get_args();
+    array_splice($args, 0, 2);
+    return function ($v) use ($getterName, $default, $args) {
+        if (method_exists($v, $getterName)) {
+            return call_user_func_array(array($v, $getterName), $args);
+        } else {
+            return $default;
+        }
+    };
+}
+
+/**
  * Generate a function that returns the value given.
  *
  * @return Closure
