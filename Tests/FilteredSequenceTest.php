@@ -82,4 +82,25 @@ class FilteredSequenceTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($subsetB == array_values(array_intersect($valuesOnly, $subsetB)));
         $this->assertTrue(! count(array_diff($valuesOnly, $subsetA, $subsetB)));
     }
+
+    public function testFilterAndFilterOut() {
+        $src = array(1, 3, 5);
+        $this->assertEquals(
+            array(1 => 3),
+            Sequence::make($src)
+                ->filter(function($v) {
+                    return $v == 3;
+                })
+                ->to_a()
+        );
+        $this->assertEquals(
+            array(0 => 1, 2 => 5),
+            Sequence::make($src)
+                ->filterOut(function($v) {
+                    return $v == 3;
+                })
+                ->to_a()
+        );
+
+    }
 }

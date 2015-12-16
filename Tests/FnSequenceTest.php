@@ -38,6 +38,28 @@ class FnSequenceTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotEquals(Sequence::make(TestData::$fruit)->to_a(), $fnSequence(TestData::$fruit));
     }
 
+    public function testFilterOut() {
+        // Only not pass on the even ones.
+        $fnFilter = FnGen::fnCallChain(FnGen::fnPluck('count'), function($v) { return $v % 2 == 0; });
+        $fnSequence = FnSequence::make()->filterOut($fnFilter)->to_a();
+        $this->assertEquals(Sequence::make(TestData::$fruit)->filterOut($fnFilter)->to_a(), $fnSequence(TestData::$fruit));
+        $this->assertNotEquals(Sequence::make(TestData::$fruit)->to_a(), $fnSequence(TestData::$fruit));
+    }
+
+    public function testFilterKeys() {
+        $fnFilter = function($key) { return $key <= 2; };
+        $fnSequence = FnSequence::make()->filterKeys($fnFilter)->to_a();
+        $this->assertEquals(Sequence::make(TestData::$fruit)->filterKeys($fnFilter)->to_a(), $fnSequence(TestData::$fruit));
+        $this->assertNotEquals(Sequence::make(TestData::$fruit)->to_a(), $fnSequence(TestData::$fruit));
+    }
+
+    public function testFilterKeysOut() {
+        $fnFilter = function($key) { return $key <= 2; };
+        $fnSequence = FnSequence::make()->filterKeysOut($fnFilter)->to_a();
+        $this->assertEquals(Sequence::make(TestData::$fruit)->filterKeysOut($fnFilter)->to_a(), $fnSequence(TestData::$fruit));
+        $this->assertNotEquals(Sequence::make(TestData::$fruit)->to_a(), $fnSequence(TestData::$fruit));
+    }
+
     public function testLimit(){
         $fnSequence = FnSequence::make()->limit(3)->to_a();
         $this->assertEquals(Sequence::make(TestData::$fruit)->limit(3)->to_a(), $fnSequence(TestData::$fruit));

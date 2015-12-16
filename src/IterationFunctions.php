@@ -11,7 +11,9 @@ interface IterationFunctions {
     public function map($fnValueMap, $fnKeyMap = null);
     public function mapKeys($fnKeyMap);
     public function filter($fn);
+    public function filterOut($fn);
     public function filterKeys($fn);
+    public function filterKeysOut($fn);
     public function reduce($init, $fn);
     public function to_a();
     public function keys();

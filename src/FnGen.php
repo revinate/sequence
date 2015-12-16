@@ -446,4 +446,13 @@ class FnGen {
     public static function fnCacheResult($fnMap, $fnHash = null) {
         return fn\fnCacheResult($fnMap, $fnHash);
     }
+
+    /**
+     * Create a function that will invert result of callback
+     * @param callable $fnCallback - any other function
+     * @return callable
+     */
+    public static function fnNot($fnCallback) {
+        return fn\fnNot($fnCallback);
+    }
 }

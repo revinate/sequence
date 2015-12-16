@@ -175,7 +175,10 @@ function fnIsObject() {
  */
 function fnNot($fn = null) {
     if ($fn) {
-        return function ($v) use ($fn) { return ! $fn($v); };
+        return function () use ($fn) {
+            // allow any number of parameters to be passed
+            return ! call_user_func_array($fn, func_get_args());
+        };
     }
     return function ($v) { return ! $v; };
 }

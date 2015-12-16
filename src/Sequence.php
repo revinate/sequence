@@ -52,11 +52,27 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     }
 
     /**
+     * @param callable $fn
+     * @return static
+     */
+    public function filterOut($fn) {
+        return static::make(IterationTraits::filterOut($this, $fn));
+    }
+
+    /**
      * @param callable $fn($key, $value)
      * @return static
      */
     public function filterKeys($fn) {
         return static::make(IterationTraits::filterKeys($this, $fn));
+    }
+
+    /**
+     * @param callable $fn($key, $value)
+     * @return static
+     */
+    public function filterKeysOut($fn) {
+        return static::make(IterationTraits::filterKeysOut($this, $fn));
     }
 
     /**

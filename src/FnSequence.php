@@ -81,8 +81,20 @@ class FnSequence {
     }
 
     /**
+     * Adds a filter function to the call chain, which is same as filter but with negative effect:
+     * it removes those for which callback will return nonempty and leaves those for which
+     * callback will return empty. The effect is same to filter(fn\fnNot(...))
+     *
+     * @param callable $fnFilter($value, $key)
+     * @return FnSequence
+     */
+    public function filterOut($fnFilter) {
+        return $this->filter(fn\fnNot($fnFilter));
+    }
+
+    /**
      * @param callable $fn($key, $value)
-     * @return Sequence
+     * @return FnSequence
      */
     public function filterKeys($fn) {
         $self = $this;
@@ -90,6 +102,18 @@ class FnSequence {
             return $self->apply($values)->filterKeys($fn);
         };
         return new FnSequence($fnApply);
+    }
+
+    /**
+     * Adds a filter function to the call chain, which is same as filterKeys but with negative effect:
+     * it removes those for which callback will return nonempty and leaves those for which
+     * callback will return empty. The effect is same to filterKeys(fn\fnNot(...))
+     *
+     * @param callable $fn($key, $value)
+     * @return FnSequence
+     */
+    public function filterKeysOut($fn) {
+        return $this->filterKeys(fn\fnNot($fn));
     }
 
     /**
