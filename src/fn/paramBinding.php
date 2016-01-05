@@ -11,11 +11,22 @@ use \Closure;
 
 /**
  * Generate a function that when called, will call a set of functions passing the result as input to the next function.
+ * Alias for fnPipe.
  *
  * @param callable[]|callable $fn
  * @return Closure
  */
 function fnCallChain($fn) {
+    return call_user_func_array('\Revinate\Sequence\fn\fnPipe', func_get_args());
+}
+
+/**
+ * Generate a function that when called, will call a set of functions passing the result as input to the next function.
+ *
+ * @param callable[]|callable $fn
+ * @return Closure
+ */
+function fnPipe($fn) {
     if (is_array($fn) && ! is_callable($fn)) {
         $args = $fn;
     } else {
