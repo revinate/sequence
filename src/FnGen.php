@@ -289,7 +289,7 @@ class FnGen {
      * @return callable
      */
     public static function fnCallChain($fn) {
-        return call_user_func_array('\Revinate\Sequence\fn\fnCallChain', func_get_args());
+        return call_user_func_array('\Revinate\Sequence\fn\fnPipe', func_get_args());
     }
 
     /**
