@@ -35,18 +35,21 @@ class MappersTest extends \PHPUnit_Framework_TestCase {
             new MappersTest_sampleObject(3),
             new MappersTest_sampleObject(5)
         );
+        /** @noinspection PhpDeprecationInspection */
         $this->assertEquals(
             array(1,3,5),
             Sequence::make($src)
                 ->map(fn\fnCallGetter('getValue'))
                 ->to_a()
         );
+        /** @noinspection PhpDeprecationInspection */
         $this->assertEquals(
             array(12, 14, 16),
             Sequence::make($src)
                 ->map(fn\fnCallGetter('getValuePlusSomething', null, 11))
                 ->to_a()
         );
+        /** @noinspection PhpDeprecationInspection */
         $this->assertEquals(
             array(22, 22, 22),
             Sequence::make($src)

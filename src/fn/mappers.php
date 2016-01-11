@@ -146,6 +146,7 @@ function fnPluckFrom($from, $default = null) {
  * @param mixed|null $getterParam1
  * @param mixed|null $getterParam2
  * @return Closure
+ * @deprecated Please use GetterSetter or react/partial
  */
 function fnCallGetter($getterName, $default = null, $getterParam1 = null, $getterParam2 = null) {
     $args = func_get_args();
