@@ -279,9 +279,29 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return null|mixed
      */
     public function first($fnTest = null) {
-        $fnTest = $fnTest ?: fn\fnTrue();
-        return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        if ($fnTest) {
+            return $this->filter($fnTest)->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+
+        } else {
+            return $this->limit(1)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        }
     }
+
+    /**
+     * Returns the last element where $fnTest returns true
+     *
+     * @param callable|null $fnTest($value, $key)
+     * @return null|mixed
+     */
+    public function last($fnTest = null) {
+        if ($fnTest) {
+            return $this->filter($fnTest)->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+
+        } else {
+            return $this->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
+        }
+    }
+
 
     /**
      * Returns the key of the first element where $fnTest returns true.
@@ -345,6 +365,48 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
         $recursiveIterator = new RecursiveIteratorIterator(RecursiveSequence::make($this)->setMaxDepth($depth));
         // Simulate array_merge by sequencing numeric keys but do not touch string keys.
         return static::make(IterationTraits::sequenceNumericKeys(Sequence::make($recursiveIterator)));
+    }
+
+    /**
+     * This is like the RX flatMap and concatMap, but does not flatten promises.
+     * See: http://reactivex.io/documentation/operators/flatmap.html
+     * Note: item order and keys are preserved
+     *   if there are duplicate keys, it is necessary to call ->values() to start the keys over from 0 before
+     *   converting to an array to avoid overwriting values.
+     *
+     * @param callable|null $fnMap($value, $key) -- optional map function, flattening is applied after the map
+     * @return Sequence
+     */
+    public function concatMap($fnMap = null) {
+        $rawSeq = is_callable($fnMap) ? $this->map($fnMap) : $this;
+        // Filter out anything that cannot be traversed.
+        $seq = $rawSeq->filter(function($value) { return is_array($value) || $value instanceOf Traversable; });
+        return Sequence::make(new RecursiveIteratorIterator(RecursiveSequence::make($seq)->setMaxDepth(1)));
+    }
+
+    /**
+     * See RX Scan: http://reactivex.io/documentation/operators/scan.html
+     *
+     * Note: if $accInit is null, $fnScanMap will be skipped for the first item.
+     *
+     * @param callable $fnScanMap($acc, $value, $key)
+     * @param null $accInit -- This is the initial value for the accumulator passed to $fnScanMap
+     * @return Sequence
+     */
+    public function scan($fnScanMap, $accInit = null) {
+        $notSet = (object)array();  // unique object.
+        $acc = $notSet;
+        if (isset($accInit)) {
+            $acc = $accInit;
+        }
+        return $this->map(function($value, $key) use (&$acc, $fnScanMap, $notSet) {
+            if ($acc === $notSet) {
+                $acc = $value;
+            } else {
+                $acc = $fnScanMap($acc, $value, $key);
+            }
+            return $acc;
+        });
     }
 
     /**

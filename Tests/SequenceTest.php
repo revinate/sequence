@@ -768,4 +768,76 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         // test on an empty list.
         $this->assertNull(Sequence::make(null)->reduceRight(fn\fnSum()));
     }
+
+    public function testConcatMap() {
+        $values = array(
+            array('one', 'two'),
+            array('three'),
+            array('four', 'five'),
+        );
+        $this->assertEquals(array('one', 'two', 'three', 'four', 'five'), Sequence::make($values)->concatMap()->toValues());
+        $this->assertEquals(array(0, 1, 0, 0, 1), Sequence::make($values)->concatMap()->toKeys());
+    }
+
+    public function testConcatMapKeys() {
+        $values = array(
+            0,
+            array('one' => 1, 'two' => 2),
+            array(),
+            array('three' => 3),
+            array('four' => 4, 'five' => 5),
+            array('array' => array(1)),
+            6,
+            7
+        );
+        $this->assertEquals(array(1, 2, 3, 4, 5, array(1)), Sequence::make($values)->concatMap()->toValues());
+        $this->assertEquals(array('one', 'two', 'three', 'four', 'five', 'array'), Sequence::make($values)->concatMap()->toKeys());
+    }
+    
+    public function testScan() {
+        $values = array(
+            95, 100, 90, 80, 75, 98
+        );
+        $default = array('sum' => null, 'avg' => null, 'min' => null, 'max' => null, 'count' => 0);
+        $result = Sequence::make($values)->scan(function($acc, $value){
+            $count = $acc['count'] + 1;
+            if ($count > 1) {
+                $sum = $acc['sum'] + $value;
+                $min = min($acc['min'], $value);
+                $max = max($acc['max'], $value);
+                $avg = $sum / $count;
+                return array(
+                    'sum' => $sum,
+                    'avg' => $avg,
+                    'min' => $min,
+                    'max' => $max,
+                    'count' => $count
+                );
+            }
+            return array('sum' => $value, 'avg' => $value, 'min' => $value, 'max' => $value, 'count' => 1);
+        }, $default)->last();
+        $this->assertEquals(array(
+            'sum' => array_sum($values),
+            'avg' => array_sum($values) / count($values),
+            'min' => min($values),
+            'max' => max($values),
+            'count' => count($values)
+        ), $result);
+    }
+
+    public function testScan2() {
+        $values = array(
+            95, 100, 90, 80, 75, 98
+        );
+        $result = Sequence::make($values)->scan(function($a, $b) { return min($a, $b); })->last();
+        $this->assertEquals(min($values), $result);
+    }
+
+    public function testLast() {
+        $values = array(
+            1, -2, 3, -4, 5, -6
+        );
+        $this->assertEquals(-6, Sequence::make($values)->last());
+        $this->assertEquals(5, Sequence::make($values)->last(function($v){ return $v >= 0; }));
+    }
 }
