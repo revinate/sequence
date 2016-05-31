@@ -65,6 +65,23 @@ function fnCompareFieldRev($fieldName) {
 }
 
 /**
+ * @param callable[] $compareFunctions -- an array of compare functions.
+ * @return Closure
+ */
+function fnCompareMulti($compareFunctions) {
+    return function($lhs, $rhs) use ($compareFunctions) {
+        $result = 0;
+        foreach ($compareFunctions as $fn) {
+            $result = $fn($lhs, $rhs);
+            if ($result) {
+                break;
+            }
+        }
+        return $result;
+    };
+}
+
+/**
  * Generate a function that can sort an array
  *
  * @param callable|null $fnComp ($lhs, $rhs) -- see PHP usort
