@@ -8,7 +8,8 @@
 
 namespace Revinate\Sequence;
 
-use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\fn;
+use Revinate\GetterSetter as gs;
 
 
 class MappersTest extends \PHPUnit_Framework_TestCase {
@@ -56,6 +57,23 @@ class MappersTest extends \PHPUnit_Framework_TestCase {
                 ->map(fn\fnCallGetter('getterThatDoesNotExist', 22))
                 ->to_a()
         );
+    }
+
+    public function testMapToField() {
+        $fnConcatNames = function($doc) { return gs\get($doc, 'firstName') . ' ' . gs\get($doc, 'lastName');};
+        $fn = fn\fnMapToField('fullName', $fnConcatNames);
+        $person = array('firstName'=>'John', 'lastName'=>'Smith');
+        $result = $fn($person);
+        $this->assertEquals(array_merge(array('fullName'=>'John Smith'), $person), $result);
+
+        // Write to a sub array.
+        $fn = fn\fnMapToField('info.fullName', $fnConcatNames);
+        $result = $fn($person);
+        $this->assertEquals(array_merge(array('info' =>array('fullName'=>'John Smith')), $person), $result);
+
+        // As an object
+        $result = $fn((object)$person);
+        $this->assertEquals((object)array_merge(array('info' =>array('fullName'=>'John Smith')), $person), $result);
     }
 }
 

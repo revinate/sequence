@@ -13,6 +13,9 @@ use \Closure;
 use Revinate\Sequence\ArrayUtil;
 use Revinate\Sequence\Sequence;
 use Revinate\Sequence\FnSequence;
+use Revinate\GetterSetter as gs;
+
+
 
 /**
  * @param ArrayAccess|array $map
@@ -111,6 +114,23 @@ function fnMapField($fieldName, $fnMap) {
     };
 }
 
+/**
+ * Generates a function that will apply a mapping function to the record and write the result into a
+ * field in the record.  The record can be an array or an object.
+ *
+ * The field name can be a path.
+ *
+ * Special case, a null record will result in: array($fieldName => $fnMap(null))
+ *
+ * @param string $fieldName -- field name or path
+ * @param \Closure $fnMap($record, $key) -- the value returned from this function will be put into $record at $fieldName
+ * @return Closure
+ */
+function fnMapToField($fieldName, $fnMap) {
+    return function ($record, $key = null) use ($fieldName, $fnMap) {
+        return gs\set($record, $fieldName, $fnMap($record, $key));
+    };
+}
 
 /**
  * Generate a pluck function that returns the value of a field, or null if the field does not exist.
