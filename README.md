@@ -12,7 +12,7 @@ Install the package via composer by adding this section to the composer.json fil
 
 ```JSON
 "require": {
-    "revinate/sequence": "~0.3"
+    "revinate/sequence": "~0.4"
 },
 ```
 
