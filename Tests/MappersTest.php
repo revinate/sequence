@@ -75,6 +75,15 @@ class MappersTest extends \PHPUnit_Framework_TestCase {
         $result = $fn((object)$person);
         $this->assertEquals((object)array_merge(array('info' =>array('fullName'=>'John Smith')), $person), $result);
     }
+
+    public function testMapFromField() {
+        $values = TestData::$people;
+        $fn2X = function ($x) { return 2 * $x; };
+
+        $this->assertEquals(
+            Sequence::make($values)->pluck('age')->map($fn2X)->toArray(),
+            Sequence::make($values)->map(fn\fnMapFromField('age', $fn2X))->toArray());
+    }
 }
 
 class MappersTest_sampleObject{

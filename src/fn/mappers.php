@@ -12,6 +12,7 @@ use \ArrayAccess;
 use \Closure;
 use Revinate\Sequence\ArrayUtil;
 use Revinate\Sequence\Sequence;
+use Revinate\Sequence\fn;
 use Revinate\Sequence\FnSequence;
 use Revinate\GetterSetter as gs;
 
@@ -131,6 +132,18 @@ function fnMapToField($fieldName, $fnMap) {
         return gs\set($record, $fieldName, $fnMap($record, $key));
     };
 }
+
+/**
+ * Generates a function that pulls a value from a field in the document and passes it to $fnMap.
+ * 
+ * @param string $fieldName
+ * @param Closure $fnMap($fieldValue)
+ * @return Closure
+ */
+function fnMapFromField($fieldName, $fnMap) {
+    return fn\fnPipe(fn\fnPluck($fieldName), $fnMap);
+}
+
 
 /**
  * Generate a pluck function that returns the value of a field, or null if the field does not exist.
