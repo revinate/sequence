@@ -8,9 +8,11 @@
 
 namespace Revinate\Sequence;
 
+use PHPUnit\Framework\TestCase;
+
 require 'TestAccessClass.php';
 
-class ArrayUtilTest extends \PHPUnit_Framework_TestCase {
+class ArrayUtilTest extends TestCase {
 
     public function testGetField() {
         $array = array(
@@ -50,7 +52,6 @@ class ArrayUtilTest extends \PHPUnit_Framework_TestCase {
 
         $arrayObject = new \ArrayObject($object);
         $this->assertEquals($arrayObject['name'], ArrayUtil::getField($arrayObject, 'name'));
-        $this->assertEquals($arrayObject[0], ArrayUtil::getField($arrayObject, 0));
         $this->assertNull(ArrayUtil::getField($arrayObject, 'missing'));
         $this->assertEquals('Default', ArrayUtil::getField($arrayObject, 'missing', 'Default'));
         $this->assertNull(ArrayUtil::getField($arrayObject, 'null', 'default'));

@@ -36,7 +36,7 @@ class StreamReaderIterator implements \Iterator {
     public function next() {
         $this->current = null;
         $this->isValid = ! feof($this->resource);
-        $this->lineNumber += 1;
+        ++$this->lineNumber;
     }
 
     public function valid() {

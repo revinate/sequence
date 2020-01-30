@@ -8,15 +8,15 @@
 
 namespace Revinate\Sequence;
 
-use \PHPUnit_Framework_TestCase;
 
-class FnGenTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
 
+class FnGenTest extends TestCase {
 
     public function testFnIdentity() {
         $fn = FnGen::fnIdentity();
         $this->assertTrue($fn(99) === 99);
-        $this->assertTrue($fn("hello") === "hello");
+        $this->assertTrue($fn('hello') === 'hello');
     }
 
     public function testPluck() {
@@ -54,7 +54,7 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testFnCallChain() {
-        $fn = function($v) { return $v + 1; };
+        $fn = static function($v) { return $v + 1; };
 
         $fnChain = FnGen::fnCallChain($fn, $fn, $fn, $fn);
 
@@ -69,7 +69,7 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
             array('name'=>'Robert', 'age' => 55),
             array('group'=>'student'),
         );
-        $fnLen = function($v) { return strlen($v); };
+        $fnLen = static function($v) { return strlen($v); };
 
         // Extract only the elements with with name length of 3
         $results = Sequence::make($values)
@@ -83,7 +83,7 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
 
         // Same thing, but without the chain.
         $resultsNonChain = Sequence::make($values)
-            ->filter(function ($v) {
+            ->filter(static function ($v) {
                 if (isset($v['name'])) {
                     $x = $v['name'];
                 } else {
@@ -98,7 +98,7 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         // The first function in the chain is allowed multiple params
         $results = Sequence::make($values)
             ->filterKeys(FnGen::fnCallChain(
-                function($k, $v) { return $v; },  // get the value -- test multiple params
+                static function($k, $v) { return $v; },  // get the value -- test multiple params
                 FnGen::fnPluck('name'),     // get the name field
                 $fnLen,                     // get the length
                 FnGen::fnIsEqual(3)         // compare to 3
@@ -108,8 +108,8 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testFnNestedMap() {
-        $fnMap = function ($v) { $v['mul'] = strlen($v['name']) * $v['count']; return $v; };
-        $fnMap2 = function ($v) { $v['mul'] = -strlen($v['name']) * $v['count']; return $v; };
+        $fnMap = static function ($v) { $v['mul'] = strlen($v['name']) * $v['count']; return $v; };
+        $fnMap2 = static function ($v) { $v['mul'] = -strlen($v['name']) * $v['count']; return $v; };
 
         $fruitBasket = array(
             TestData::$fruit,
@@ -122,7 +122,7 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $n1 = Sequence::make($fruitBasket)->map(FnGen::fnNestedMap($fnMap))->to_a();
         $n2 = Sequence::make($fruitBasket)->map(FnSequence::make()->map($fnMap)->to_a())->to_a();
         $n3 = Sequence::make($fruitBasket)
-            ->map(function ($values) use ($fnMap) {
+            ->map(static function ($values) use ($fnMap) {
                 return Sequence::make($values)->map($fnMap)->to_a();
             })
             ->to_a();
@@ -302,16 +302,20 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
 
     public function testFnCount() {
         $fn = FnGen::fnCount();
-        $this->assertEquals(count(0), $fn(0));
-        $this->assertEquals(count(null), $fn(null));
-        $this->assertEquals(count('hello'), $fn('hello'));
+        $co = new class implements \Countable {
+            public function count()
+            {
+                return 42;
+            }
+        };
+        $this->assertEquals(\count($co), $fn($co));
         $this->assertEquals(count(array()), $fn(array()));
         $this->assertEquals(count(array(1,2,3)), $fn(array(1,2,3)));
         $this->assertNotEquals(count(array(1,2)), $fn(array(1,2,3)));
     }
 
     public function testFnMapField() {
-        $fn = FnGen::fnMapField('name', function($value) { return strtoupper($value);});
+        $fn = FnGen::fnMapField('name', static function($value) { return strtoupper($value);});
 
         $doc = TestData::$fruit[0];
         $docU = $doc;
@@ -337,8 +341,8 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $count = 0;
         $scale = 2;
 
-        $fn = FnGen::fnCacheResult(function ($value) use (&$count, $scale) {
-            $count += 1;
+        $fn = FnGen::fnCacheResult(static function ($value) use (&$count, $scale) {
+            ++$count;
             return $value * $scale;
         });
 
@@ -354,8 +358,8 @@ class FnGenTest extends PHPUnit_Framework_TestCase {
         $fnToUpper = FnString::fnToUpper();
 
         $fn = FnGen::fnCacheResult(
-            function ($value) use (&$count, $scale, $fnToUpper) {
-                $count += 1;
+            static function ($value) use (&$count, $scale, $fnToUpper) {
+                ++$count;
                 return $fnToUpper($value);
             },
             $fnToUpper

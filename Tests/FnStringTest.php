@@ -9,7 +9,9 @@
 namespace Revinate\Sequence;
 
 
-class FnStringTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class FnStringTest extends TestCase {
 
     public function testFnTrim() {
         $fn = FnString::fnTrim();
@@ -24,19 +26,19 @@ class FnStringTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testFnRemoveSuffix() {
-        $suffix = "world";
+        $suffix = 'world';
         $fn = FnString::fnRemoveSuffix($suffix);
 
-        $this->assertEquals("Hello ", $fn("Hello world"));
-        $this->assertEquals("Hello world!", $fn("Hello world!"));
+        $this->assertEquals('Hello ', $fn('Hello world'));
+        $this->assertEquals('Hello world!', $fn('Hello world!'));
     }
 
     public function testFnRemovePrefix() {
-        $prefix = "Hello";
+        $prefix = 'Hello';
         $fn = FnString::fnRemovePrefix($prefix);
 
-        $this->assertEquals(" world!", $fn("Hello world!"));
-        $this->assertEquals("Oh, Hello world!", $fn("Oh, Hello world!"));
+        $this->assertEquals(' world!', $fn('Hello world!'));
+        $this->assertEquals('Oh, Hello world!', $fn('Oh, Hello world!'));
     }
 
     public function testFnToUpper() {

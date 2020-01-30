@@ -8,10 +8,11 @@
 
 namespace Revinate\Sequence\Tutorial\util;
 
+use PHPUnit\Framework\TestCase;
 use Revinate\Sequence\Sequence;
 use Revinate\Sequence\Tutorial\SampleDataLoader;
 
-class StreamReaderIteratorTest extends \PHPUnit_Framework_TestCase {
+class StreamReaderIteratorTest extends TestCase {
 
     public function testStreamReaderIterator() {
         $handle = SampleDataLoader::getEmployeesCsvStream();
@@ -19,7 +20,7 @@ class StreamReaderIteratorTest extends \PHPUnit_Framework_TestCase {
         $expected = SampleDataLoader::getEmployeesCsv();
 
         $fromIterator = Sequence::make(new StreamReaderIterator($handle))
-            ->reduce('', function($content, $line){
+            ->reduce('', static function($content, $line){
                 return $content . $line;
             });
 

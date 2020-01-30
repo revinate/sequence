@@ -8,10 +8,12 @@
 
 namespace Revinate\Sequence\Tutorial;
 
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../exampleCsvToJson.php';
 
 
-class exampleCsvToJsonTest extends \PHPUnit_Framework_TestCase {
+class exampleCsvToJsonTest extends TestCase {
 
     public function testExampleCsvToJson() {
         $input = SampleDataLoader::getEmployeesCsvStream();

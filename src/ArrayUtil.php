@@ -19,6 +19,7 @@ class ArrayUtil {
      * @param string $fieldName
      * @param null|mixed $default
      * @return mixed
+     * @throws gs\UnableToGetFieldException
      */
     public static function getField($doc, $fieldName, $default = null) {
         return gs\getValue($doc, $fieldName, $default);
@@ -29,6 +30,7 @@ class ArrayUtil {
      * @param string $fieldName
      * @param mixed $value
      * @return array|ArrayAccess|object
+     * @throws gs\UnableToSetFieldException
      */
     public static function setField($doc, $fieldName, $value) {
         return gs\setValue($doc, $fieldName, $value);
@@ -39,6 +41,7 @@ class ArrayUtil {
      * @param string[] $path
      * @param null|mixed $default
      * @return mixed
+     * @throws gs\UnableToGetFieldException
      */
     public static function getPath($doc, $path, $default = null) {
         return gs\get($doc, $path, $default);
@@ -46,9 +49,10 @@ class ArrayUtil {
 
     /**
      * @param array|ArrayAccess|object $doc
-     * @param string[]      $path   -- array of field names
-     * @param mixed         $value
+     * @param string[] $path -- array of field names
+     * @param mixed $value
      * @return array|ArrayAccess|object
+     * @throws gs\UnableToSetFieldException
      */
     public static function setPath($doc, $path, $value) {
         return gs\set($doc, $path, $value);

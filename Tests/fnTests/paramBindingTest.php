@@ -2,24 +2,24 @@
 
 namespace Revinate\Sequence;
 
-use \PHPUnit_Framework_TestCase;
-use \Revinate\Sequence\fn as fn;
+use PHPUnit\Framework\TestCase;
+use \Revinate\Sequence\func;
 
-class ParamBindingTest extends PHPUnit_Framework_TestCase {
+class ParamBindingTest extends TestCase {
 
     public function testFnPipe() {
-        $fn = function($v) { return $v + 1; };
+        $fn = static function($v) { return $v + 1; };
 
-        $fnChain = fn\fnPipe($fn, $fn, $fn, $fn);
+        $fnChain = func\fnPipe($fn, $fn, $fn, $fn);
 
         $this->assertEquals(9, $fnChain(5));
     }
 
     public function testFnPipeWithMultipleArgumentsInFirstFunction() {
-        $fnAdd = function ($a, $b) { return $a + $b; };
-        $fnIncrease = function($v) { return $v + 1; };
+        $fnAdd = static function ($a, $b) { return $a + $b; };
+        $fnIncrease = static function($v) { return $v + 1; };
 
-        $fnChain = fn\fnPipe($fnAdd, $fnIncrease, $fnIncrease, $fnIncrease);
+        $fnChain = func\fnPipe($fnAdd, $fnIncrease, $fnIncrease, $fnIncrease);
 
         $this->assertEquals(8, $fnChain(2, 3));
     }

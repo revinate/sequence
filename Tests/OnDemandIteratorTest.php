@@ -9,13 +9,15 @@
 namespace Revinate\Sequence;
 
 
-class OnDemandIteratorTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class OnDemandIteratorTest extends TestCase {
 
     public function testBinding() {
         $count = 0;
         $data = array(1,2,3,4,5,6);
-        $fnGetIterator = function() use (&$count, $data) {
-            $count += 1;
+        $fnGetIterator = static function() use (&$count, $data) {
+            ++$count;
             return new \ArrayIterator($data);
         };
 

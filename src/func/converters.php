@@ -6,7 +6,7 @@
  * Time: 10:19
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 
 
 /**
@@ -14,7 +14,7 @@ namespace Revinate\Sequence\fn;
  * @return \Closure
  */
 function fnCastToInt() {
-    return function ($value) { return (int)$value; };
+    return static function ($value) { return (int)$value; };
 }
 
 /**
@@ -22,7 +22,7 @@ function fnCastToInt() {
  * @return \Closure
  */
 function fnCastToFloat() {
-    return function ($value) { return (float)$value; };
+    return static function ($value) { return (float)$value; };
 }
 
 /**
@@ -30,7 +30,7 @@ function fnCastToFloat() {
  * @return \Closure
  */
 function fnCastToDouble() {
-    return function ($value) { return (double)$value; };
+    return static function ($value) { return (double)$value; };
 }
 
 /**
@@ -38,7 +38,7 @@ function fnCastToDouble() {
  * @return \Closure
  */
 function fnCastToString() {
-    return function ($value) { return (string)$value; };
+    return static function ($value) { return (string)$value; };
 }
 
 /**
@@ -46,7 +46,7 @@ function fnCastToString() {
  * @return \Closure
  */
 function fnCastToArray() {
-    return function ($value) { return (array)$value; };
+    return static function ($value) { return (array)$value; };
 }
 
 /**
@@ -54,7 +54,7 @@ function fnCastToArray() {
  * @return \Closure
  */
 function fnCastToObject() {
-    return function ($value) { return (object)$value; };
+    return static function ($value) { return (object)$value; };
 }
 
 /**
@@ -62,5 +62,5 @@ function fnCastToObject() {
  * @return \Closure
  */
 function fnCastToBool() {
-    return function ($value) { return (bool)$value; };
+    return static function ($value) { return (bool)$value; };
 }

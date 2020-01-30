@@ -6,7 +6,7 @@
  * Time: 11:32
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 
 use Revinate\Sequence\Sequence;
 use \Closure;
@@ -25,7 +25,7 @@ use \Closure;
  * @return callable
  */
 function fnReduce($fnReduce) {
-    return function ($current, $values) use ($fnReduce) {
+    return static function ($current, $values) use ($fnReduce) {
         return Sequence::make($values)->reduce($current, $fnReduce);
     };
 }
@@ -42,9 +42,9 @@ function fnReduce($fnReduce) {
  */
 function fnSum($fnMapValue = null) {
     if ($fnMapValue) {
-        return function ($sum, $v) use ($fnMapValue) { return $sum + $fnMapValue($v); };
+        return static function ($sum, $v) use ($fnMapValue) { return $sum + $fnMapValue($v); };
     }
-    return function ($sum, $v) { return $sum + $v; };
+    return static function ($sum, $v) { return $sum + $v; };
 }
 
 /**
@@ -52,7 +52,7 @@ function fnSum($fnMapValue = null) {
  * @return Closure
  */
 function fnMax() {
-    return function ($max, $v) { return max(array($max, $v)); };
+    return static function ($max, $v) { return max(array($max, $v)); };
 }
 
 /**
@@ -60,7 +60,7 @@ function fnMax() {
  * @return Closure
  */
 function fnMin() {
-    return function ($min, $v) { return is_null($min) ? $v : (is_null($v) ? $min : min($min, $v)); };
+    return static function ($min, $v) { return is_null($min) ? $v : (is_null($v) ? $min : min($min, $v)); };
 }
 
 /**
@@ -78,20 +78,19 @@ function fnAvg($fnMapValue = null) {
         $fnMapValue = fnIdentity();
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     /**
      * @param float|int $avg -- Ignored because the average will be recalculated.
      * @param float|int|null $v -- the value
      * @return float|int|null
      */
-    return function ($avg, $v) use (&$count, &$sum, $fnMapValue) {
+    return static function ($avg, $v) use (&$count, &$sum, $fnMapValue) {
         $v = $fnMapValue($v);
         if (is_null($v)) {
             if (! $count) {
                 return null;
             }
         } else {
-            $count += 1;
+            ++$count;
             $sum += $v;
         }
         return $sum / $count;

@@ -6,7 +6,7 @@
  * Time: 16:02
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 
 use \Closure;
 
@@ -17,16 +17,14 @@ use \Closure;
  * @return Closure -- returns a function to be used with sort
  */
 function fnCompare($fnExtractValue) {
-    return function ($lhs, $rhs) use ($fnExtractValue) {
+    return static function ($lhs, $rhs) use ($fnExtractValue) {
         $lhsValue = $fnExtractValue($lhs);
         $rhsValue = $fnExtractValue($rhs);
 
         if ($lhsValue < $rhsValue) {
             return -1;
-        } else {
-            if ($lhsValue > $rhsValue) {
-                return 1;
-            }
+        } else if ($lhsValue > $rhsValue) {
+            return 1;
         }
         return 0;
     };
@@ -69,7 +67,7 @@ function fnCompareFieldRev($fieldName) {
  * @return Closure
  */
 function fnCompareMulti($compareFunctions) {
-    return function($lhs, $rhs) use ($compareFunctions) {
+    return static function($lhs, $rhs) use ($compareFunctions) {
         $result = 0;
         foreach ($compareFunctions as $fn) {
             $result = $fn($lhs, $rhs);
@@ -89,13 +87,13 @@ function fnCompareMulti($compareFunctions) {
  */
 function fnSortArray($fnComp = null) {
     if ($fnComp) {
-        return function ($array) use ($fnComp) {
+        return static function ($array) use ($fnComp) {
             usort($array, $fnComp);
             return $array;
         };
     }
 
-    return function ($array) {
+    return static function ($array) {
         sort($array);
         return $array;
     };

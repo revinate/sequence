@@ -6,7 +6,7 @@
  * Time: 11:22
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 use \Closure;
 
 /**
@@ -15,7 +15,7 @@ use \Closure;
  * @return Closure
  */
 function fnTrim() {
-    return function ($v) {
+    return static function ($v) {
         return trim($v);
     };
 }
@@ -26,7 +26,7 @@ function fnTrim() {
  * @return Closure
  */
 function fnTrimLeft() {
-    return function ($v) {
+    return static function ($v) {
         return ltrim($v);
     };
 }
@@ -37,7 +37,7 @@ function fnTrimLeft() {
  * @return Closure
  */
 function fnTrimRight() {
-    return function ($v) {
+    return static function ($v) {
         return rtrim($v);
     };
 }
@@ -49,8 +49,8 @@ function fnTrimRight() {
  * @return  Closure
  */
 function fnRemoveSuffix($suffix) {
-    return function ($val) use ($suffix) {
-        return preg_replace('/' . preg_quote($suffix) . '$/', '', $val);
+    return static function ($val) use ($suffix) {
+        return preg_replace('/' . preg_quote($suffix, '/') . '$/', '', $val);
     };
 }
 
@@ -61,8 +61,8 @@ function fnRemoveSuffix($suffix) {
  * @return  Closure
  */
 function fnRemovePrefix($prefix) {
-    return function ($val) use ($prefix) {
-        return preg_replace('/^' . preg_quote($prefix) . '/', '', $val);
+    return static function ($val) use ($prefix) {
+        return preg_replace('/^' . preg_quote($prefix, '/') . '/', '', $val);
     };
 }
 
@@ -73,7 +73,7 @@ function fnRemovePrefix($prefix) {
  * @return Closure
  */
 function fnAddPrefix($prefix) {
-    return function ($val) use ($prefix) {
+    return static function ($val) use ($prefix) {
         return $prefix . $val;
     };
 }
@@ -85,7 +85,7 @@ function fnAddPrefix($prefix) {
  * @return Closure
  */
 function fnAddPostfix($postfix) {
-    return function ($val) use ($postfix) {
+    return static function ($val) use ($postfix) {
         return $val . $postfix;
     };
 }
@@ -114,7 +114,7 @@ function fnToLower($encoding = null) {
  * @return \Closure
  */
 function fnPregReplace($pattern, $replace) {
-    return function ($subject) use ($pattern, $replace) {
+    return static function ($subject) use ($pattern, $replace) {
         return preg_replace($pattern, $replace, $subject);
     };
 }
@@ -126,11 +126,11 @@ function fnPregReplace($pattern, $replace) {
  */
 function fnConvertCase($mode, $encoding = null) {
     if ($encoding) {
-        return function ($subject) use ($mode, $encoding) {
+        return static function ($subject) use ($mode, $encoding) {
             return mb_convert_case($subject, $mode, $encoding);
         };
     }
-    return function ($subject) use ($mode) {
+    return static function ($subject) use ($mode) {
         return mb_convert_case($subject, $mode);
     };
 }
@@ -192,7 +192,7 @@ function fnUcFirst($encoding = null) {
         $pattern = '||u';
     }
 
-    return function ($string) use ($encoding, $pattern) {
+    return static function ($string) use ($encoding, $pattern) {
         $parts = preg_split($pattern, $string, 2, PREG_SPLIT_NO_EMPTY);
         $parts[0] = mb_strtoupper($parts[0], $encoding);
         return implode('', $parts);
@@ -210,7 +210,7 @@ function fnLcFirst($encoding = null) {
         $pattern = '||u';
     }
 
-    return function ($string) use ($encoding, $pattern) {
+    return static function ($string) use ($encoding, $pattern) {
         $parts = preg_split($pattern, $string, 2, PREG_SPLIT_NO_EMPTY);
         $parts[0] = mb_strtolower($parts[0], $encoding);
         return implode('', $parts);
@@ -221,7 +221,7 @@ function fnLcFirst($encoding = null) {
  * @return Closure
  */
 function fnStrLen() {
-    return function ($str) {
+    return static function ($str) {
         return strlen($str);
     };
 }
@@ -232,7 +232,7 @@ function fnStrLen() {
  */
 function fnMbStrLen($encoding = null) {
     $encoding = $encoding ?: mb_internal_encoding();
-    return function ($str) use ($encoding) {
+    return static function ($str) use ($encoding) {
         return mb_strlen($str, $encoding);
     };
 }
@@ -246,7 +246,7 @@ function fnMbStrLen($encoding = null) {
  * @return Closure
  */
 function fnStringConcat($glue = '') {
-    return function($a, $b) use ($glue) {
+    return static function($a, $b) use ($glue) {
         return $a . $glue . $b;
     };
 }

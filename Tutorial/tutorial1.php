@@ -10,7 +10,7 @@ namespace Revinate\Sequence\Tutorial;
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Revinate\Sequence\Sequence;
-use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\func;
 use Revinate\Sequence\Tutorial\SampleDataLoader;
 
 function employeeExample1() {

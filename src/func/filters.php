@@ -6,7 +6,7 @@
  * Time: 10:18
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 
 use \ArrayAccess;
 
@@ -14,14 +14,14 @@ use \ArrayAccess;
  * @return \Closure
  */
 function fnIsNotEmpty() {
-    return function ($v) { return ! empty($v); };
+    return static function ($v) { return ! empty($v); };
 }
 
 /**
  * @return \Closure
  */
 function fnIsSet() {
-    return function ($v) { return isset($v); };
+    return static function ($v) { return isset($v); };
 }
 
 /**
@@ -39,7 +39,7 @@ function fnClean() {
  * @return \Closure
  */
 function fnIsEmpty() {
-    return function ($v) { return empty($v); };
+    return static function ($v) { return empty($v); };
 }
 
 /**
@@ -50,14 +50,12 @@ function fnIsEmpty() {
  */
 function fnIsInMap($map) {
     if (is_array($map)) {
-        return function ($v) use ($map) { return array_key_exists($v, $map); };
-    } else {
-        if (class_implements($map, 'ArrayAccess')) {
-            return function ($v) use ($map) { return $map->offsetExists($v); };
-        }
+        return static function ($v) use ($map) { return array_key_exists($v, $map); };
+    } else if (class_implements($map, 'ArrayAccess')) {
+        return static function ($v) use ($map) { return $map->offsetExists($v); };
     }
     // just use isset
-    return function ($v) use ($map) { return isset($map[$v]); };
+    return static function ($v) use ($map) { return isset($map[$v]); };
 }
 
 /**
@@ -68,7 +66,7 @@ function fnIsInMap($map) {
  */
 function fnIsNotInMap($map) {
     $fnInMap = fnIsInMap($map);
-    return function ($v) use ($fnInMap) { return ! $fnInMap($v); };
+    return static function ($v) use ($fnInMap) { return ! $fnInMap($v); };
 }
 
 /**
@@ -78,7 +76,7 @@ function fnIsNotInMap($map) {
  * @return \Closure
  */
 function fnIsEqual($value) {
-    return function ($v) use ($value) { return $value == $v; };
+    return static function ($v) use ($value) { return $value == $v; };
 }
 
 /**
@@ -88,7 +86,7 @@ function fnIsEqual($value) {
  * @return \Closure
  */
 function fnIsEqualEqual($value) {
-    return function ($v) use ($value) { return $value === $v; };
+    return static function ($v) use ($value) { return $value === $v; };
 }
 
 /**
@@ -98,7 +96,7 @@ function fnIsEqualEqual($value) {
  * @return \Closure
  */
 function fnIsNotEqual($value) {
-    return function ($v) use ($value) { return $value != $v; };
+    return static function ($v) use ($value) { return $value != $v; };
 }
 
 
@@ -109,7 +107,7 @@ function fnIsNotEqual($value) {
  * @return \Closure
  */
 function fnIsNotEqualEqual($value) {
-    return function ($v) use ($value) { return $value !== $v; };
+    return static function ($v) use ($value) { return $value !== $v; };
 }
 
 
@@ -119,7 +117,7 @@ function fnIsNotEqualEqual($value) {
  * @return \Closure
  */
 function fnIsNumeric() {
-    return function ($v) { return is_numeric($v); };
+    return static function ($v) { return is_numeric($v); };
 }
 
 /**
@@ -127,7 +125,7 @@ function fnIsNumeric() {
  * @return \Closure
  */
 function fnIsInArray($array) {
-    return function ($v) use ($array) { return in_array($v, $array); };
+    return static function ($v) use ($array) { return in_array($v, $array); };
 }
 
 /**
@@ -135,7 +133,7 @@ function fnIsInArray($array) {
  * @return \Closure
  */
 function fnIsNotInArray($array) {
-    return function ($v) use ($array) { return ! in_array($v, $array); };
+    return static function ($v) use ($array) { return ! in_array($v, $array); };
 }
 
 /**
@@ -145,7 +143,7 @@ function fnIsNotInArray($array) {
  * @return \Closure
  */
 function fnImplements($interface) {
-    return function ($v) use ($interface) { return class_implements($v, $interface); };
+    return static function ($v) use ($interface) { return class_implements($v, $interface); };
 }
 
 /**
@@ -153,7 +151,7 @@ function fnImplements($interface) {
  * @return \Closure
  */
 function fnInstanceOf($className) {
-    return function ($v) use ($className) { return $v instanceof $className; };
+    return static function ($v) use ($className) { return $v instanceof $className; };
 }
 
 /**
@@ -162,7 +160,7 @@ function fnInstanceOf($className) {
  * @return \Closure
  */
 function fnIsObject() {
-    return function ($v) { return is_object($v); };
+    return static function ($v) { return is_object($v); };
 }
 
 
@@ -175,9 +173,9 @@ function fnIsObject() {
  */
 function fnNot($fn = null) {
     if ($fn) {
-        return function ($v) use ($fn) { return ! $fn($v); };
+        return static function ($v) use ($fn) { return ! $fn($v); };
     }
-    return function ($v) { return ! $v; };
+    return static function ($v) { return ! $v; };
 }
 
 
@@ -197,7 +195,7 @@ function fnMatch($pattern) {
  * @return \Closure
  */
 function fnPregMatch($pattern) {
-    return function($v) use ($pattern) {
+    return static function($v) use ($pattern) {
         return preg_match($pattern, $v) ? true : false;
     };
 }

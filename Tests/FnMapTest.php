@@ -9,7 +9,9 @@
 namespace Revinate\Sequence;
 
 
-class FnMapTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class FnMapTest extends TestCase {
 
     public function testFnCastToInt() {
         $fnInt = FnMap::fnCastToInt();
@@ -17,8 +19,8 @@ class FnMapTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(5, $fnInt(5));
         $this->assertEquals(1, $fnInt(1.0));
         $this->assertEquals(1, $fnInt(1.5));
-        $this->assertEquals(1, $fnInt("1.0"));
-        $this->assertEquals(0, $fnInt("hello"));
+        $this->assertEquals(1, $fnInt('1.0'));
+        $this->assertEquals(0, $fnInt('hello'));
     }
 
     public function testFnCastToFloat() {
@@ -27,7 +29,7 @@ class FnMapTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(1.0, $fnFloat(1.0));
         $this->assertEquals(1.0, $fnFloat(1));
         $this->assertEquals(1.5, $fnFloat(1.5));
-        $this->assertEquals(1.2, $fnFloat("1.2"));
+        $this->assertEquals(1.2, $fnFloat('1.2'));
     }
 
     public function testFnCastToDouble() {
@@ -36,15 +38,15 @@ class FnMapTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(1.0, $fnDouble(1.0));
         $this->assertEquals(1.0, $fnDouble(1));
         $this->assertEquals(1.5, $fnDouble(1.5));
-        $this->assertEquals(1.2, $fnDouble("1.2"));
+        $this->assertEquals(1.2, $fnDouble('1.2'));
     }
 
     public function testFnCastToString() {
         $fnString = FnMap::fnCastToString();
 
-        $this->assertEquals("Hello", $fnString("Hello"));
+        $this->assertEquals('Hello', $fnString('Hello'));
         $this->assertEquals(0, $fnString(0));
-        $this->assertNotEquals("Hello", $fnString(0));
+        $this->assertNotEquals('Hello', $fnString(0));
     }
 
     public function testFnCastToArray() {
@@ -62,7 +64,7 @@ class FnMapTest extends \PHPUnit_Framework_TestCase {
         $fnObject = FnMap::fnCastToObject();
 
         $object = new \stdClass();
-        $object->name = "object";
+        $object->name = 'object';
 
         $this->assertEquals((object)array(), $fnObject(array()));
         $this->assertEquals($object, $fnObject($object));

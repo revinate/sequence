@@ -9,7 +9,9 @@
 namespace Revinate\Sequence;
 
 
-class FnBindTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class FnBindTest extends TestCase {
 
 
     public function testFnBindFieldsToParams() {
@@ -19,7 +21,7 @@ class FnBindTest extends \PHPUnit_Framework_TestCase {
             'c' => 'c',
         );
 
-        $fnEchoParams = function() {
+        $fnEchoParams = static function() {
             return func_get_args();
         };
 

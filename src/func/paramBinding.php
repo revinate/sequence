@@ -6,7 +6,7 @@
  * Time: 15:42
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 use \Closure;
 
 /**
@@ -17,7 +17,7 @@ use \Closure;
  * @return Closure
  */
 function fnCallChain($fn) {
-    return call_user_func_array('\Revinate\Sequence\fn\fnPipe', func_get_args());
+    return call_user_func_array('\Revinate\Sequence\func\fnPipe', func_get_args());
 }
 
 /**
@@ -32,7 +32,7 @@ function fnPipe($fn) {
     } else {
         $args = func_get_args();
     }
-    return function ($v) use ($args) {
+    return static function ($v) use ($args) {
         $fn = array_shift($args);
         $v = call_user_func_array($fn, func_get_args());
         foreach ($args as $fn) {
@@ -49,7 +49,7 @@ function fnPipe($fn) {
  * @return Closure
  */
 function fnParam($num) {
-    return function () use ($num) {
+    return static function () use ($num) {
         $args = func_get_args();
         return isset($args[$num]) ? $args[$num] : null;
     };

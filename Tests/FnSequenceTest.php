@@ -8,7 +8,9 @@
 
 namespace Revinate\Sequence;
 
-class FnSequenceTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class FnSequenceTest extends TestCase {
 
     public function testIdentity() {
         $values = range(0, 100);
@@ -24,7 +26,7 @@ class FnSequenceTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testMap() {
-        $fnMap = function($v) { return str_repeat($v['name'], $v['count']); };
+        $fnMap = static function($v) { return str_repeat($v['name'], $v['count']); };
         $fnSequence = FnSequence::make()->map($fnMap)->to_a();
         $this->assertEquals(Sequence::make(TestData::$fruit)->map($fnMap)->to_a(), $fnSequence(TestData::$fruit));
         $this->assertNotEquals(Sequence::make(TestData::$fruit)->map($fnMap)->limit(4)->to_a(), $fnSequence(TestData::$fruit));
@@ -32,7 +34,7 @@ class FnSequenceTest extends \PHPUnit_Framework_TestCase {
 
     public function testFilter() {
         // Only pass on the even ones.
-        $fnFilter = FnGen::fnCallChain(FnGen::fnPluck('count'), function($v) { return $v % 2 == 0; });
+        $fnFilter = FnGen::fnCallChain(FnGen::fnPluck('count'), static function($v) { return $v % 2 == 0; });
         $fnSequence = FnSequence::make()->filter($fnFilter)->to_a();
         $this->assertEquals(Sequence::make(TestData::$fruit)->filter($fnFilter)->to_a(), $fnSequence(TestData::$fruit));
         $this->assertNotEquals(Sequence::make(TestData::$fruit)->to_a(), $fnSequence(TestData::$fruit));
@@ -57,7 +59,7 @@ class FnSequenceTest extends \PHPUnit_Framework_TestCase {
         $sum = 0;
 
         // use walk to sum the values.
-        $fnSequence = FnSequence::make()->walk(function($v) use (&$sum) { $sum += $v['count'];})->to_fn();
+        $fnSequence = FnSequence::make()->walk(static function($v) use (&$sum) { $sum += $v['count'];})->to_fn();
 
         $fnSequence(TestData::$fruit);
 
@@ -66,7 +68,7 @@ class FnSequenceTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testReduceBounded() {
-        $fnSum = function($base, $value) { return $base + $value; };
+        $fnSum = static function($base, $value) { return $base + $value; };
         $fnReduce = FnSequence::make()->map(FnGen::fnPluck('count'))->reduceBounded(0, $fnSum);
 
         $this->assertEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('count'))->reduce(0, $fnSum), $fnReduce(TestData::$fruit));
@@ -81,7 +83,7 @@ class FnSequenceTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testReduce() {
-        $fnSum = function($base, $value) { return $base + $value; };
+        $fnSum = static function($base, $value) { return $base + $value; };
         $fnReduce = FnSequence::make()->map(FnGen::fnPluck('count'))->reduce($fnSum);
 
         $this->assertEquals(Sequence::make(TestData::$fruit)->map(FnGen::fnPluck('count'))->reduce(0, $fnSum), $fnReduce(0,

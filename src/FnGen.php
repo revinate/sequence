@@ -2,7 +2,7 @@
 
 namespace Revinate\Sequence;
 
-use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\func;
 use \ArrayAccess;
 
 /**
@@ -15,14 +15,14 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepNotEmpty() {
-        return fn\fnIsNotEmpty();
+        return func\fnIsNotEmpty();
     }
 
     /**
      * @return callable
      */
     public static function fnKeepIsSet() {
-        return fn\fnIsSet();
+        return func\fnIsSet();
     }
 
     /**
@@ -33,14 +33,14 @@ class FnGen {
      * @return callable
      */
     public static function fnClean() {
-        return fn\fnClean();
+        return func\fnClean();
     }
 
     /**
      * @return callable
      */
     public static function fnIsEmpty() {
-        return fn\fnIsEmpty();
+        return func\fnIsEmpty();
     }
 
     /**
@@ -50,7 +50,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepInMap($map) {
-        return fn\fnIsInMap($map);
+        return func\fnIsInMap($map);
     }
 
     /**
@@ -60,7 +60,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepNotInMap($map) {
-        return fn\fnIsNotInMap($map);
+        return func\fnIsNotInMap($map);
     }
 
     /**
@@ -70,7 +70,7 @@ class FnGen {
      * @return callable
      */
     public static function fnIsEqual($value) {
-        return fn\fnIsEqual($value);
+        return func\fnIsEqual($value);
     }
 
     /**
@@ -80,7 +80,7 @@ class FnGen {
      * @return callable
      */
     public static function fnIsEqualEqual($value) {
-        return fn\fnIsEqualEqual($value);
+        return func\fnIsEqualEqual($value);
     }
 
     /**
@@ -90,7 +90,7 @@ class FnGen {
      * @return callable
      */
     public static function fnIsNotEqual($value) {
-        return fn\fnIsNotEqual($value);
+        return func\fnIsNotEqual($value);
     }
 
 
@@ -101,7 +101,7 @@ class FnGen {
      * @return callable
      */
     public static function fnIsNotEqualEqual($value) {
-        return fn\fnIsNotEqualEqual($value);
+        return func\fnIsNotEqualEqual($value);
     }
 
 
@@ -111,7 +111,7 @@ class FnGen {
      * @return callable
      */
     public static function fnIsNumeric() {
-        return fn\fnIsNumeric();
+        return func\fnIsNumeric();
     }
 
     /** Returns a function that trims the value.
@@ -119,7 +119,7 @@ class FnGen {
      * @return callable
      */
     public static function fnTrim() {
-        return fn\fnTrim();
+        return func\fnTrim();
     }
 
     /**
@@ -128,7 +128,7 @@ class FnGen {
      * @return callable
      */
     public static function fnTrue() {
-        return fn\fnTrue();
+        return func\fnTrue();
     }
 
     /**
@@ -137,7 +137,7 @@ class FnGen {
      * @return callable
      */
     public static function fnFalse() {
-        return fn\fnFalse();
+        return func\fnFalse();
     }
 
     /**
@@ -145,7 +145,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepInArray($array) {
-        return fn\fnIsInArray($array);
+        return func\fnIsInArray($array);
     }
 
     /**
@@ -153,7 +153,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepNotInArray($array) {
-        return fn\fnIsNotInArray($array);
+        return func\fnIsNotInArray($array);
     }
 
     /**
@@ -163,7 +163,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepImplements($className) {
-        return fn\fnImplements($className);
+        return func\fnImplements($className);
     }
 
     /**
@@ -172,7 +172,7 @@ class FnGen {
      * @return callable
      */
     public static function fnKeepIfIsObject() {
-        return fn\fnIsObject();
+        return func\fnIsObject();
     }
 
     /**
@@ -180,7 +180,7 @@ class FnGen {
      * @return callable
      */
     public static function fnMap($map) {
-        return fn\fnMap($map);
+        return func\fnMap($map);
     }
 
     /**
@@ -188,7 +188,7 @@ class FnGen {
      * @return callable
      */
     public static function fnCastToInt() {
-        return fn\fnCastToInt();
+        return func\fnCastToInt();
     }
 
     /**
@@ -198,7 +198,7 @@ class FnGen {
      * @return callable
      */
     public static function fnSwapParamsPassThrough($fn) {
-        return fn\fnSwapParamsPassThrough($fn);
+        return func\fnSwapParamsPassThrough($fn);
     }
 
     /**
@@ -207,7 +207,7 @@ class FnGen {
      * @return callable
      */
     public static function fnMapToKey() {
-        return fn\fnKey();
+        return func\fnKey();
     }
 
     /**
@@ -216,7 +216,7 @@ class FnGen {
      * @return callable
      */
     public static function fnMapToKeyValuePair() {
-        return fn\fnMapToKeyValuePair();
+        return func\fnMapToKeyValuePair();
     }
 
 
@@ -228,7 +228,7 @@ class FnGen {
      * @return callable
      */
     public static function fnMapField($fieldName, $fnMap) {
-        return fn\fnMapField($fieldName, $fnMap);
+        return func\fnMapField($fieldName, $fnMap);
     }
 
 
@@ -240,7 +240,7 @@ class FnGen {
      * @return callable
      */
     public static function fnPluck($key, $default = null) {
-        return fn\fnPluck($key, $default);
+        return func\fnPluck($key, $default);
     }
 
     /**
@@ -251,7 +251,7 @@ class FnGen {
      * @return callable
      */
     public static function fnPluckFrom($from, $default = null) {
-        return fn\fnPluckFrom($from, $default);
+        return func\fnPluckFrom($from, $default);
     }
 
     /**
@@ -260,7 +260,7 @@ class FnGen {
      * @return callable
      */
     public static function fnIdentity() {
-        return fn\fnIdentity();
+        return func\fnIdentity();
     }
 
     /**
@@ -269,7 +269,7 @@ class FnGen {
      * @return callable
      */
     public static function fnCount() {
-        return fn\fnCount();
+        return func\fnCount();
     }
 
     /**
@@ -279,7 +279,7 @@ class FnGen {
      * @return callable
      */
     public static function fnCounter($startingValue = 0) {
-        return fn\fnCounter($startingValue);
+        return func\fnCounter($startingValue);
     }
 
     /**
@@ -289,7 +289,7 @@ class FnGen {
      * @return callable
      */
     public static function fnCallChain($fn) {
-        return call_user_func_array('\Revinate\Sequence\fn\fnPipe', func_get_args());
+        return call_user_func_array('\Revinate\Sequence\func\fnPipe', func_get_args());
     }
 
     /**
@@ -299,7 +299,7 @@ class FnGen {
      * @return callable
      */
     public static function fnParam($num) {
-        return call_user_func_array('\Revinate\Sequence\fn\fnParam', func_get_args());
+        return call_user_func_array('\Revinate\Sequence\func\fnParam', func_get_args());
     }
 
     /**
@@ -308,7 +308,7 @@ class FnGen {
      * @return callable
      */
     public static function fnNestedSort() {
-        return fn\fnNestedSort();
+        return func\fnNestedSort();
     }
 
     /**
@@ -318,7 +318,7 @@ class FnGen {
      * @return callable
      */
     public static function fnNestedMap($fn) {
-        return fn\fnNestedMap($fn);
+        return func\fnNestedMap($fn);
     }
 
     /**
@@ -328,7 +328,7 @@ class FnGen {
      * @return callable
      */
     public static function fnNestedUKeyBy($fn) {
-        return fn\fnNestedUKeyBy($fn);
+        return func\fnNestedUKeyBy($fn);
     }
 
     /**
@@ -339,7 +339,7 @@ class FnGen {
      * @deprecated use FnString::fnRemoveSuffix
      */
     public static function fnRemoveSuffix($suffix) {
-        return fn\fnRemoveSuffix($suffix);
+        return func\fnRemoveSuffix($suffix);
     }
 
     /**
@@ -350,7 +350,7 @@ class FnGen {
      * @deprecated  use FnString::fnRemovePrefix
      */
     public static function fnRemovePrefix($prefix) {
-        return fn\fnRemoveSuffix($prefix);
+        return func\fnRemoveSuffix($prefix);
     }
 
 
@@ -372,7 +372,7 @@ class FnGen {
      * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->reduce(FnGen::fnSum(FnGen::fnPluck('count'))
      */
     public static function fnSum($fnMapValue = null) {
-        return fn\fnSum($fnMapValue);
+        return func\fnSum($fnMapValue);
     }
 
     /**
@@ -381,7 +381,7 @@ class FnGen {
      * @deprecated
      */
     public static function fnMax() {
-        return fn\fnMax();
+        return func\fnMax();
     }
 
     /**
@@ -390,7 +390,7 @@ class FnGen {
      * @deprecated
      */
     public static function fnMin() {
-        return fn\fnMin();
+        return func\fnMin();
     }
 
     /**
@@ -402,7 +402,7 @@ class FnGen {
      * @deprecated
      */
     public static function fnAvg($fnMapValue = null) {
-        return fn\fnAvg($fnMapValue);
+        return func\fnAvg($fnMapValue);
     }
 
     /**
@@ -411,7 +411,7 @@ class FnGen {
      * @deprecated
      */
     public static function fnUnion() {
-        return fn\fnUnion();
+        return func\fnUnion();
     }
 
     /**
@@ -433,7 +433,7 @@ class FnGen {
      * @return callable
      */
     public static function fnIfMap($fnTest, $fnMapTrue, $fnMapFalse = null) {
-        return fn\fnIfMap($fnTest, $fnMapTrue, $fnMapFalse);
+        return func\fnIfMap($fnTest, $fnMapTrue, $fnMapFalse);
     }
 
     /**
@@ -444,6 +444,6 @@ class FnGen {
      * @return callable
      */
     public static function fnCacheResult($fnMap, $fnHash = null) {
-        return fn\fnCacheResult($fnMap, $fnHash);
+        return func\fnCacheResult($fnMap, $fnHash);
     }
 }

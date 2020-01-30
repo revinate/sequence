@@ -10,52 +10,66 @@ class FancyArray extends \ArrayObject {
     public function __construct($obj = array()){
 
         //else proceed normally, as though this special constructor didn't exist at all
-        return parent::__construct($obj);
+        parent::__construct($obj);
     }
 
-	static function make($source = null)
+	public static function make($source = null)
 	{
 
-		if (is_null($source))			return new self;
-		if (is_array($source))			return new self($source);
-		if (is_a($source, __CLASS__))	return new self($source);
-        if (is_a($source, 'ArrayObject')) return new self($source);
+		if (is_null($source)) {
+            return new self;
+        }
+		if (is_array($source)) {
+            return new self($source);
+        }
+		if (is_a($source, __CLASS__)) {
+            return new self($source);
+        }
+        if (is_a($source, 'ArrayObject')) {
+            return new self($source);
+        }
 
 		return new self(func_get_args());
 	}
 
     public static function intcmp($a,$b) {
-        if((float)$a == (float)$b)return 0;
-        if((float)$a  > (float)$b)return 1;
-        if((float)$a  < (float)$b)return -1;
+        if((float)$a == (float)$b) {
+            return 0;
+        }
+        if((float)$a  > (float)$b) {
+            return 1;
+        }
+        if((float)$a  < (float)$b) {
+            return -1;
+        }
     }
 
     /**
      * Returns a true array of this FancyArray.  In theory, I think usage of this function should be minimized, since this class supports native array operations. Also type-hinting should be duck-typed to the interfaces as used in a function, not the class Array. --Alex
      * @return array
      */
-    function to_a()							{ return (array)$this; }
+    public function to_a()							{ return (array)$this; }
 
-	function keys()							{ return new self(array_keys((array)$this)); }
-	function values()						{ return new self(array_values((array)$this)); }
+	public function keys()							{ return new self(array_keys((array)$this)); }
+	public function values()						{ return new self(array_values((array)$this)); }
 
-    function intersect($arr) {
+    public function intersect($arr) {
         return new self(array_intersect(array_values((array)$this), $arr));
     }
 
-	function get($key, $default = null)		{ return array_key_exists($key, (array)$this) ? $this[$key] : $default; }
-	function has($value)					{ return in_array($value, (array)$this); }
-	function get_key($value)				{ return array_search($value, (array)$this); }
-    function get_all_keys($value)           { return array_keys((array) $this, $value); }
-	function has_key($key)					{ return array_key_exists($key, (array)$this); }
-	function has_key_value($key, $value)	{ return array_key_exists($key, (array)$this) && $this[$key] == $value; }
+	public function get($key, $default = null)		{ return array_key_exists($key, (array)$this) ? $this[$key] : $default; }
+	public function has($value)					{ return in_array($value, (array)$this); }
+	public function get_key($value)				{ return array_search($value, (array)$this); }
+    public function get_all_keys($value)           { return array_keys((array) $this, $value); }
+	public function has_key($key)					{ return array_key_exists($key, (array)$this); }
+	public function has_key_value($key, $value)	{ return array_key_exists($key, (array)$this) && $this[$key] == $value; }
 
-	function slice($offset, $length = null, $preserve_keys = false)
+	public function slice($offset, $length = null, $preserve_keys = false)
 	{
 		return new self(array_slice((array)$this, $offset, $length, $preserve_keys));
 	}
 
-    function chunk($size, $preserve_keys = false) {
+    public function chunk($size, $preserve_keys = false) {
 
         $chunks = array_chunk((array)$this, $size, $preserve_keys);
 
@@ -72,7 +86,7 @@ class FancyArray extends \ArrayObject {
      * @param string  $key the index key
      * @return FancyArray the array[$key] for each element
      */
-    function pluck($key) {
+    public function pluck($key) {
         $r = new self();
         foreach ($this as $k => $v) {
             $r[$k] = isset ($v[$key]) ? $v[$key] : null;
@@ -84,7 +98,7 @@ class FancyArray extends \ArrayObject {
      * this method removes every "falsy" value: undefined, null, 0, false, NaN and ''):
      * @return FancyArray
      */
-    function clean() {
+    public function clean() {
         $r = new self();
         foreach ($this as $k => $v) {
             if ($v) {
@@ -100,7 +114,7 @@ class FancyArray extends \ArrayObject {
      * @param string    $propertyName the object property name
      * @returns array   the $object->$propertyName for each element
      */
-    function pluckPropertyName($propertyName) {
+    public function pluckPropertyName($propertyName) {
         $r = new self();
         foreach ($this as $k => $v) {
             $r[$k] = $v->$propertyName;
@@ -114,7 +128,7 @@ class FancyArray extends \ArrayObject {
 	 * @param $array
 	 * @return self
 	 */
-	function merge($array = null)
+	public function merge($array = null)
 	{
 		return new self(array_merge((array)$this, (array)$array));
 	}
@@ -124,63 +138,71 @@ class FancyArray extends \ArrayObject {
 	 * @param self $array
 	 * @return self
 	 */
-	function merge_into(self $array = null)
+	public function merge_into(self $array = null)
 	{
 		return new self(array_merge((array)$array, (array)$this));
 	}
 
-	function implode($glue)
+	public function implode($glue)
 	{
 		return implode($glue, (array)$this);
 	}
 
-	function flatten()
+	public function flatten()
 	{
 		$res = self::make();
-		foreach ($this as $elem)
-			if (is_array($elem))			$res   = $res->merge(self::make($elem)->flatten());
-			elseif (is_a($elem, __CLASS__))	$res   = $res->merge($elem->flatten());
-			else							$res[] = $elem;
+		foreach ($this as $elem) {
+            if (is_array($elem)) {
+                $res = $res->merge(self::make($elem)->flatten());
+            } elseif (is_a($elem, __CLASS__)) {
+                $res = $res->merge($elem->flatten());
+            } else {
+                $res[] = $elem;
+            }
+        }
 		return $res;
 	}
 
-    function is_empty() {
+    public function is_empty() {
         $arr = $this->to_a();
         return empty($arr);
     }
 
-	function flatten_once()
+	public function flatten_once()
 	{
 		$res = self::make();
-		foreach ($this as $elem)
-			if (is_array($elem))			$res   = $res->merge(self::make($elem));
-			else							$res[] = $elem;
+		foreach ($this as $elem) {
+            if (is_array($elem)) {
+                $res = $res->merge(self::make($elem));
+            } else {
+                $res[] = $elem;
+            }
+        }
 		return $res;
 	}
 
-    function unique($func = null) {
+    public function unique($func = null) {
         if (is_null($func)) { return self::make(array_unique((array)$this)); }
-        else {
-            $r = new self();
-            foreach($this as $val) {
-                if ($func instanceof \Closure) {
-                    $r[$func($val)] = $val;
-                } else {
-                    $r[call_user_func($func, $val)] = $val;
-                }
+
+        $r = new self();
+        foreach($this as $val) {
+            if ($func instanceof \Closure) {
+                $r[$func($val)] = $val;
+            } else {
+                $r[call_user_func($func, $val)] = $val;
             }
-            return $r->values();
         }
+        return $r->values();
     }
 
-    function unique_preserve_order($func = null) {
+    public function unique_preserve_order($func = null) {
         return $this->unique($func)->ksort();
     }
 
     /**
      * @return FancyArray
      */
-    function arsort() {
+    public function arsort() {
         $arr = $this->to_a();
         arsort($arr);
         return new self($arr);
@@ -190,14 +212,14 @@ class FancyArray extends \ArrayObject {
      * @param $glue the separator
      * @return string
      */
-    function join($glue) {
+    public function join($glue) {
         return join($glue, $this->to_a());
     }
 
     /**
      * @return FancyArray
      */
-    function ksort() {
+    public function ksort() {
         $arr = $this->to_a();
         ksort($arr);
         return new self($arr);
@@ -206,7 +228,7 @@ class FancyArray extends \ArrayObject {
     /**
      * @return FancyArray
      */
-    function usort($func) {
+    public function usort($func) {
         $arr = $this->to_a();
         usort($arr,$func);
         return new self($arr);
@@ -215,7 +237,7 @@ class FancyArray extends \ArrayObject {
     /**
      * @return FancyArray
      */
-    function uksort($func) {
+    public function uksort($func) {
         $arr = $this->to_a();
         uksort($arr,$func);
         return new self($arr);
@@ -224,7 +246,7 @@ class FancyArray extends \ArrayObject {
     /**
      * @return FancyArray
      */
-    function asort() {
+    public function asort() {
         $arr = $this->to_a();
         asort($arr);
         return new self($arr);
@@ -233,7 +255,7 @@ class FancyArray extends \ArrayObject {
     /**
      * @return FancyArray
      */
-    function sort() {
+    public function sort() {
         $arr = $this->to_a();
         sort($arr);
         return new self($arr);
@@ -242,7 +264,7 @@ class FancyArray extends \ArrayObject {
     /**
      * @return FancyArray
      */
-    function reverse() {
+    public function reverse() {
         $arr = $this->to_a();
         $arr = array_reverse($arr);
         return new self($arr);
@@ -251,13 +273,13 @@ class FancyArray extends \ArrayObject {
     /**
      * @return FancyArray
      */
-    function uasort($func) {
+    public function uasort($func) {
         $arr = $this->to_a();
         uasort($arr,$func);
         return new self($arr);
     }
 
-    function key_by($rekey_by) {
+    public function key_by($rekey_by) {
         $rekeyed_data = array();
         foreach ($this->to_a() as $index => $data) {
             if (isset($data[$rekey_by])) {
@@ -267,7 +289,7 @@ class FancyArray extends \ArrayObject {
         return new self($rekeyed_data);
     }
 
-    function ukey_by($func) {
+    public function ukey_by($func) {
         $reKeyedData = array();
         foreach ($this->to_a() as $index => $data) {
             $reKeyedData[$func($data, $index)] = $data;
@@ -279,7 +301,7 @@ class FancyArray extends \ArrayObject {
      * @param $func
      * @return float
      */
-    function average($func) {
+    public function average($func) {
         $sum = array_sum($this->map($func)->to_a());
         return $sum/$this->count();
     }
@@ -291,8 +313,8 @@ class FancyArray extends \ArrayObject {
      * @param array $keys
      * @return FancyArray
      */
-    function sort_by_key($key) {
-        return $this->usort(function($a, $b) use ($key){
+    public function sort_by_key($key) {
+        return $this->usort(static function($a, $b) use ($key){
            return $a[$key] > $b[$key] ? 1 : -1;
         });
     }
@@ -301,8 +323,14 @@ class FancyArray extends \ArrayObject {
      * @param $func
      * @return FancyArray
      */
-    function walk($func)			{					foreach ($this as $k => &$v)	$func($v, $k);							return $this; }
-	function map($func)				{ $r = new self();	foreach ($this as $k => $v)		$r[$k] = call_user_func($func, $v, $k);					return $r; }
+    public function walk($func)			{					foreach ($this as $k => &$v) {
+        $func($v, $k);
+    }
+        return $this; }
+	public function map($func)				{ $r = new self();	foreach ($this as $k => $v) {
+        $r[$k] = call_user_func($func, $v, $k);
+    }
+        return $r; }
 
 
     public static function identity($x) { return $x; }
@@ -318,7 +346,7 @@ class FancyArray extends \ArrayObject {
         return sqrt(
             array_sum(
                 array_map(
-                    function($x, $mean) {
+                    static function($x, $mean) {
                         return pow($x - $mean,2); }, $array,
                             array_fill(0,count($array),
                                 (array_sum($array) / count($array)) ) ) ) / (count($array)-1) );
@@ -338,7 +366,7 @@ class FancyArray extends \ArrayObject {
      * @param $func
      * @return FancyArray
      */
-    function filter($func = 'FancyArray::identity')	{
+    public function filter($func = 'FancyArray::identity')	{
         $r = new self();
         foreach ($this as $k => $v) {
             if (call_user_func($func, $v, $k)) {
@@ -347,34 +375,66 @@ class FancyArray extends \ArrayObject {
         }
         return $r;
     }
-	function reduce($init, $func)	{ $r = $init;		foreach ($this as $k => $v)		$r = $func($v, $r);					return $r; }
-    function reduce2($init, $func)	{ $r = $init;		foreach ($this as $k => $v)		$r = $func($r, $v, $k);				return $r; }  // This version better matches other libraries.
+	public function reduce($init, $func)	{ $r = $init;		foreach ($this as $k => $v) {
+        $r = $func($v, $r);
+    }
+        return $r; }
+    public function reduce2($init, $func)	{ $r = $init;		foreach ($this as $k => $v) {
+        $r = $func($r, $v, $k);
+    }
+        return $r; }  // This version better matches other libraries.
 
-	function first($func)			{					foreach ($this as $k => $v)		if ($func($v)) return $v;			return null; }
-	function first_key($func)		{					foreach ($this as $k => $v)		if ($func($v)) return $k;			return null; }
-	function for_any($func = 'FancyArray::identity')			{					foreach ($this as $k => $v)		if (call_user_func($func, $v)) return true;			return false; }
-	function for_all($func = 'FancyArray::identity')			{					foreach ($this as $k => $v)		if (!call_user_func($func,$v)) return false;		return true; }
+	public function first($func)			{					foreach ($this as $k => $v) {
+        if ($func($v)) {
+            return $v;
+        }
+    }
+        return null; }
+	public function first_key($func)		{					foreach ($this as $k => $v) {
+        if ($func($v)) {
+            return $k;
+        }
+    }
+        return null; }
+	public function for_any($func = 'FancyArray::identity')			{					foreach ($this as $k => $v) {
+        if (call_user_func($func, $v)) {
+            return true;
+        }
+    }
+        return false; }
+	public function for_all($func = 'FancyArray::identity')			{					foreach ($this as $k => $v) {
+        if (!call_user_func($func, $v)) {
+            return false;
+        }
+    }
+        return true; }
 
-	function walk_k($func)			{					foreach ($this as $k => &$v)	$func($k, $v);						return $this; }
+	public function walk_k($func)			{					foreach ($this as $k => &$v) {
+        $func($k, $v);
+    }
+        return $this; }
 
     /**
      * @return FancyArray
      */
-    function map_k($func)			{ $r = new self();	foreach ($this as $k => $v)		$r[$func($k)] = $v;				return $r; }
-    function first_element() {
+    public function map_k($func)			{ $r = new self();	foreach ($this as $k => $v) {
+        $r[$func($k)] = $v;
+    }
+        return $r; }
+    public function first_element() {
         $arr = $this->to_a();
         return reset($arr);
     }
-    function last_element() {
+    public function last_element() {
         $arr = $this->to_a();
         return end($arr);
     }
 
-    function diff($arr) {
+    public function diff($arr) {
         return new self(array_diff($this->to_a(), $arr));
     }
 
-    function map_k_and_v($func)			{
+    public function map_k_and_v($func)			{
         $r = new self();
         foreach ($this as $k => $v) {
             list($key, $val) = $func($k, $v);
@@ -382,35 +442,66 @@ class FancyArray extends \ArrayObject {
         }
         return $r;
     }
-    function fill_keys($func = 'FancyArray::identity') {
+    public function fill_keys($func = 'FancyArray::identity') {
         $r = new self();
         foreach ($this as $v)	{
             $r[call_user_func($func, $v)] = $v;
         }
         return $r;
     }
-    function fill_values($func) {
+    public function fill_values($func) {
         $r = new self();
         foreach ($this as $k)	{
             $r[$k] = $func($k);
         }
         return $r;
     }
-	function filter_k($func)		{ $r = new self();	foreach ($this as $k => $v)		if ($func($k, $v)) $r[$k] = $v;		return $r; }
-	function reduce_k($init, $func)	{ $r = $init;		foreach ($this as $k => $v)		$r = $func($k, $v, $r);				return $r; }
+	public function filter_k($func)		{ $r = new self();	foreach ($this as $k => $v) {
+        if ($func($k, $v)) {
+            $r[$k] = $v;
+        }
+    }
+        return $r; }
+	public function reduce_k($init, $func)	{ $r = $init;		foreach ($this as $k => $v) {
+        $r = $func($k, $v, $r);
+    }
+        return $r; }
 
-	function first_k($func)			{					foreach ($this as $k => $v)		if ($func($k, $v)) return $v;		return null; }
-	function first_key_k($func)		{					foreach ($this as $k => $v)		if ($func($k, $v)) return $k;		return null; }
-	function for_any_k($func)		{					foreach ($this as $k => $v)		if ($func($k, $v)) return true;		return false; }
-	function for_all_k($func)		{					foreach ($this as $k => $v)		if (!$func($k, $v)) return false;	return true; }
+	public function first_k($func)			{					foreach ($this as $k => $v) {
+        if ($func($k, $v)) {
+            return $v;
+        }
+    }
+        return null; }
+	public function first_key_k($func)		{					foreach ($this as $k => $v) {
+        if ($func($k, $v)) {
+            return $k;
+        }
+    }
+        return null; }
+	public function for_any_k($func)		{					foreach ($this as $k => $v) {
+        if ($func($k, $v)) {
+            return true;
+        }
+    }
+        return false; }
+	public function for_all_k($func)		{					foreach ($this as $k => $v) {
+        if (!$func($k, $v)) {
+            return false;
+        }
+    }
+        return true; }
 
-    function group($func)           { $g = new self();  foreach ($this as $k => $v)     $g[$func($v, $k)][] = $v;           return $g;}
+    public function group($func)           { $g = new self();  foreach ($this as $k => $v) {
+        $g[$func($v, $k)][] = $v;
+    }
+        return $g;}
 
     /**
      * @param $func
      * @return FancyArray
      */
-    function group_by_function($func)		{ return FancyArray::make(self::group_by($this->to_a(), $func)); }
+    public function group_by_function($func)		{ return self::make(self::group_by($this->to_a(), $func)); }
 
 
 
@@ -503,9 +594,9 @@ class FancyArray extends \ArrayObject {
     public static function make_array_if_not($thing) {
         if (is_array($thing)) {
             return $thing;
-        } else {
-            return array($thing);
         }
+
+        return array($thing);
     }
 
     /**
@@ -525,7 +616,7 @@ class FancyArray extends \ArrayObject {
     }
 
 
-    function hasStringKeys() {
+    public function hasStringKeys() {
         return (bool)count(array_filter(array_keys($this->to_a()), 'is_string'));
     }
 

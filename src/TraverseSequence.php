@@ -26,7 +26,7 @@ class TraverseSequence extends RecursiveSequence {
     public function getChildren() {
         $x = $this->current();
         if ($this->canGoDeeper()) {
-            return TraverseSequence::make($x, $this->key(), $this->pathSeparator)->setMaxDepth($this->depth - 1);
+            return self::make($x, $this->key(), $this->pathSeparator)->setMaxDepth($this->depth - 1);
         } else {
             return IterationTraits::map(
                 Sequence::make($x),
