@@ -29,13 +29,13 @@ $seq = Sequence::make($dataSet);
 
 // At this point you have a sequence and you can do bunch of cool sequence stuff with it
 
-$even = $seq->filter(staticfunction($n) { return $n%2 == 0; });  // nothing is evaluated here because of lazy loading
+$even = $seq->filter(static function($n) { return $n%2 == 0; });  // nothing is evaluated here because of lazy loading
 foreach($even as $num) {
     echo "$num\n";
 }
 
 
-$twice = $seq->map(staticfunction($n) { return $n * 2; });
+$twice = $seq->map(static function($n) { return $n * 2; });
 foreach($twice as $num) {
     echo "$num\n";
 }
