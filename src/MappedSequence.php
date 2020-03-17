@@ -23,13 +23,13 @@ class MappedSequence extends Sequence {
      * @param callable|null $fnMapValueFunction($value, $key)
      * @param callable|null $fnMapKeyFunction($key, $value)
      */
-    public function __construct(Iterator $iterator, $fnMapValueFunction, $fnMapKeyFunction) {
+    public function __construct(Iterator $iterator, callable $fnMapValueFunction = null, callable $fnMapKeyFunction = null) {
         parent::__construct($iterator);
-        if (!$fnMapKeyFunction) {
+        if (null === $fnMapKeyFunction) {
             $fnMapKeyFunction = FnGen::fnIdentity();
         }
 
-        if (!$fnMapValueFunction) {
+        if (null === $fnMapValueFunction) {
             $fnMapValueFunction = FnGen::fnIdentity();
         }
 
