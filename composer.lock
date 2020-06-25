@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "467726d1edf1fcbec8065c7f0d7859f1",
+    "content-hash": "f003d6c7c480f801efef2cf6f13d4780",
     "packages": [
         {
             "name": "react/partial",
@@ -50,16 +50,16 @@
         },
         {
             "name": "revinate/php-getter-setter",
-            "version": "0.2.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/revinate/php-getter-setter.git",
-                "reference": "e5b4e3905a5654bea416fa16d98b77b6b6ad235a"
+                "reference": "d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/revinate/php-getter-setter/zipball/e5b4e3905a5654bea416fa16d98b77b6b6ad235a",
-                "reference": "e5b4e3905a5654bea416fa16d98b77b6b6ad235a",
+                "url": "https://api.github.com/repos/revinate/php-getter-setter/zipball/d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83",
+                "reference": "d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83",
                 "shasum": ""
             },
             "require": {
@@ -91,7 +91,7 @@
                 }
             ],
             "description": "PHP library to simplify getting and setting values in arrays and objects.",
-            "time": "2016-03-09T11:07:04+00:00"
+            "time": "2020-06-25T01:32:21+00:00"
         }
     ],
     "packages-dev": [
@@ -1611,7 +1611,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "revinate/php-getter-setter": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

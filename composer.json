@@ -9,7 +9,7 @@
   ],
   "require": {
     "php":                        ">=7",
-    "revinate/php-getter-setter": "~0.2.2",
+    "revinate/php-getter-setter": "dev-master#d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83",
     "react/partial":              "~2.0",
     "ext-json": "*",
     "ext-mbstring": "*"
