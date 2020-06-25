@@ -8,12 +8,11 @@
     {"name" : "Eric Madar"}
   ],
   "require": {
-    "php":                        ">=5.3.0",
-    "revinate/php-getter-setter": "~0.2.2",
-    "react/partial":              "~2.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "4.7.*"
+    "php":                        ">=7",
+    "revinate/php-getter-setter": "dev-master#d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83",
+    "react/partial":              "~2.0",
+    "ext-json": "*",
+    "ext-mbstring": "*"
   },
   "autoload": {
     "psr-4": {
@@ -22,13 +21,26 @@
       "Revinate\\Sequence\\Tutorial\\" : "Tutorial"
     },
     "files": [
-      "src/fn/converters.php",
-      "src/fn/filters.php",
-      "src/fn/mappers.php",
-      "src/fn/reducers.php",
-      "src/fn/sorting.php",
-      "src/fn/strings.php",
-      "src/fn/paramBinding.php"
+      "src/func/converters.php",
+      "src/func/filters.php",
+      "src/func/mappers.php",
+      "src/func/reducers.php",
+      "src/func/sorting.php",
+      "src/func/strings.php",
+      "src/func/paramBinding.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Revinate\\Sequence\\" : "Tests"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "7.0.33"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.5"
   }
 }

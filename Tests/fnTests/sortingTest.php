@@ -8,20 +8,21 @@
 
 namespace Revinate\Sequence;
 
-use \Revinate\Sequence\fn;
+use PHPUnit\Framework\TestCase;
+use \Revinate\Sequence\func;
 
 
-class sortingTest extends \PHPUnit_Framework_TestCase {
+class sortingTest extends TestCase {
 
     public function testCompareMulti() {
         $values = TestData::$fruit;
 
-        usort($values, fn\fnCompareMulti(array(fn\fnCompareField('name'))));
+        usort($values, func\fnCompareMulti(array(func\fnCompareField('name'))));
 
         $this->assertNotEquals(TestData::$fruit, $values);
         $this->assertEquals(
             Sequence::make(TestData::$fruit)->pluck('name')->sort()->toValues(),
-            array_map(fn\fnPluck('name'), $values)
+            array_map(func\fnPluck('name'), $values)
         );
 
         $values = array(
@@ -42,7 +43,7 @@ class sortingTest extends \PHPUnit_Framework_TestCase {
             array('name' => 'Sam', 'age' => 19),
         );
 
-        usort($values, fn\fnCompareMulti(array(fn\fnCompareFieldRev('age'), fn\fnCompareField('name'))));
+        usort($values, func\fnCompareMulti(array(func\fnCompareFieldRev('age'), func\fnCompareField('name'))));
         $this->assertEquals($expected, $values);
     }
 }

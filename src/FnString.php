@@ -8,7 +8,7 @@
 
 namespace Revinate\Sequence;
 
-use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\func;
 
 class FnString {
     /**
@@ -17,7 +17,7 @@ class FnString {
      * @return callable
      */
     public static function fnTrim() {
-        return fn\fnTrim();
+        return func\fnTrim();
     }
 
     /**
@@ -27,7 +27,7 @@ class FnString {
      * @return  callable
      */
     public static function fnRemoveSuffix($suffix) {
-        return fn\fnRemoveSuffix($suffix);
+        return func\fnRemoveSuffix($suffix);
     }
 
     /**
@@ -37,7 +37,7 @@ class FnString {
      * @return  callable
      */
     public static function fnRemovePrefix($prefix) {
-        return fn\fnRemovePrefix($prefix);
+        return func\fnRemovePrefix($prefix);
     }
 
     /**
@@ -47,7 +47,7 @@ class FnString {
      * @return callable
      */
     public static function fnAddPrefix($prefix) {
-        return fn\fnAddPrefix($prefix);
+        return func\fnAddPrefix($prefix);
     }
 
     /**
@@ -57,7 +57,7 @@ class FnString {
      * @return callable
      */
     public static function fnAddPostfix($postfix) {
-        return fn\fnAddPostfix($postfix);
+        return func\fnAddPostfix($postfix);
     }
 
     /**
@@ -65,7 +65,7 @@ class FnString {
      * @return \Closure
      */
     public static function fnToUpper($encoding = null) {
-        return fn\fnToUpper($encoding);
+        return func\fnToUpper($encoding);
     }
 
     /**
@@ -73,6 +73,6 @@ class FnString {
      * @return \Closure
      */
     public static function fnToLower($encoding = null) {
-        return fn\fnToLower($encoding);
+        return func\fnToLower($encoding);
     }
 }

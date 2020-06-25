@@ -8,9 +8,9 @@
 
 namespace Revinate\Sequence;
 
-use \PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class FnSortTest extends PHPUnit_Framework_TestCase {
+class FnSortTest extends TestCase {
 
 
     public function testFnComp() {

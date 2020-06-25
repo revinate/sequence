@@ -8,7 +8,7 @@
 
 namespace Revinate\Sequence;
 use \Closure;
-use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\func;
 
 class FnSort {
 
@@ -19,7 +19,7 @@ class FnSort {
      * @return Closure -- returns a function to be used with sort
      */
     public static function fnComp(Closure $fnExtractValue) {
-        return fn\fnCompare($fnExtractValue);
+        return func\fnCompare($fnExtractValue);
     }
 
     /**
@@ -30,7 +30,7 @@ class FnSort {
      * @return Closure -- returns a function to be used with sort
      */
     public static function fnRevComp(Closure $fnExtractValue) {
-        return fn\fnCompareRev($fnExtractValue);
+        return func\fnCompareRev($fnExtractValue);
     }
 
 
@@ -41,7 +41,7 @@ class FnSort {
      * @return Closure
      */
     public static function fnByField($fieldName) {
-        return fn\fnCompareField($fieldName);
+        return func\fnCompareField($fieldName);
     }
 
     /**
@@ -51,7 +51,7 @@ class FnSort {
      * @return Closure
      */
     public static function fnByFieldRev($fieldName) {
-        return fn\fnCompareFieldRev($fieldName);
+        return func\fnCompareFieldRev($fieldName);
     }
 
     /**
@@ -61,7 +61,7 @@ class FnSort {
      * @return Closure
      */
     public static function fnSort(Closure $fnComp = null) {
-        return fn\fnSortArray($fnComp);
+        return func\fnSortArray($fnComp);
     }
 
     /**
@@ -71,6 +71,6 @@ class FnSort {
      * @return Closure
      */
     public static function fnSortByField($fieldName) {
-        return fn\fnSortArrayByField($fieldName);
+        return func\fnSortArrayByField($fieldName);
     }
 }

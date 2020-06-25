@@ -6,10 +6,12 @@
  * Time: 23:43
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 
 
-class StringsTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class StringsTest extends TestCase {
 
     public function providerEncodings() {
         return array(
@@ -43,7 +45,7 @@ class StringsTest extends \PHPUnit_Framework_TestCase {
      */
     public function testPregReplace($encoding) {
         mb_internal_encoding($encoding);
-        $pattern = '|(\w)(?=\p{Lu})|';
+        $pattern = '|(\w)(?=\p{Lu})|u';
         $replace = '$1_';
 
         $fnRegEx = fnPregReplace($pattern, $replace);

@@ -9,7 +9,9 @@
 namespace Revinate\Sequence;
 
 
-class FnReduceTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class FnReduceTest extends TestCase {
     public function testFnSum() {
         $range = range(0, 100);
         $this->assertEquals(array_sum($range), Sequence::make($range)->reduce(0, FnGen::fnSum()));

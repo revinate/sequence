@@ -17,7 +17,7 @@ class SampleDataLoader {
      */
     public static function dataLoader($filename, $asArray) {
         $json = file_get_contents($filename);
-        return json_decode($json, $asArray);
+        return \json_decode($json, $asArray);
     }
 
     /**

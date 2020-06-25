@@ -18,7 +18,7 @@ class FnSequence {
             $fnPrev = FnGen::fnIdentity();
         }
 
-        $this->fnToApply = function ($values) use ($fnPrev) {
+        $this->fnToApply = static function ($values) use ($fnPrev) {
             return Sequence::make($fnPrev($values));
         };
     }
@@ -32,7 +32,7 @@ class FnSequence {
      */
     public function map($fnMap, $fnMapKey = null) {
         $self = $this;
-        $fnApply = function($values) use ($self, $fnMap, $fnMapKey) {
+        $fnApply = static function($values) use ($self, $fnMap, $fnMapKey) {
             return $self->apply($values)->map($fnMap, $fnMapKey);
         };
         return new FnSequence($fnApply);
@@ -46,7 +46,7 @@ class FnSequence {
      */
     public function mapKey($fnMapKey) {
         $self = $this;
-        $fnApply = function($values) use ($self, $fnMapKey) {
+        $fnApply = static function($values) use ($self, $fnMapKey) {
             return $self->apply($values)->mapKeys($fnMapKey);
         };
         return new FnSequence($fnApply);
@@ -60,7 +60,7 @@ class FnSequence {
      */
     public function keyBy($fnMap) {
         $self = $this;
-        $fnApply = function($values) use ($self, $fnMap) {
+        $fnApply = static function($values) use ($self, $fnMap) {
             return $self->apply($values)->keyBy($fnMap);
         };
         return new FnSequence($fnApply);
@@ -74,7 +74,7 @@ class FnSequence {
      */
     public function filter($fnFilter) {
         $self = $this;
-        $fnApply = function($values) use ($self, $fnFilter) {
+        $fnApply = static function($values) use ($self, $fnFilter) {
             return $self->apply($values)->filter($fnFilter);
         };
         return new FnSequence($fnApply);
@@ -86,7 +86,7 @@ class FnSequence {
      */
     public function filterKeys($fn) {
         $self = $this;
-        $fnApply = function($values) use ($self, $fn) {
+        $fnApply = static function($values) use ($self, $fn) {
             return $self->apply($values)->filterKeys($fn);
         };
         return new FnSequence($fnApply);
@@ -100,7 +100,7 @@ class FnSequence {
      */
     public function limit($limit){
         $self = $this;
-        $fnApply = function($values) use ($self, $limit) {
+        $fnApply = static function($values) use ($self, $limit) {
             return $self->apply($values)->limit($limit);
         };
         return new FnSequence($fnApply);
@@ -114,7 +114,7 @@ class FnSequence {
      */
     public function offset($offset) {
         $self = $this;
-        $fnApply = function($values) use ($self, $offset) {
+        $fnApply = static function($values) use ($self, $offset) {
             return $self->apply($values)->offset($offset);
         };
         return new FnSequence($fnApply);
@@ -141,7 +141,7 @@ class FnSequence {
      */
     public function append($fn) {
         $self = $this;
-        return function($values) use ($self, $fn) {
+        return static function($values) use ($self, $fn) {
             return $fn($self->apply($values));
         };
     }
@@ -152,7 +152,7 @@ class FnSequence {
      */
     public function walk($fnToApplyToEachElement) {
         $self = $this;
-        $fnApply = function($values) use ($self, $fnToApplyToEachElement) {
+        $fnApply = static function($values) use ($self, $fnToApplyToEachElement) {
             return $self->apply($values)->walk($fnToApplyToEachElement);
         };
         return new FnSequence($fnApply);
@@ -169,7 +169,7 @@ class FnSequence {
      */
     public function reduceBounded($initialValue, $fn) {
         $self = $this;
-        $fnApply = function($values) use ($self, $fn, $initialValue) {
+        $fnApply = static function($values) use ($self, $fn, $initialValue) {
             return $self->apply($values)->reduce($initialValue, $fn);
         };
         return $fnApply;
@@ -185,7 +185,7 @@ class FnSequence {
      */
     public function reduce($fn) {
         $self = $this;
-        $fnApply = function($initialValue, $values) use ($self, $fn) {
+        $fnApply = static function($initialValue, $values) use ($self, $fn) {
             return $self->apply($values)->reduce($initialValue, $fn);
         };
         return $fnApply;
@@ -200,7 +200,7 @@ class FnSequence {
      */
     public function to_fn() {
         $self = $this;
-        return function ($values) use ($self) {
+        return static function ($values) use ($self) {
             return $self->apply($values);
         };
     }
@@ -214,7 +214,7 @@ class FnSequence {
      */
     public function to_a() {
         $self = $this;
-        return function ($values) use ($self) {
+        return static function ($values) use ($self) {
             return $self->apply($values)->to_a();
         };
     }

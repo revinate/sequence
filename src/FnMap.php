@@ -8,7 +8,7 @@
 
 namespace Revinate\Sequence;
 
-use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\func;
 
 /**
  * Class FnMap
@@ -18,27 +18,27 @@ use Revinate\Sequence\fn as fn;
 class FnMap {
 
     public static function fnCastToInt() {
-        return fn\fnCastToInt();
+        return func\fnCastToInt();
     }
 
     public static function fnCastToFloat() {
-        return fn\fnCastToFloat();
+        return func\fnCastToFloat();
     }
 
     public static function fnCastToDouble() {
-        return fn\fnCastToDouble();
+        return func\fnCastToDouble();
     }
 
     public static function fnCastToString() {
-        return fn\fnCastToString();
+        return func\fnCastToString();
     }
 
     public static function fnCastToArray() {
-        return fn\fnCastToArray();
+        return func\fnCastToArray();
     }
 
     public static function fnCastToObject() {
-        return fn\fnCastToObject();
+        return func\fnCastToObject();
     }
 
 }

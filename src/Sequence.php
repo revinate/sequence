@@ -97,7 +97,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * summing values, concatenating strings, union arrays, etc.
      * Note, the items will be walked in reverse order.  This means the entire sequence will be reversed before the reduce is applied.
      *
-     * Example: Sequence::make(['one','two','three'])->reduceRight(fn\fnStringConcat('.')) = 'three.two.one'
+     * Example: Sequence::make(['one','two','three'])->reduceRight(func\fnStringConcat('.')) = 'three.two.one'
      *
      * @param callable $fn($prevValue, $currentValue, $currentKey) -- The $fn predicate is a function(T $prevValue, T $currentValue) that returns type T|null.
      * @return mixed
@@ -310,7 +310,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return mixed
      */
     public function firstKey($fnTest = null) {
-        $fnTest = $fnTest ?: fn\fnTrue();
+        $fnTest = $fnTest ?: func\fnTrue();
         return $this->filter($fnTest)->limit(1)->keys()->reduce(null, FnGen::fnSwapParamsPassThrough(FnGen::fnIdentity()));
     }
 
@@ -321,7 +321,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return null|mixed
      */
     public function firstByKey($fnTest = null) {
-        $fnFilter = $fnTest ? fn\fnSwapParamsPassThrough($fnTest) : null;
+        $fnFilter = $fnTest ? func\fnSwapParamsPassThrough($fnTest) : null;
         return $this->first($fnFilter);
     }
 
@@ -333,7 +333,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return static
      */
     public function flattenOnceNow() {
-        $result = $this->reduce(array(), function($result, $value) {
+        $result = $this->reduce(array(), static function($result, $value) {
             if ($value instanceof Traversable) {
                 $value = iterator_to_array($value);
             }
@@ -364,7 +364,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     public function flatten($depth = -1) {
         $recursiveIterator = new RecursiveIteratorIterator(RecursiveSequence::make($this)->setMaxDepth($depth));
         // Simulate array_merge by sequencing numeric keys but do not touch string keys.
-        return static::make(IterationTraits::sequenceNumericKeys(Sequence::make($recursiveIterator)));
+        return static::make(IterationTraits::sequenceNumericKeys(self::make($recursiveIterator)));
     }
 
     /**
@@ -380,8 +380,8 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
     public function concatMap($fnMap = null) {
         $rawSeq = is_callable($fnMap) ? $this->map($fnMap) : $this;
         // Filter out anything that cannot be traversed.
-        $seq = $rawSeq->filter(function($value) { return is_array($value) || $value instanceOf Traversable; });
-        return Sequence::make(new RecursiveIteratorIterator(RecursiveSequence::make($seq)->setMaxDepth(1)));
+        $seq = $rawSeq->filter(static function($value) { return is_array($value) || $value instanceOf Traversable; });
+        return self::make(new RecursiveIteratorIterator(RecursiveSequence::make($seq)->setMaxDepth(1)));
     }
 
     /**
@@ -399,7 +399,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
         if (isset($accInit)) {
             $acc = $accInit;
         }
-        return $this->map(function($value, $key) use (&$acc, $fnScanMap, $notSet) {
+        return $this->map(static function($value, $key) use (&$acc, $fnScanMap, $notSet) {
             if ($acc === $notSet) {
                 $acc = $value;
             } else {
@@ -450,7 +450,7 @@ class Sequence extends IteratorIterator implements IterationFunctions, Recursive
      * @return \Closure
      */
     public static function fnCanBeSequence() {
-        return function($thing) {
+        return static function($thing) {
             return Sequence::canBeSequence($thing);
         };
     }

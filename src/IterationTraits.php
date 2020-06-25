@@ -100,7 +100,7 @@ class IterationTraits {
      */
     public static function reduceLeft(Iterator $iterator, $fn) {
         $nil = (object)array('Nil');
-        $result = self::reduce($iterator, $nil, function($valueLeft, $valueRight) use ($nil, $fn) {
+        $result = self::reduce($iterator, $nil, static function($valueLeft, $valueRight) use ($nil, $fn) {
             if ($valueLeft === $nil) {
                 return $valueRight;
             }
@@ -184,7 +184,7 @@ class IterationTraits {
      * @return MappedSequence
      */
     public static function tap(Iterator $iterator, $fnTap) {
-        $fnValue = function ($v, $k) use ($fnTap) { $fnTap($v, $k); return $v; };
+        $fnValue = static function ($v, $k) use ($fnTap) { $fnTap($v, $k); return $v; };
         return new MappedSequence($iterator, $fnValue, null);
     }
 
@@ -205,7 +205,7 @@ class IterationTraits {
      * @return Sequence
      */
     public static function sort(Iterator $iterator, $fn = null) {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
+        return self::wrapFunctionIntoSequenceOnDemand(static function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
                 usort($array, $fn);
@@ -224,7 +224,7 @@ class IterationTraits {
      * @return Sequence
      */
     public static function asort(Iterator $iterator, $fn = null) {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
+        return self::wrapFunctionIntoSequenceOnDemand(static function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
                 uasort($array, $fn);
@@ -243,7 +243,7 @@ class IterationTraits {
      * @return Sequence
      */
     public static function sortKeys(Iterator $iterator, $fn = null) {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fn) {
+        return self::wrapFunctionIntoSequenceOnDemand(static function() use ($iterator, $fn) {
             $array = iterator_to_array($iterator);
             if ($fn) {
                 uksort($array, $fn);
@@ -267,13 +267,13 @@ class IterationTraits {
      */
     public static function groupBy(Iterator $iterator, $fnToGroup, $init = null) {
         $init = $init ?: array();
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $fnToGroup, $init) {
+        return self::wrapFunctionIntoSequenceOnDemand(static function() use ($iterator, $fnToGroup, $init) {
             // Allow for late binding of the initial value.
             if ($init instanceof \Closure) {
                 $init = $init();
             }
             return Sequence::make($iterator)
-                ->reduceToSequence($init, function ($collection, $value, $key) use ($fnToGroup) {
+                ->reduceToSequence($init, static function ($collection, $value, $key) use ($fnToGroup) {
                     $collection[$fnToGroup($value, $key)][] = $value;
                     return $collection;
                 });
@@ -300,12 +300,12 @@ class IterationTraits {
      * @return static
      */
     public static function transpose(Iterator $iterator) {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator) {
+        return self::wrapFunctionIntoSequenceOnDemand(static function() use ($iterator) {
             return Sequence::make($iterator)
                 ->filter(Sequence::fnCanBeSequence())
-                ->reduceToSequence(array(), function ($collection, $row, $keyCol) {
+                ->reduceToSequence(array(), static function ($collection, $row, $keyCol) {
                     return Sequence::make($row)
-                        ->reduce($collection, function ($collection, $value, $keyRow) use ($keyCol) {
+                        ->reduce($collection, static function ($collection, $value, $keyRow) use ($keyCol) {
                             $collection[$keyRow][$keyCol] = $value;
                             return $collection;
                         });
@@ -321,11 +321,11 @@ class IterationTraits {
      * @return Sequence
      */
     public static function reverse(Iterator $iterator) {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator) {
+        return self::wrapFunctionIntoSequenceOnDemand(static function() use ($iterator) {
             // So we do not lose values due to duplicate keys, we need to store the keys along with the values.
-            $array = Sequence::make($iterator)->map(fn\fnMapToKeyValuePair())->toValues();
+            $array = Sequence::make($iterator)->map(func\fnMapToKeyValuePair())->toValues();
             // separate the key/value pair and return the resulting sequence.
-            return Sequence::make(array_reverse($array))->keyBy(fn\fnPairKey())->map(fn\fnPairValue());
+            return Sequence::make(array_reverse($array))->keyBy(func\fnPairKey())->map(func\fnPairValue());
         });
     }
 
@@ -338,9 +338,9 @@ class IterationTraits {
      * @return Sequence
      */
     public static function reassemble(Iterator $iterator, $pathSeparator = '.') {
-        return self::wrapFunctionIntoSequenceOnDemand(function() use ($iterator, $pathSeparator) {
+        return self::wrapFunctionIntoSequenceOnDemand(static function() use ($iterator, $pathSeparator) {
            return Sequence::make($iterator)
-               ->reduceToSequence(array(), function ($collection, $value, $path) use ($pathSeparator) {
+               ->reduceToSequence(array(), static function ($collection, $value, $path) use ($pathSeparator) {
                    return gs\set($collection, $path, $value, $pathSeparator);
                });
         });

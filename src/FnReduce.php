@@ -8,7 +8,7 @@
 
 namespace Revinate\Sequence;
 
-use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\func;
 use \Closure;
 
 class FnReduce {
@@ -23,7 +23,7 @@ class FnReduce {
      * Sequence::make([['count'=>5, 'name'=>'apple'], ['count'=>2, 'name'=>'orange']])->reduce(FnGen::fnSum(FnGen::fnPluck('count'))
      */
     public static function fnSum(Closure $fnMapValue = null) {
-        return fn\fnSum($fnMapValue);
+        return func\fnSum($fnMapValue);
     }
 
     /**
@@ -31,7 +31,7 @@ class FnReduce {
      * @return callable
      */
     public static function fnMax() {
-        return fn\fnMax();
+        return func\fnMax();
     }
 
     /**
@@ -39,7 +39,7 @@ class FnReduce {
      * @return callable
      */
     public static function fnMin() {
-        return fn\fnMin();
+        return func\fnMin();
     }
 
     /**
@@ -50,7 +50,7 @@ class FnReduce {
      * @return callable
      */
     public static function fnAvg(Closure $fnMapValue = null) {
-        return fn\fnAvg($fnMapValue);
+        return func\fnAvg($fnMapValue);
     }
 
     /**
@@ -58,6 +58,6 @@ class FnReduce {
      * @return callable
      */
     public static function fnUnion() {
-        return fn\fnUnion();
+        return func\fnUnion();
     }
 }

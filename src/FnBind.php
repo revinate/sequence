@@ -19,7 +19,7 @@ class FnBind {
      * @return \Closure
      */
     public static function fnBindFieldsToParams($callable, $paramMap) {
-        return function ($record) use ($callable, $paramMap) {
+        return static function ($record) use ($callable, $paramMap) {
             $params = Sequence::make($paramMap)->map(FnGen::fnPluckFrom($record))->to_a();
             return call_user_func_array($callable, $params);
         };

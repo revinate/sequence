@@ -10,7 +10,7 @@ namespace Revinate\Sequence\Tutorial;
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Revinate\Sequence\Sequence;
-use Revinate\Sequence\fn as fn;
+use Revinate\Sequence\func;
 
 /**
  * @param array[] $employees
@@ -30,7 +30,7 @@ function exampleExtractField1($employees) {
  */
 function exampleExtractField2($employees) {
     $employeeIds = Sequence::make($employees)   // make the array into a Sequence
-        ->map(fn\fnPluck('employeeId'))         // Extract the employee id
+        ->map(func\fnPluck('employeeId'))         // Extract the employee id
         ->to_a();                               // Convert it into an array
 
     return $employeeIds;
@@ -43,7 +43,7 @@ function exampleExtractField2($employees) {
  */
 function exampleKeyByFieldName($employees) {
     $employeeIds = Sequence::make($employees)   // make the array into a Sequence
-        ->keyBy(fn\fnPluck('employeeId'))       // Extract the employee id as assign it to the key
+        ->keyBy(func\fnPluck('employeeId'))       // Extract the employee id as assign it to the key
         ->to_a();                               // Convert it into an array
 
     return $employeeIds;
@@ -56,7 +56,7 @@ function exampleKeyByFieldName($employees) {
  */
 function exampleSortByEmployeeId($employees) {
     $employeesSortedById = Sequence::make($employees)   // make the array into a Sequence
-        ->sort(fn\fnCompareField('employeeId'))         // sort the employees by their id
+        ->sort(func\fnCompareField('employeeId'))         // sort the employees by their id
         ->to_a();
 
     return $employeesSortedById;
@@ -69,7 +69,7 @@ function exampleSortByEmployeeId($employees) {
  */
 function exampleSortByEmployeeIdRev($employees) {
     $employeesSortedById = Sequence::make($employees)   // make the array into a Sequence
-        ->sort(fn\fnCompareFieldRev('employeeId'))      // sort the employees by their id
+        ->sort(func\fnCompareFieldRev('employeeId'))      // sort the employees by their id
         ->to_a();
 
     return $employeesSortedById;
@@ -82,8 +82,8 @@ function exampleSortByEmployeeIdRev($employees) {
  */
 function exampleKeyByIdSortByEmployeeLastName1($employees) {
     $employeesSortedById = Sequence::make($employees)   // make the array into a Sequence
-        ->sort(fn\fnCompareField('lastName'))           // sort the employees by their last name
-        ->keyBy(fn\fnPluck('employeeId'))               // key by the employee id
+        ->sort(func\fnCompareField('lastName'))           // sort the employees by their last name
+        ->keyBy(func\fnPluck('employeeId'))               // key by the employee id
         ->to_a();
 
     return $employeesSortedById;
@@ -96,8 +96,8 @@ function exampleKeyByIdSortByEmployeeLastName1($employees) {
  */
 function exampleKeyByIdSortByEmployeeLastName1Wrong($employees) {
     $employeesSortedById = Sequence::make($employees)   // make the array into a Sequence
-        ->keyBy(fn\fnPluck('employeeId'))               // key by the employee id
-        ->sort(fn\fnCompareField('lastName'))           // **Keys are lost**
+        ->keyBy(func\fnPluck('employeeId'))               // key by the employee id
+        ->sort(func\fnCompareField('lastName'))           // **Keys are lost**
         ->to_a();
 
     return $employeesSortedById;
@@ -110,8 +110,8 @@ function exampleKeyByIdSortByEmployeeLastName1Wrong($employees) {
  */
 function exampleKeyByIdSortByEmployeeLastName2($employees) {
     $employeesSortedById = Sequence::make($employees)   // make the array into a Sequence
-        ->keyBy(fn\fnPluck('employeeId'))               // key by the employee id
-        ->asort(fn\fnCompareField('lastName'))          // sort the employees by their last name
+        ->keyBy(func\fnPluck('employeeId'))               // key by the employee id
+        ->asort(func\fnCompareField('lastName'))          // sort the employees by their last name
         ->to_a();
 
     return $employeesSortedById;
@@ -135,7 +135,7 @@ function exampleExtractKeys1($peopleKeyedById) {
  */
 function exampleExtractKeys2($peopleKeyedById) {
     $keys = Sequence::make($peopleKeyedById)    // make the array|iterator into a Sequence
-        ->map(function ($value, $key) {         // write a Closure to extract $key
+        ->map(static function ($value, $key) {         // write a Closure to extract $key
             return $key;
         })
         ->values()                              // Re-key starting with 0
@@ -150,7 +150,7 @@ function exampleExtractKeys2($peopleKeyedById) {
  */
 function exampleExtractKeys3($peopleKeyedById) {
     $keys = Sequence::make($peopleKeyedById)
-        ->map(fn\fnSwapParamsPassThrough(fn\fnIdentity()))
+        ->map(func\fnSwapParamsPassThrough(func\fnIdentity()))
         ->values()
         ->to_a();
 
@@ -163,7 +163,7 @@ function exampleExtractKeys3($peopleKeyedById) {
  */
 function exampleIdentity($employees) {
     $values = Sequence::make($employees)
-        ->map(fn\fnIdentity())          // Copies the array values
+        ->map(func\fnIdentity())          // Copies the array values
         ->to_a();
     return $values;
 }

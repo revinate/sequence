@@ -6,13 +6,13 @@
  * Time: 10:17
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 
 use \ArrayAccess;
 use \Closure;
 use Revinate\Sequence\ArrayUtil;
 use Revinate\Sequence\Sequence;
-use Revinate\Sequence\fn;
+use Revinate\Sequence\func;
 use Revinate\Sequence\FnSequence;
 use Revinate\GetterSetter as gs;
 
@@ -24,7 +24,7 @@ use Revinate\GetterSetter as gs;
  * @return Closure
  */
 function fnMap($map, $default = null) {
-    return function ($v) use ($map, $default) { return isset($map[$v]) ? $map[$v] : $default; };
+    return static function ($v) use ($map, $default) { return isset($map[$v]) ? $map[$v] : $default; };
 }
 
 /**
@@ -34,7 +34,7 @@ function fnMap($map, $default = null) {
  * @return Closure
  */
 function fnSwapParamsPassThrough($fn) {
-    return function ($a, $b) use ($fn) { return $fn($b, $a); };
+    return static function ($a, $b) use ($fn) { return $fn($b, $a); };
 }
 
 /**
@@ -43,13 +43,12 @@ function fnSwapParamsPassThrough($fn) {
  * @return Closure
  */
 function fnKey() {
-    /** @noinspection PhpUnusedParameterInspection */
     /**
      * @param mixed            $v -- Value
      * @param string|int|mixed $k -- Key
      * @return mixed returns the key
      */
-    return function ($v, $k) { return $k; };
+    return static function ($v, $k) { return $k; };
 }
 
 /**
@@ -58,7 +57,7 @@ function fnKey() {
  * @return Closure
  */
 function fnMapToKeyValuePair() {
-    return function ($v, $k) { return array($k, $v); };
+    return static function ($v, $k) { return array($k, $v); };
 }
 
 /**
@@ -79,7 +78,7 @@ function fnPairKey() {
      * @param mixed $v - Value
      * @return mixed returns the key portion of a [key, value] tuple
      */
-    return function ($v) { return $v[0]; };
+    return static function ($v) { return $v[0]; };
 }
 
 
@@ -92,7 +91,7 @@ function fnPairValue() {
      * @param mixed $v - Value
      * @return mixed returns the value portion of a [key, value] tuple
      */
-    return function ($v) { return $v[1]; };
+    return static function ($v) { return $v[1]; };
 }
 
 /**
@@ -103,7 +102,7 @@ function fnPairValue() {
  * @return Closure
  */
 function fnMapField($fieldName, $fnMap) {
-    return function ($record, $key = null) use ($fieldName, $fnMap) {
+    return static function ($record, $key = null) use ($fieldName, $fnMap) {
         if ($record instanceof ArrayAccess || is_array($record)) {
             $fieldValue = isset($record[$fieldName]) ? $record[$fieldName] : null;
             $record[$fieldName] = $fnMap($fieldValue, $fieldName, $record, $key);
@@ -128,20 +127,20 @@ function fnMapField($fieldName, $fnMap) {
  * @return Closure
  */
 function fnMapToField($fieldName, $fnMap) {
-    return function ($record, $key = null) use ($fieldName, $fnMap) {
+    return static function ($record, $key = null) use ($fieldName, $fnMap) {
         return gs\set($record, $fieldName, $fnMap($record, $key));
     };
 }
 
 /**
  * Generates a function that pulls a value from a field in the document and passes it to $fnMap.
- * 
+ *
  * @param string $fieldName
  * @param Closure $fnMap($fieldValue)
  * @return Closure
  */
 function fnMapFromField($fieldName, $fnMap) {
-    return fn\fnPipe(fn\fnPluck($fieldName), $fnMap);
+    return func\fnPipe(func\fnPluck($fieldName), $fnMap);
 }
 
 
@@ -153,7 +152,7 @@ function fnMapFromField($fieldName, $fnMap) {
  * @return Closure
  */
 function fnPluck($key, $default = null) {
-    return function ($v) use ($key, $default) {
+    return static function ($v) use ($key, $default) {
         return ArrayUtil::getField($v, $key, $default);
     };
 }
@@ -166,7 +165,7 @@ function fnPluck($key, $default = null) {
  * @return Closure
  */
 function fnPluckFrom($from, $default = null) {
-    return function ($key) use ($from, $default) {
+    return static function ($key) use ($from, $default) {
         return ArrayUtil::getField($from, $key, $default);
     };
 }
@@ -184,7 +183,7 @@ function fnPluckFrom($from, $default = null) {
 function fnCallGetter($getterName, $default = null, $getterParam1 = null, $getterParam2 = null) {
     $args = func_get_args();
     array_splice($args, 0, 2);
-    return function ($v) use ($getterName, $default, $args) {
+    return static function ($v) use ($getterName, $default, $args) {
         if (method_exists($v, $getterName)) {
             return call_user_func_array(array($v, $getterName), $args);
         } else {
@@ -199,7 +198,7 @@ function fnCallGetter($getterName, $default = null, $getterParam1 = null, $gette
  * @return Closure
  */
 function fnIdentity() {
-    return function ($v) { return $v; };
+    return static function ($v) { return $v; };
 }
 
 /**
@@ -208,7 +207,7 @@ function fnIdentity() {
  * @return Closure
  */
 function fnCount() {
-    return function ($v) { return count($v); };
+    return static function ($v) { return count($v); };
 }
 
 /**
@@ -219,7 +218,7 @@ function fnCount() {
  */
 function fnCounter($startingValue = 0) {
     $count = $startingValue;
-    return function () use (&$count) { return $count++; };
+    return static function () use (&$count) { return $count++; };
 }
 
 /**
@@ -228,7 +227,7 @@ function fnCounter($startingValue = 0) {
  * @return Closure
  */
 function fnNestedSort() {
-    return function ($array) {
+    return static function ($array) {
         return Sequence::make($array)->sort()->to_a();
     };
 }
@@ -250,7 +249,7 @@ function fnNestedMap($fn) {
  * @return Closure
  */
 function fnNestedUKeyBy($fn) {
-    return function ($array) use ($fn) {
+    return static function ($array) use ($fn) {
         return Sequence::make($array)->keyBy($fn)->to_a();
     };
 }
@@ -268,7 +267,7 @@ function fnIfMap($fnTest, $fnMapTrue, $fnMapFalse = null) {
         $fnMapFalse = fnIdentity();
     }
 
-    return function ($value, $key) use ($fnTest, $fnMapTrue, $fnMapFalse) {
+    return static function ($value, $key) use ($fnTest, $fnMapTrue, $fnMapFalse) {
         if ($fnTest($value, $key)) {
             return $fnMapTrue($value, $key);
         } else {
@@ -287,7 +286,7 @@ function fnIfMap($fnTest, $fnMapTrue, $fnMapFalse = null) {
 function fnCacheResult($fnMap, $fnHash = null) {
     $fnHash = $fnHash ?: fnIdentity();
     $cache = array();
-    return function($value) use ($fnMap, $fnHash, &$cache) {
+    return static function($value) use ($fnMap, $fnHash, &$cache) {
         $args = func_get_args();
         $hashKey = call_user_func_array($fnHash, $args);
         if (! array_key_exists($hashKey, $cache)) {
@@ -304,7 +303,7 @@ function fnCacheResult($fnMap, $fnHash = null) {
  * @return Closure
  */
 function fnTrue() {
-    return function () { return true; };
+    return static function () { return true; };
 }
 
 /**
@@ -313,7 +312,7 @@ function fnTrue() {
  * @return Closure
  */
 function fnFalse() {
-    return function () { return false; };
+    return static function () { return false; };
 }
 
 /**
@@ -323,5 +322,5 @@ function fnFalse() {
  * @return Closure
  */
 function fnConst($const) {
-    return function () use ($const) { return $const; };
+    return static function () use ($const) { return $const; };
 }

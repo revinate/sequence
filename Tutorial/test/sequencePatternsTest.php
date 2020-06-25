@@ -8,25 +8,26 @@
 
 namespace Revinate\Sequence\Tutorial;
 
-use Revinate\Sequence\fn as fn;
+use PHPUnit\Framework\TestCase;
+use Revinate\Sequence\func;
 use Revinate\Sequence\Sequence;
 
 require_once __DIR__.'/../sequencePatterns.php';
 
-class sequencePatternsTest extends \PHPUnit_Framework_TestCase {
+class sequencePatternsTest extends TestCase {
 
     public function testExampleExtractField1() {
         $employees = SampleDataLoader::getEmployees(true);
 
         $employeeIds = exampleExtractField1($employees);
-        $this->assertEquals(array_map(fn\fnPluck('employeeId'), $employees), $employeeIds);
+        $this->assertEquals(array_map(func\fnPluck('employeeId'), $employees), $employeeIds);
     }
 
     public function testExampleExtractField2() {
         $employees = SampleDataLoader::getEmployees(true);
 
         $employeeIds = exampleExtractField2($employees);
-        $this->assertEquals(array_map(fn\fnPluck('employeeId'), $employees), $employeeIds);
+        $this->assertEquals(array_map(func\fnPluck('employeeId'), $employees), $employeeIds);
     }
 
     public function testExampleSortByEmployeeId() {
@@ -69,7 +70,7 @@ class sequencePatternsTest extends \PHPUnit_Framework_TestCase {
 
     public function testExampleExtractKey() {
         $people = SampleDataLoader::getPeople(true);
-        $peopleSeq = Sequence::make($people)->keyBy(fn\fnPluck('_id'));
+        $peopleSeq = Sequence::make($people)->keyBy(func\fnPluck('_id'));
 
         $keys1 = exampleExtractKeys1($peopleSeq);
         $keys2 = exampleExtractKeys2($peopleSeq);

@@ -9,16 +9,16 @@
 namespace Revinate\Sequence;
 
 use \ArrayObject;
-use \PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Revinate\Sequence\Test\FancyArray;
 
-class SequenceTest extends PHPUnit_Framework_TestCase  {
+class SequenceTest extends TestCase  {
 
     public function testMap() {
 
         $values = range(1,100);
 
-        $fn = function($v){ return 2 * $v;};
+        $fn = static function($v){ return 2 * $v;};
         $results = Sequence::make($values)->map($fn)->to_a();
 
         $this->assertTrue($results == range(2,200,2));
@@ -27,7 +27,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
     public function testMapKeys() {
         $values = range(0,100);
-        $fnKeyMap = function($k) { return $k * 2; };
+        $fnKeyMap = static function($k) { return $k * 2; };
 
         $results = Sequence::make($values)->mapKeys($fnKeyMap)->to_a();
 
@@ -50,7 +50,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     public function testFilter() {
         $values = range(1,100,1);
 
-        $fn = function($v){ return $v % 2; };
+        $fn = static function($v){ return $v % 2; };
         $results = Sequence::make($values)->filter($fn)->to_a();
 
         $this->assertTrue($results == FancyArray::make($values)->filter($fn)->to_a());
@@ -60,7 +60,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     public function testFilterKeys() {
         $values = range(0,100);
 
-        $fn = function($v){ return $v % 2; };
+        $fn = static function($v){ return $v % 2; };
         $results = Sequence::make($values)->filterKeys($fn)->to_a();
 
         $this->assertTrue($results == FancyArray::make($values)->filter_k($fn)->to_a());
@@ -69,9 +69,9 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
     public function testChaining() {
 
-        $fnMap1 = function($v, $k) { return $v * $k;};
-        $fnMap2 = function($v) { return $v + 1;};
-        $fnFilter = function($v) { return $v % 3 == 0; };
+        $fnMap1 = static function($v, $k) { return $v * $k;};
+        $fnMap2 = static function($v) { return $v + 1;};
+        $fnFilter = static function($v) { return $v % 3 == 0; };
 
         $values = range(1,100);
 
@@ -112,7 +112,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     }
 
     public function testReduce() {
-        $fn = function($result, $v) {
+        $fn = static function($result, $v) {
             return $result + $v;
         };
 
@@ -125,8 +125,8 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
 
     public function testWalk() {
         $sum = 0;
-        $fn = function ($value) use (&$sum) { $sum += $value; };
-        $fnReduceSum = function ($sum, $value) { return $sum + $value; };
+        $fn = static function ($value) use (&$sum) { $sum += $value; };
+        $fnReduceSum = static function ($sum, $value) { return $sum + $value; };
         $values = range(1,100);
 
         Sequence::make($values)->walk($fn);
@@ -171,7 +171,9 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         // Test that they can be sorted by age.
         $this->assertEquals(
             array('Sam', 'Terry', 'Bob', 'Robert'),
-            Sequence::make(TestData::$people)->limit(4)->sort(FnGen::fnPluck('age'))->pluck('name')->to_a());
+            Sequence::make(TestData::$people)->limit(4)->sort(static function($a, $b) {
+                return $a['age'] <=> $b['age'];
+            })->pluck('name')->to_a());
     }
 
     public function testASort() {
@@ -671,7 +673,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     public function testGroupBy() {
         $fruitOrders = TestData::$fruit;
 
-        $fnExtractFruitCountsForName = function($fruit, $name) {
+        $fnExtractFruitCountsForName = static function($fruit, $name) {
             return Sequence::make($fruit)
                 ->filter(FnGen::fnCallChain(FnGen::fnPluck('name'), FnGen::fnIsEqual($name)))
                 ->values()
@@ -685,19 +687,19 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
             $this->assertEquals($filteredOrders, $orders);
         }
 
-        $peopleByAge = Sequence::make(TestData::$people)->groupBy(fn\fnPluck('age'), array_fill(0, 100, array()))->toArray();
+        $peopleByAge = Sequence::make(TestData::$people)->groupBy(func\fnPluck('age'), array_fill(0, 100, array()))->toArray();
         $this->assertEquals(array(), $peopleByAge[0]);
-        $peopleAge55 = Sequence::make(TestData::$people)->filter(fn\fnCallChain(fn\fnPluck('age'), fn\fnIsEqual(55)))->toValues();
+        $peopleAge55 = Sequence::make(TestData::$people)->filter(func\fnCallChain(func\fnPluck('age'), func\fnIsEqual(55)))->toValues();
         $this->assertEquals($peopleAge55, $peopleByAge[55]);
 
         // Test late binding of $init
-        $peopleByAgeFnInit = Sequence::make(TestData::$people)->groupBy(fn\fnPluck('age'), function() { return array_fill(0, 100, array()); })->toArray();
+        $peopleByAgeFnInit = Sequence::make(TestData::$people)->groupBy(func\fnPluck('age'), static function() { return array_fill(0, 100, array()); })->toArray();
         $this->assertEquals($peopleByAge, $peopleByAgeFnInit);
     }
 
     public function testGroupByInitWithKeys() {
-        $peopleByAgeB = Sequence::make(TestData::$people)->groupByInitWithKeys(fn\fnPluck('age'), range(0, 100))->toArray();
-        $peopleByAgeA = Sequence::make(TestData::$people)->groupBy(fn\fnPluck('age'), array_fill(0, 101, array()))->toArray();
+        $peopleByAgeB = Sequence::make(TestData::$people)->groupByInitWithKeys(func\fnPluck('age'), range(0, 100))->toArray();
+        $peopleByAgeA = Sequence::make(TestData::$people)->groupBy(func\fnPluck('age'), array_fill(0, 101, array()))->toArray();
         $this->assertEquals($peopleByAgeA, $peopleByAgeB);
     }
 
@@ -708,11 +710,10 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $tappedValues = array();
         $tappedKeys = array();
 
-        /** @noinspection PhpUnusedParameterInspection */
         $result = Sequence::make($values)
             // Grab Values
-            ->tap(function($v, $k) use (&$tappedValues) { $tappedValues[] = $v; })
-            ->tap(function($v, $k) use (&$tappedKeys) { $tappedKeys[] = $k; })
+            ->tap(static function($v, $k) use (&$tappedValues) { $tappedValues[] = $v; })
+            ->tap(static function($v, $k) use (&$tappedKeys) { $tappedKeys[] = $k; })
             ->to_a();
 
         $this->assertEquals($values, $result);
@@ -726,8 +727,8 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals($values, Sequence::make(array_combine($values, $values))->toValues());
 
         // Test the case of duplicate keys
-        $this->assertEquals($values, Sequence::make($values)->mapKeys(fn\fnConst(0))->toValues());
-        $this->assertNotEquals($values, Sequence::make($values)->mapKeys(fn\fnConst(0))->toArray());
+        $this->assertEquals($values, Sequence::make($values)->mapKeys(func\fnConst(0))->toValues());
+        $this->assertNotEquals($values, Sequence::make($values)->mapKeys(func\fnConst(0))->toArray());
     }
 
     public function testToKeys() {
@@ -736,8 +737,8 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals($values, Sequence::make(array_combine($values, $values))->toKeys());
 
         // Test the case of duplicate keys
-        $this->assertEquals(array_fill(0, 101, 'value'), Sequence::make($values)->mapKeys(fn\fnConst('value'))->toKeys());
-        $this->assertEquals(array('dup-key'), array_keys(Sequence::make($values)->mapKeys(fn\fnConst('dup-key'))->toArray()));
+        $this->assertEquals(array_fill(0, 101, 'value'), Sequence::make($values)->mapKeys(func\fnConst('value'))->toKeys());
+        $this->assertEquals(array('dup-key'), array_keys(Sequence::make($values)->mapKeys(func\fnConst('dup-key'))->toArray()));
     }
 
     public function testTranspose() {
@@ -752,21 +753,21 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
     public function testReduceLeft() {
         $values = array('one', 'two', 'three');
 
-        $this->assertEquals(implode('', $values), Sequence::make($values)->reduceLeft(fn\fnStringConcat()));
-        $this->assertEquals(implode(', ', $values), Sequence::make($values)->reduceLeft(fn\fnStringConcat(', ')));
+        $this->assertEquals(implode('', $values), Sequence::make($values)->reduceLeft(func\fnStringConcat()));
+        $this->assertEquals(implode(', ', $values), Sequence::make($values)->reduceLeft(func\fnStringConcat(', ')));
 
-        $this->assertEquals(11, Sequence::make($values)->map(fn\fnStrLen())->reduceLeft(fn\fnSum()));
+        $this->assertEquals(11, Sequence::make($values)->map(func\fnStrLen())->reduceLeft(func\fnSum()));
 
         // test on an empty list.
-        $this->assertNull(Sequence::make(null)->reduceLeft(fn\fnSum()));
+        $this->assertNull(Sequence::make(null)->reduceLeft(func\fnSum()));
     }
 
     public function testReduceRight() {
         $values = array('one', 'two', 'three');
-        $this->assertEquals(implode('', array_reverse($values)), Sequence::make($values)->reduceRight(fn\fnStringConcat()));
+        $this->assertEquals(implode('', array_reverse($values)), Sequence::make($values)->reduceRight(func\fnStringConcat()));
 
         // test on an empty list.
-        $this->assertNull(Sequence::make(null)->reduceRight(fn\fnSum()));
+        $this->assertNull(Sequence::make(null)->reduceRight(func\fnSum()));
     }
 
     public function testConcatMap() {
@@ -793,13 +794,13 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $this->assertEquals(array(1, 2, 3, 4, 5, array(1)), Sequence::make($values)->concatMap()->toValues());
         $this->assertEquals(array('one', 'two', 'three', 'four', 'five', 'array'), Sequence::make($values)->concatMap()->toKeys());
     }
-    
+
     public function testScan() {
         $values = array(
             95, 100, 90, 80, 75, 98
         );
         $default = array('sum' => null, 'avg' => null, 'min' => null, 'max' => null, 'count' => 0);
-        $result = Sequence::make($values)->scan(function($acc, $value){
+        $result = Sequence::make($values)->scan(static function($acc, $value){
             $count = $acc['count'] + 1;
             if ($count > 1) {
                 $sum = $acc['sum'] + $value;
@@ -829,7 +830,7 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
         $values = array(
             95, 100, 90, 80, 75, 98
         );
-        $result = Sequence::make($values)->scan(function($a, $b) { return min($a, $b); })->last();
+        $result = Sequence::make($values)->scan(static function($a, $b) { return min($a, $b); })->last();
         $this->assertEquals(min($values), $result);
     }
 
@@ -838,6 +839,6 @@ class SequenceTest extends PHPUnit_Framework_TestCase  {
             1, -2, 3, -4, 5, -6
         );
         $this->assertEquals(-6, Sequence::make($values)->last());
-        $this->assertEquals(5, Sequence::make($values)->last(function($v){ return $v >= 0; }));
+        $this->assertEquals(5, Sequence::make($values)->last(static function($v){ return $v >= 0; }));
     }
 }

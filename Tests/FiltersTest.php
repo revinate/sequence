@@ -6,15 +6,16 @@
  * Time: 22:38
  */
 
-namespace Revinate\Sequence\fn;
+namespace Revinate\Sequence\func;
 
+use PHPUnit\Framework\TestCase;
 use Revinate\Sequence\Test\FancyArray;
 use Revinate\Sequence\TestAccessClass;
 
 require_once 'TestAccessClass.php';
 require_once 'FancyArray.php';
 
-class FiltersTest extends \PHPUnit_Framework_TestCase {
+class FiltersTest extends TestCase {
     public function testNot() {
         $fnNot = fnNot();
 
