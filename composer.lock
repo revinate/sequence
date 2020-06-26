@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f003d6c7c480f801efef2cf6f13d4780",
+    "content-hash": "db299202aa0918b4f5e6157f036615e2",
     "packages": [
         {
             "name": "react/partial",
@@ -50,23 +50,18 @@
         },
         {
             "name": "revinate/php-getter-setter",
-            "version": "dev-master",
+            "version": "v1.0.0-beta",
             "source": {
                 "type": "git",
-                "url": "https://github.com/revinate/php-getter-setter.git",
+                "url": "https://github.com/revinate/php-getter-setter",
                 "reference": "d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83"
             },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/revinate/php-getter-setter/zipball/d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83",
-                "reference": "d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83",
-                "shasum": ""
-            },
             "require": {
-                "php": ">=5.3.3"
+                "ext-json": "*",
+                "php": ">=7"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8"
+                "phpunit/phpunit": "^6"
             },
             "type": "library",
             "autoload": {
@@ -80,7 +75,6 @@
                     "src/util/utils.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1612,7 +1606,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "revinate/php-getter-setter": 20
+        "revinate/php-getter-setter": 10
     },
     "prefer-stable": false,
     "prefer-lowest": false,
