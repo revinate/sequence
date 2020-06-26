@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "db299202aa0918b4f5e6157f036615e2",
+    "content-hash": "5f26d4dc55768ecfe391c8e94946f08e",
     "packages": [
         {
             "name": "react/partial",
@@ -50,7 +50,7 @@
         },
         {
             "name": "revinate/php-getter-setter",
-            "version": "v1.0.0-beta",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/revinate/php-getter-setter",
@@ -1605,9 +1605,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "revinate/php-getter-setter": 10
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

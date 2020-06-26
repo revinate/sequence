@@ -16,7 +16,7 @@
   ],
   "require": {
     "php":                        ">=7",
-    "revinate/php-getter-setter": "v1.0.0-beta",
+    "revinate/php-getter-setter": "1.0.0",
     "react/partial":              "~2.0",
     "ext-json": "*",
     "ext-mbstring": "*"
