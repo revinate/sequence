@@ -7,9 +7,16 @@
     {"name" : "Jason Dent"},
     {"name" : "Eric Madar"}
   ],
+  "repositories": [
+    {
+      "name": "revinate",
+      "type" : "git",
+      "url": "https://github.com/revinate/php-getter-setter"
+    }
+  ],
   "require": {
     "php":                        ">=7",
-    "revinate/php-getter-setter": "dev-master#d4f3f37ae7cc089ffbac7b19b0bf2bddb0599d83",
+    "revinate/php-getter-setter": "v1.0.0-beta",
     "react/partial":              "~2.0",
     "ext-json": "*",
     "ext-mbstring": "*"
